@@ -1,6 +1,5 @@
 import FuseDialog from '@fuse/core/FuseDialog';
 import { styled } from '@mui/material/styles';
-import FuseMessage from '@fuse/core/FuseMessage';
 import FuseSuspense from '@fuse/core/FuseSuspense';
 import AppContext from 'app/AppContext';
 import clsx from 'clsx';
@@ -70,7 +69,6 @@ function Layout2(props) {
       </div>
 
       {config.rightSidePanel.display && <RightSideLayout2 />}
-      <FuseMessage />
     </Root>
   );
 }
