@@ -3,9 +3,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import history from '@history';
 import _ from '@lodash';
 import { setInitialSettings } from 'app/store/fuse/settingsSlice';
-import { showMessage } from 'app/store/fuse/messageSlice';
 import settingsConfig from 'app/configs/settingsConfig';
-import jwtService from '../auth/services/jwtService';
 
 export const setUser = createAsyncThunk('user/setUser', async (user, { dispatch, getState }) => {
   /*
@@ -66,28 +64,16 @@ export const logoutUser = () => async (dispatch, getState) => {
 };
 
 export const updateUserData = (user) => async (dispatch, getState) => {
-  if (!user.role || user.role.length === 0) {
-    // is guest
-    return;
-  }
-
-  jwtService
-    .updateUserData(user)
-    .then(() => {
-      dispatch(showMessage({ message: 'User data saved with api' }));
-    })
-    .catch((error) => {
-      dispatch(showMessage({ message: error.message }));
-    });
+  console.log('');
 };
 
 const initialState = {
   role: [], // guest
   data: {
-    displayName: 'John Doe',
-    photoURL: 'assets/images/avatars/brian-hughes.jpg',
-    email: 'johndoe@withinpixels.com',
-    shortcuts: ['apps.calendar', 'apps.mailbox', 'apps.contacts', 'apps.tasks'],
+    displayName: 'Hiroshi Ikeda',
+    photoURL: '',
+    email: 'ikedahiroshi51@gmail.com',
+    shortcuts: [],
   },
 };
 
