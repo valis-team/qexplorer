@@ -6,7 +6,7 @@ import Logo from '../../shared-components/Logo';
 import Navigation from '../../shared-components/Navigation';
 
 const Root = styled('div')(({ theme }) => ({
-  backgroundColor: theme.palette.background.default,
+  backgroundColor: theme.palette.background.paper,
   color: theme.palette.text.primary,
 }));
 

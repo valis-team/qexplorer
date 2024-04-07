@@ -14,17 +14,18 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
   textDecoration: 'none!important',
   minHeight: 48,
   '&.active': {
-    backgroundColor: `${theme.palette.secondary.main}!important`,
-    color: `${theme.palette.secondary.contrastText}!important`,
+    color: `${theme.palette.common.white}`,
     pointerEvents: 'none',
     '& .fuse-list-item-text-primary': {
       color: 'inherit',
     },
     '& .fuse-list-item-icon': {
-      color: 'inherit',
+      color: `${theme.palette.common.white}`,
     },
   },
-  '& .fuse-list-item-icon': {},
+  '& .fuse-list-item-icon': {
+    color: theme.palette.text.primary,
+  },
   '& .fuse-list-item-text': {
     padding: '0 0 0 16px',
   },

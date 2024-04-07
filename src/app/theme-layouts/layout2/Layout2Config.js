@@ -5,12 +5,9 @@ const config = {
     containerWidth: 1440,
     navbar: {
       display: true,
-      style: 'fixed',
     },
     toolbar: {
       display: true,
-      style: 'static',
-      position: 'below',
     },
     footer: {
       display: false,

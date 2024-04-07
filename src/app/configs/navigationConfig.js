@@ -9,20 +9,18 @@ i18next.addResourceBundle('ar', 'navigation', ar);
 
 const navigationConfig = [
   {
-    id: 'example-component',
-    title: 'Example',
-    translate: 'EXAMPLE',
+    id: 'overview',
+    title: 'Overview',
     type: 'item',
-    icon: 'heroicons-outline:star',
-    url: 'example',
+    icon: 'heroicons-outline:home',
+    url: 'overview',
   },
   {
-    id: 'example',
-    title: 'Examsssssple',
-    translate: 'EXAMPLE',
+    id: 'richlist',
+    title: 'Rish List',
     type: 'item',
-    icon: 'heroicons-outline:star',
-    url: 'project',
+    icon: 'heroicons-outline:identification',
+    url: 'richlist',
   },
 ];
 

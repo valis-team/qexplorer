@@ -32,14 +32,7 @@ function Layout2(props) {
 
       <div className="flex flex-col flex-auto min-w-0">
         <main id="fuse-main" className="flex flex-col flex-auto min-h-full min-w-0 relative">
-          {config.toolbar.display && (
-            <ToolbarLayout2
-              className={clsx(
-                config.toolbar.style === 'fixed' && 'sticky top-0',
-                config.toolbar.position === 'above' && 'order-first z-40'
-              )}
-            />
-          )}
+          {config.toolbar.display && <ToolbarLayout2 className={clsx('sticky top-0')} />}
           {config.navbar.display && (
             <NavbarWrapperLayout2
               className={clsx(config.navbar.style === 'fixed' && 'sticky top-0 z-50')}

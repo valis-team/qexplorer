@@ -48,7 +48,7 @@ const Root = styled('div')(({ theme, ...props }) => ({
   },
 
   '& .FusePageSimple-topBg': {
-    position: 'absolute',
+    position: '',
     left: 0,
     right: 0,
     top: 0,
@@ -240,15 +240,12 @@ const FusePageSimple = forwardRef((props, ref) => {
               className="FusePageSimple-contentWrapper"
               // enable={props.scroll === 'page'}
             >
-              {props.header && <FusePageSimpleHeader header={props.header} />}
-              {props.content && (
-                <FuseScrollbars
-                  enable={props.scroll === 'content'}
-                  className={clsx('FusePageSimple-content container')}
-                >
-                  {props.content}
-                </FuseScrollbars>
-              )}
+              <FuseScrollbars enable={props.scroll === 'content'}>
+                {props.header && <FusePageSimpleHeader header={props.header} />}
+                {props.content && (
+                  <div className={clsx('FusePageSimple-content container')}>{props.content}</div>
+                )}
+              </FuseScrollbars>
             </div>
 
             {props.rightSidebarContent && (

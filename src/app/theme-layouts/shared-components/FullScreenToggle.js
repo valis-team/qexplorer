@@ -84,7 +84,7 @@ const HeaderFullScreenToggle = (props) => {
     <Tooltip title="Fullscreen toggle" placement="bottom">
       <IconButton
         onClick={toggleFullScreen}
-        className={clsx('w-40 h-40', props.className)}
+        className={clsx('w-40 h-40 text-gray-50', props.className)}
         size="large"
       >
         <FuseSvgIcon>heroicons-outline:arrows-expand</FuseSvgIcon>

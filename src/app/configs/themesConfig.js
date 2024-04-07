@@ -5,7 +5,7 @@ export const lightPaletteText = {
 };
 
 export const darkPaletteText = {
-  primary: 'rgb(255,255,255)',
+  primary: '#808B9B',
   secondary: 'rgb(148, 163, 184)',
   disabled: 'rgb(156, 163, 175)',
 };
@@ -76,9 +76,9 @@ const themesConfig = {
         main: '#f44336',
         dark: '#b71c1c',
       },
-      status: {
-        danger: 'orange',
-      },
+    },
+    status: {
+      danger: 'orange',
     },
   },
 };
