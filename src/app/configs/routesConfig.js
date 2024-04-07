@@ -2,25 +2,21 @@ import FuseUtils from '@fuse/utils';
 import FuseLoading from '@fuse/core/FuseLoading';
 import { Navigate } from 'react-router-dom';
 import settingsConfig from 'app/configs/settingsConfig';
-import Error404Page from '../main/404/Error404Page';
-import ExampleConfig from '../main/example/ExampleConfig';
+import Error404Config from '../pages/404/Error404Config';
+import RichlistConfig from '../pages/richlist/RichlistConfig';
 
-const routeConfigs = [ExampleConfig];
+const routeConfigs = [RichlistConfig, Error404Config];
 
 const routes = [
   ...FuseUtils.generateRoutesFromConfigs(routeConfigs, settingsConfig.defaultAuth),
   {
     path: '/',
-    element: <Navigate to="/example" />,
+    element: <Navigate to="/richlist" />,
     auth: settingsConfig.defaultAuth,
   },
   {
     path: 'loading',
     element: <FuseLoading />,
-  },
-  {
-    path: '404',
-    element: <Error404Page />,
   },
   {
     path: '*',

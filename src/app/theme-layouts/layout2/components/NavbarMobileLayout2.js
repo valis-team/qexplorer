@@ -2,7 +2,6 @@ import FuseScrollbars from '@fuse/core/FuseScrollbars';
 import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
 import { memo } from 'react';
-import UserNavbarHeader from '../../shared-components/UserNavbarHeader';
 import NavbarToggleButton from '../../shared-components/NavbarToggleButton';
 import Logo from '../../shared-components/Logo';
 import Navigation from '../../shared-components/Navigation';
@@ -48,8 +47,6 @@ function NavbarMobileLayout2(props) {
         className="flex flex-1 flex-col min-h-0"
         option={{ suppressScrollX: true, wheelPropagation: false }}
       >
-        <UserNavbarHeader />
-
         <Navigation layout="vertical" />
 
         <div className="flex flex-0 items-center justify-center py-48 opacity-10">

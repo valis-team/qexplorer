@@ -14,19 +14,11 @@ import RightSideLayout2 from './components/RightSideLayout2';
 import ToolbarLayout2 from './components/ToolbarLayout2';
 
 const Root = styled('div')(({ theme, config }) => ({
-  ...(config.mode === 'boxed' && {
-    clipPath: 'inset(0)',
+  '& .container': {
     maxWidth: `${config.containerWidth}px`,
+    width: '100%',
     margin: '0 auto',
-    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-  }),
-  ...(config.mode === 'container' && {
-    '& .container': {
-      maxWidth: `${config.containerWidth}px`,
-      width: '100%',
-      margin: '0 auto',
-    },
-  }),
+  },
 }));
 
 function Layout2(props) {

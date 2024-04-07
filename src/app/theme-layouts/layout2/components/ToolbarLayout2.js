@@ -6,13 +6,11 @@ import clsx from 'clsx';
 import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { selectFuseCurrentLayoutConfig, selectToolbarTheme } from 'app/store/fuse/settingsSlice';
-import AdjustFontSize from '../../shared-components/AdjustFontSize';
+import Logo from 'app/theme-layouts/shared-components/Logo';
 import FullScreenToggle from '../../shared-components/FullScreenToggle';
 import LanguageSwitcher from '../../shared-components/LanguageSwitcher';
-import NavigationShortcuts from '../../shared-components/NavigationShortcuts';
 import NavigationSearch from '../../shared-components/NavigationSearch';
 import NavbarToggleButton from '../../shared-components/NavbarToggleButton';
-import UserMenu from '../../shared-components/UserMenu';
 
 function ToolbarLayout2(props) {
   const config = useSelector(selectFuseCurrentLayoutConfig);
@@ -35,20 +33,16 @@ function ToolbarLayout2(props) {
 
           <div className="flex flex-1">
             <Hidden lgDown>
-              <NavigationShortcuts />
+              <Logo />
             </Hidden>
           </div>
 
           <div className="flex items-center px-8 h-full overflow-x-auto">
             <LanguageSwitcher />
 
-            <AdjustFontSize />
-
             <FullScreenToggle />
 
             <NavigationSearch />
-
-            <UserMenu />
           </div>
         </Toolbar>
       </AppBar>

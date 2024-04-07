@@ -1,5 +1,4 @@
 import { styled } from '@mui/material/styles';
-import { useTranslation } from 'react-i18next';
 import FusePageSimple from '@fuse/core/FusePageSimple';
 import DemoContent from '@fuse/core/DemoContent';
 
@@ -16,14 +15,12 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
   '& .FusePageSimple-sidebarContent': {},
 }));
 
-function ExamplePage(props) {
-  const { t } = useTranslation('examplePage');
-
+function RichlistPage(props) {
   return (
     <Root
       header={
         <div className="p-24">
-          <h4>{t('TITLE')}</h4>
+          <h4>Rich List</h4>
         </div>
       }
       content={
@@ -38,4 +35,4 @@ function ExamplePage(props) {
   );
 }
 
-export default ExamplePage;
+export default RichlistPage;
