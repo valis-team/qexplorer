@@ -17,7 +17,7 @@ const navigationConfig = [
   },
   {
     id: 'richlist',
-    title: 'Rish List',
+    title: 'Rich List',
     type: 'item',
     icon: 'heroicons-outline:identification',
     url: 'richlist',

@@ -10,6 +10,16 @@ const RichlistConfig = {
     {
       path: 'richlist',
       element: <RichlistPage />,
+      children: [
+        {
+          path: '',
+          element: <RichlistPage />,
+        },
+        {
+          path: ':token',
+          element: <RichlistPage />,
+        },
+      ],
     },
   ],
 };

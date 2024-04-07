@@ -39,6 +39,9 @@ module.exports = {
       },
       gray: {
         50: '#808B9B',
+        60: '#4B5565',
+        80: '#1E293B',
+        90: '#111827',
         100: '#F5F5F5',
         200: '#EEEEEE',
         300: '#E0E0E0',
@@ -747,6 +750,7 @@ module.exports = {
       DEFAULT: '1',
     },
     fontFamily: {
+      mont: ['Montserrat', 'sans-serif'],
       sans: [
         'Inter var',
         'Roboto',
