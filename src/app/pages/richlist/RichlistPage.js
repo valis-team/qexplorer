@@ -3,7 +3,7 @@ import FusePageSimple from '@fuse/core/FusePageSimple';
 import { Typography } from '@mui/material';
 import Card from 'src/app/components/Card/Card';
 import { useEffect } from 'react';
-import { io } from 'socket.io-client';
+import { useSocket } from 'src/app/context/SocketContext';
 import RichlistHeader from './RichlistHeader';
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
@@ -15,16 +15,16 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 }));
 
 function RichlistPage() {
+  const socket = useSocket();
   useEffect(() => {
-    const newSocket = io(process.env.REACT_APP_SOCKET_URL);
     setTimeout(() => {
-      newSocket.emit('livesocketRequest', 'help');
+      socket?.emit('livesocketRequest', 'help');
     }, 1000);
 
-    newSocket.on('livesocketResponse', (data) => {
+    socket?.on('livesocketResponse', (data) => {
       console.log(data);
     });
-  }, []);
+  }, [socket]);
   return (
     <Root
       header={<RichlistHeader />}

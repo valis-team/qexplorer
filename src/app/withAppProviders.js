@@ -10,6 +10,7 @@ import { StyledEngineProvider } from '@mui/material/styles';
 import routes from 'app/configs/routesConfig';
 import store from './store';
 import AppContext from './AppContext';
+import { SocketProvider } from './context/SocketContext';
 
 const withAppProviders = (Component) => (props) => {
   const WrapperComponent = () => (
@@ -20,9 +21,11 @@ const withAppProviders = (Component) => (props) => {
     >
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Provider store={store}>
-          <StyledEngineProvider injectFirst>
-            <Component {...props} />
-          </StyledEngineProvider>
+          <SocketProvider socketUrl={process.env.REACT_APP_SOCKET_URL}>
+            <StyledEngineProvider injectFirst>
+              <Component {...props} />
+            </StyledEngineProvider>
+          </SocketProvider>
         </Provider>
       </LocalizationProvider>
     </AppContext.Provider>

@@ -107,7 +107,7 @@
     "util": "^0.12.4"
   },
   "scripts": {
-    "start": "react-app-rewired  start",
+    "start": "PORT=7004 react-app-rewired  start ",
     "start-proxy": "node dev-proxy.cjs",
     "build": "cross-env GENERATE_SOURCEMAP=false react-app-rewired build",
     "test": "react-app-rewired test --env=node",
