@@ -3,7 +3,12 @@ import FusePageSimple from '@fuse/core/FusePageSimple';
 import { Typography } from '@mui/material';
 import Card from 'src/app/components/Card/Card';
 import { useSocket } from 'src/app/context/SocketContext';
+import withReducer from 'app/store/withReducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
 import RichlistHeader from './RichlistHeader';
+import reducer from './store';
+import { selectRichlist, selectTokens, setTokens, setRichlist } from './store/richlistSlice';
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
   '& .FusePageSimple-header': {},
@@ -23,6 +28,20 @@ function RichlistPage() {
       socketTest();
     }
   };
+
+  console.log(useSelector(selectTokens));
+  console.log(useSelector(selectRichlist));
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(setTokens(['QU', 'QTRY']));
+    dispatch(
+      setRichlist([
+        ['1', 'QTRY'],
+        ['2', 'QTRY'],
+      ])
+    );
+  }, [dispatch]);
   return (
     <Root
       header={<RichlistHeader />}
@@ -55,4 +74,4 @@ function RichlistPage() {
   );
 }
 
-export default RichlistPage;
+export default withReducer('richlist', reducer)(RichlistPage);
