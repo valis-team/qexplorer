@@ -11,6 +11,7 @@ export const useSocket = () => {
 };
 
 const useWebSocket = (socketUrl) => {
+  const [marketcap, setMarketcap] = useState({});
   const [tokens, setTokens] = useState([]);
   const [richlist, setRichList] = useState({});
   const [messages, setMessages] = useState({});
@@ -24,6 +25,7 @@ const useWebSocket = (socketUrl) => {
       console.log('WebSocket connected');
       ws.send('richlist');
       ws.send('tokenlist');
+      ws.send('marketcap');
       setIsConnected(true);
     };
 
@@ -37,12 +39,11 @@ const useWebSocket = (socketUrl) => {
           }));
         } else if (data.tokens) {
           setTokens(data.tokens);
-          for (let idx = 0; idx < data.tokens.length; idx += 1) {
-            ws.send(`richlist.${data.tokens[idx]}`);
-          }
+        } else if (data.marketcap) {
+          setMarketcap(data);
         }
       } catch (error) {
-        console.error('Parsing error in WebSocket message:', error);
+        console.log(event.data);
       }
     };
 
@@ -81,7 +82,7 @@ const useWebSocket = (socketUrl) => {
     [websocket, isConnected]
   );
 
-  return { tokens, richlist, messages, sendMessage, isConnected };
+  return { tokens, richlist, messages, marketcap, sendMessage, isConnected };
 };
 
 export const SocketProvider = ({ children, socketUrl }) => {

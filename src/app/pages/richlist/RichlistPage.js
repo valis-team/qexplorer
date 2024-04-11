@@ -17,9 +17,11 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 }));
 
 function RichlistPage() {
-  const { socket, richlist, tokens } = useSocket();
+  const socket = useSocket();
+  const { richlist, tokens, marketcap, isConnected } = useSocket();
   const socketTest = (event) => {
-    socket.sendMessage('help');
+    console.log(socket);
+    if (socket && isConnected) socket.sendMessage('help');
   };
   const handleKeyDown = (event) => {
     if (event.key === 'Enter' || event.key === ' ') {
@@ -28,12 +30,8 @@ function RichlistPage() {
   };
 
   useEffect(() => {
-    console.log(tokens, '222222 tokens');
-  }, [tokens]);
-
-  useEffect(() => {
-    console.log(richlist, '222222 richlist');
-  }, [richlist]);
+    console.log(marketcap);
+  }, [marketcap]);
 
   return (
     <Root
