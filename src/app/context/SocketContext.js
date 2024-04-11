@@ -11,7 +11,9 @@ export const useSocket = () => {
 };
 
 const useWebSocket = (socketUrl) => {
-  const [messages, setMessages] = useState([]);
+  const [tokens, setTokens] = useState([]);
+  const [richlist, setRichList] = useState({});
+  const [messages, setMessages] = useState({});
   const [websocket, setWebsocket] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
 
@@ -20,12 +22,28 @@ const useWebSocket = (socketUrl) => {
 
     const onOpen = () => {
       console.log('WebSocket connected');
+      ws.send('richlist');
+      ws.send('tokenlist');
       setIsConnected(true);
     };
 
     const onMessage = (event) => {
-      console.log(event.data);
-      setMessages((prev) => [...prev, event.data]);
+      try {
+        const data = JSON.parse(event.data);
+        if (data.richlist && data.name) {
+          setRichList((prevRichlist) => ({
+            ...prevRichlist,
+            [data.name]: data.richlist,
+          }));
+        } else if (data.tokens) {
+          setTokens(data.tokens);
+          for (let idx = 0; idx < data.tokens.length; idx += 1) {
+            ws.send(`richlist.${data.tokens[idx]}`);
+          }
+        }
+      } catch (error) {
+        console.error('Parsing error in WebSocket message:', error);
+      }
     };
 
     const onError = (error) => {
@@ -63,7 +81,7 @@ const useWebSocket = (socketUrl) => {
     [websocket, isConnected]
   );
 
-  return { messages, sendMessage, isConnected };
+  return { tokens, richlist, messages, sendMessage, isConnected };
 };
 
 export const SocketProvider = ({ children, socketUrl }) => {
