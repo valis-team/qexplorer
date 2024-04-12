@@ -8,10 +8,11 @@ module.exports = {
   darkMode: 'class', // or 'class'
   theme: {
     screens: {
-      sm: '600px',
-      md: '960px',
-      lg: '1280px',
-      xl: '1920px',
+      xs: '375px',
+      sm: '425px',
+      md: '768px',
+      lg: '1024px',
+      xl: '1440px',
       print: { raw: 'print' },
     },
     colors: ({ colors }) => ({
@@ -20,8 +21,15 @@ module.exports = {
       transparent: 'transparent',
       black: '#22292F',
       white: '#fff',
-      grey: {
-        50: '#FAFAFA',
+      primary: {
+        20: '#CCFCFF',
+        30: '#B6E0FF',
+        40: '#8BCEFF',
+        50: '#40AFFF',
+        60: '#36AEFA',
+        70: '#0094FF',
+        80: '#15315A',
+        90: '#060A11',
         100: '#F5F5F5',
         200: '#EEEEEE',
         300: '#E0E0E0',
@@ -40,6 +48,7 @@ module.exports = {
       gray: {
         50: '#808B9B',
         60: '#4B5565',
+        70: '#202E3C',
         80: '#1E293B',
         90: '#111827',
         100: '#F5F5F5',
@@ -751,6 +760,7 @@ module.exports = {
     },
     fontFamily: {
       mont: ['Montserrat', 'sans-serif'],
+      space: ['Space Grotesk', 'sans-serif'],
       sans: [
         'Inter var',
         'Roboto',

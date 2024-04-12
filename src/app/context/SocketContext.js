@@ -1,3 +1,4 @@
+import FuseLoading from '@fuse/core/FuseLoading';
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 
 const WebSocketContext = createContext(null);
@@ -13,19 +14,14 @@ export const useSocket = () => {
 const useWebSocket = (socketUrl) => {
   const [marketcap, setMarketcap] = useState({});
   const [tokens, setTokens] = useState([]);
-  const [richlist, setRichList] = useState({});
-  const [messages, setMessages] = useState({});
+  const [richlist, setRichList] = useState([]);
   const [websocket, setWebsocket] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
-
+  const [loading, setLoading] = useState(false); // Added loading state
   useEffect(() => {
     const ws = new WebSocket(socketUrl);
 
     const onOpen = () => {
-      console.log('WebSocket connected');
-      ws.send('richlist');
-      ws.send('tokenlist');
-      ws.send('marketcap');
       setIsConnected(true);
     };
 
@@ -33,17 +29,16 @@ const useWebSocket = (socketUrl) => {
       try {
         const data = JSON.parse(event.data);
         if (data.richlist && data.name) {
-          setRichList((prevRichlist) => ({
-            ...prevRichlist,
-            [data.name]: data.richlist,
-          }));
+          setRichList(data.richlist);
         } else if (data.tokens) {
           setTokens(data.tokens);
         } else if (data.marketcap) {
           setMarketcap(data);
         }
+        setLoading(false);
       } catch (error) {
         console.log(event.data);
+        setLoading(false);
       }
     };
 
@@ -71,21 +66,27 @@ const useWebSocket = (socketUrl) => {
       ws.removeEventListener('close', onClose);
       ws.close();
     };
-  }, [socketUrl]); // Ensure WebSocket is recreated only if socketUrl changes
+  }, [socketUrl]);
 
   const sendMessage = useCallback(
     (message) => {
       if (websocket && isConnected) {
         websocket.send(message);
+        setLoading(true);
       }
     },
     [websocket, isConnected]
   );
 
-  return { tokens, richlist, messages, marketcap, sendMessage, isConnected };
+  return { tokens, richlist, marketcap, sendMessage, isConnected, loading };
 };
 
 export const SocketProvider = ({ children, socketUrl }) => {
-  const websocket = useWebSocket(socketUrl);
+  const { isConnected, ...websocket } = useWebSocket(socketUrl);
+
+  if (!isConnected) {
+    return <FuseLoading />; // Show loading indicator while connecting
+  }
+
   return <WebSocketContext.Provider value={websocket}>{children}</WebSocketContext.Provider>;
 };
