@@ -33,7 +33,7 @@ function RichlistContent() {
     <>
       <div className="container px-10 md:px-40 lg:px-60">
         <div className="py-20 flex justify-between items-center overflow-x-auto">
-          <Typography className="text-primary-70 w-40 sm:w-80 md:w-120 text-16 md:text-20">
+          <Typography className="text-primary-70 w-28 xs:w-40 sm:w-80 md:w-120 text-16 md:text-20">
             No.
           </Typography>
           <Typography className="text-primary-70 flex flex-1 text-16 md:text-20">
@@ -44,14 +44,14 @@ function RichlistContent() {
         <div className="flex flex-col gap-16">
           {richlist?.map((item, key) => (
             <div className="flex border-b-2 pb-8 border-gray-60" key={key}>
-              <Typography className="w-40 sm:w-80 md:w-120 text-white text-16">
+              <Typography className="w-28 xs:w-40 sm:w-80 md:w-120 text-white text-14 xs:text-16">
                 {item[0]}
               </Typography>
               <AddressLink
                 className="flex flex-1 text-primary-40"
                 value={isSp ? formatEllipsis(item[1]) : item[1]}
               />
-              <Typography className="text-primary-20 font-mont text-16">
+              <Typography className="text-primary-20 font-space text-14 xs:text-16">
                 {formatString(item[2])}
               </Typography>
             </div>

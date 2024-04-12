@@ -760,7 +760,8 @@ module.exports = {
     },
     fontFamily: {
       mont: ['Montserrat', 'sans-serif'],
-      space: ['Space Grotesk', 'sans-serif'],
+      space: ['Space Mono', 'monospace'],
+
       sans: [
         'Inter var',
         'Roboto',
