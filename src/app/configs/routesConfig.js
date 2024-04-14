@@ -4,14 +4,15 @@ import { Navigate } from 'react-router-dom';
 import settingsConfig from 'app/configs/settingsConfig';
 import Error404Config from '../pages/404/Error404Config';
 import RichlistConfig from '../pages/richlist/RichlistConfig';
+import ExplorerConfig from '../pages/explorer/ExplorerConfig';
 
-const routeConfigs = [RichlistConfig, Error404Config];
+const routeConfigs = [ExplorerConfig, RichlistConfig, Error404Config];
 
 const routes = [
   ...FuseUtils.generateRoutesFromConfigs(routeConfigs, settingsConfig.defaultAuth),
   {
     path: '/',
-    element: <Navigate to="/richlist" />,
+    element: <Navigate to="/explorer" />,
     auth: settingsConfig.defaultAuth,
   },
   {

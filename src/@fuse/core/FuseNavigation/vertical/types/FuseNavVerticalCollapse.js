@@ -74,7 +74,7 @@ function FuseNavVerticalCollapse(props) {
       }
     }
     // eslint-disable-next-line
-	}, [location, props.item]);
+  }, [location, props.item]);
 
   return useMemo(
     () => (
@@ -144,7 +144,11 @@ function FuseNavVerticalCollapse(props) {
       item.icon,
       item.iconClass,
       item.title,
+      item.subtitle,
       item.url,
+      item.disabled,
+      item.end,
+      item.sx,
       itempadding,
       nestedLevel,
       onItemClick,

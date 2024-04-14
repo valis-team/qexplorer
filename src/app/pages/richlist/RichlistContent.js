@@ -3,22 +3,21 @@ import { useEffect } from 'react';
 import { useSocket } from 'src/app/context/SocketContext';
 import { useParams } from 'react-router-dom';
 import { formatEllipsis, formatString } from 'src/app/utils/function';
-import AddressLink from 'src/app/components/AddressLink/AddressLink';
+import AddressLink from 'src/app/pages/components/AddressLink/AddressLink';
 
 function RichlistContent() {
-  const { richlist, loading } = useSocket();
-  const socket = useSocket();
+  const { richlist, loading, sendMessage } = useSocket();
   const { token } = useParams();
 
   const isSp = useMediaQuery('(max-width:1024px)');
 
   useEffect(() => {
     if (token === 'QU') {
-      socket.sendMessage('richlist');
+      sendMessage('richlist');
     } else {
-      socket.sendMessage(`richlist.${token}`);
+      sendMessage(`richlist.${token}`);
     }
-  }, [token]);
+  }, [token, sendMessage]);
 
   if (loading) {
     return (
@@ -27,7 +26,6 @@ function RichlistContent() {
       </div>
     );
   }
-  console.log(loading);
 
   return (
     <>

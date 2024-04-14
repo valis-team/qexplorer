@@ -7,7 +7,7 @@ import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { selectFuseCurrentLayoutConfig, selectToolbarTheme } from 'app/store/fuse/settingsSlice';
 import Logo from 'app/theme-layouts/shared-components/Logo';
-import SearchBar from 'src/app/components/SearchBar/SearchBar';
+import SearchBar from 'src/app/pages/components/SearchBar/SearchBar';
 import FullScreenToggle from '../../shared-components/FullScreenToggle';
 import SettingButton from '../../shared-components/SettingButton';
 import NavigationSearch from '../../shared-components/NavigationSearch';

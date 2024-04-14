@@ -13,7 +13,7 @@ const navigationConfig = [
     title: 'Overview',
     type: 'item',
     icon: 'heroicons-outline:home',
-    url: 'overview',
+    url: 'explorer',
   },
   {
     id: 'richlist',

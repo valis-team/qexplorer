@@ -8,7 +8,7 @@ function BrowserRouter({ basename, children, window }) {
     location: history.location,
   });
 
-  useLayoutEffect(() => history.listen(setState), [history]);
+  useLayoutEffect(() => history.listen(setState), []);
 
   return (
     <Router

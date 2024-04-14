@@ -4,13 +4,12 @@ import { Link, useParams } from 'react-router-dom';
 import { useSocket } from 'src/app/context/SocketContext';
 
 const RichlistHeader = () => {
-  const { tokens } = useSocket();
+  const { tokens, sendMessage } = useSocket();
   const { token } = useParams();
-  const socket = useSocket();
 
   useEffect(() => {
-    socket.sendMessage('tokenlist');
-  }, []);
+    sendMessage('tokenlist');
+  }, [sendMessage]);
 
   return (
     <div className="pb-12 pt-32 px-10 md:px-40 lg:px-60">
