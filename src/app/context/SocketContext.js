@@ -13,6 +13,7 @@ export const useSocket = () => {
 
 const useWebSocket = (socketUrl) => {
   const [marketcap, setMarketcap] = useState({});
+  const [emptyticks, setEmptyticks] = useState({});
   const [tokens, setTokens] = useState([]);
   const [richlist, setRichList] = useState([]);
   const [websocket, setWebsocket] = useState(null);
@@ -34,6 +35,8 @@ const useWebSocket = (socketUrl) => {
           setTokens(data.tokens);
         } else if (data.marketcap) {
           setMarketcap(data);
+        } else if (data.emptyticks) {
+          setEmptyticks(data);
         }
         setLoading(false);
       } catch (error) {
@@ -78,7 +81,7 @@ const useWebSocket = (socketUrl) => {
     [websocket, isConnected]
   );
 
-  return { tokens, richlist, marketcap, sendMessage, isConnected, loading };
+  return { marketcap, emptyticks, tokens, richlist, sendMessage, isConnected, loading };
 };
 
 export const SocketProvider = ({ children, socketUrl }) => {
