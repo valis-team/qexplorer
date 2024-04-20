@@ -21,7 +21,7 @@ wss.on('connection', function connection(ws) {
     console.log(`Received from a client: ${message}`);
     // Relay the message to the live external WebSocket server
     if (liveSocket.readyState === WebSocket.OPEN) {
-      liveSocket.send(message);
+      liveSocket.send(`${message}`);
     } else {
       console.log('LiveSocket connection is not open');
     }
@@ -49,7 +49,7 @@ liveSocket.on('message', (data) => {
   // Broadcast to all connected clients
   wss.clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
-      client.send(data);
+      client.send(`${data}`);
     }
   });
 });

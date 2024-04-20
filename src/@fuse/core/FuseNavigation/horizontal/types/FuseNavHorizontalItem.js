@@ -14,8 +14,10 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
   textDecoration: 'none!important',
   minHeight: 48,
   '&.active': {
-    color: `${theme.palette.common.white}`,
+    color: '#EBF0F5',
     pointerEvents: 'none',
+    borderBottom: '2px solid',
+    borderColor: '#EBF0F5',
     '& .fuse-list-item-text-primary': {
       color: 'inherit',
     },

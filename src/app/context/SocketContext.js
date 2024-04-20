@@ -14,8 +14,10 @@ export const useSocket = () => {
 const useWebSocket = (socketUrl) => {
   const [marketcap, setMarketcap] = useState({});
   const [emptyticks, setEmptyticks] = useState({});
+  const [recenttx, setRecenttx] = useState({});
   const [tokens, setTokens] = useState([]);
   const [richlist, setRichList] = useState([]);
+  const [address, setAddress] = useState({});
   const [websocket, setWebsocket] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const [loading, setLoading] = useState(false); // Added loading state
@@ -29,6 +31,7 @@ const useWebSocket = (socketUrl) => {
     const onMessage = (event) => {
       try {
         const data = JSON.parse(event.data);
+        // console.log('socket data ----->', data, socketUrl);
         if (data.richlist && data.name) {
           setRichList(data.richlist);
         } else if (data.tokens) {
@@ -37,7 +40,14 @@ const useWebSocket = (socketUrl) => {
           setMarketcap(data);
         } else if (data.emptyticks) {
           setEmptyticks(data);
+        } else if (data.recenttx) {
+          setRecenttx(data);
+        } else if (data.recenttx) {
+          setRecenttx(data);
+        } else if (data.address) {
+          setAddress(data);
         }
+
         setLoading(false);
       } catch (error) {
         console.log(event.data);
@@ -81,7 +91,17 @@ const useWebSocket = (socketUrl) => {
     [websocket, isConnected]
   );
 
-  return { marketcap, emptyticks, tokens, richlist, sendMessage, isConnected, loading };
+  return {
+    marketcap,
+    emptyticks,
+    recenttx,
+    tokens,
+    richlist,
+    sendMessage,
+    isConnected,
+    loading,
+    address,
+  };
 };
 
 export const SocketProvider = ({ children, socketUrl }) => {

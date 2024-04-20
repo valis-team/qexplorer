@@ -22,8 +22,8 @@ const themesConfig = {
       },
       primary: {
         light: '#64748b',
-        main: '#1e293b',
-        dark: '#0f172a',
+        main: '#2D4357',
+        dark: '#2D4357',
         contrastText: darkPaletteText.primary,
       },
       secondary: {
@@ -68,8 +68,9 @@ const themesConfig = {
         contrastText: darkPaletteText.primary,
       },
       background: {
-        paper: '#1e293b',
-        default: '#111827',
+        paper: '#2D4357',
+        default: '#192B3B',
+        celestial: '#2C91DE',
       },
       error: {
         light: '#ffcdd2',

@@ -12,28 +12,30 @@ const RichlistHeader = () => {
   }, [sendMessage]);
 
   return (
-    <div className="pb-12 pt-32 px-10 md:px-40 lg:px-60">
-      <Typography className="text-24 text-white font-mont">Rich List</Typography>
-      <div className="mt-12 flex flex-wrap gap-12 ">
+    <div className="flex w-full justify-between pb-12 pt-32 px-10 md:px-40 lg:px-60">
+      <Typography className="text-24 text-bold text-white font-urb">Rich List</Typography>
+      <div className="mt-4 flex gap-12 flex-wrap">
         <Typography
-          className={`px-16 py-8 rounded-full ${
-            token === 'QU' ? 'bg-gray-60 text-white' : 'bg-gray-70 text-primary-40'
+          className={`px-16 py-8 rounded-t-8 ${
+            token === 'QU' ? 'border-b-2 text-bold text-white' : 'text-main-50'
           }`}
           role="button"
           component={Link}
           to="/richlist/QU"
+          style={{ borderColor: '#d2e0fc80' }}
         >
           QU
         </Typography>
         {tokens?.map((item, key) => (
           <Typography
             key={key}
-            className={`px-16 py-8 rounded-full ${
-              token === item ? 'bg-gray-60 text-white' : 'bg-gray-70 text-primary-40'
+            className={`px-16 py-8 rounded-t-8 ${
+              token === item ? 'border-b-2 text-bold text-white' : 'text-main-50'
             }`}
             role="button"
             component={Link}
             to={`/richlist/${item}`}
+            style={{ borderColor: '#d2e0fc80' }}
           >
             {item}
           </Typography>

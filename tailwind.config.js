@@ -21,6 +21,32 @@ module.exports = {
       transparent: 'transparent',
       black: '#22292F',
       white: '#fff',
+      main: {
+        30: '#ABB8C3',
+        40: '#8596A5',
+        50: '#63788A',
+        80: '#2D4357',
+        100: '#192B3B',
+      },
+      celestial: {
+        10: '#2d91de1a',
+        20: '#2c91de33',
+        30: '#2c91de4d',
+        100: '#2C91DE',
+      },
+      hawkes: {
+        30: '#d2e0fc4d',
+        50: '#d2e0fc80',
+        100: '#D2E0FC',
+      },
+      baby: {
+        100: '#B4CCF9',
+      },
+      moonstone: {
+        10: '#879fcb1a',
+        20: '#879fcb33',
+        100: '#879FCB',
+      },
       primary: {
         20: '#CCFCFF',
         30: '#B6E0FF',
@@ -761,6 +787,7 @@ module.exports = {
     fontFamily: {
       mont: ['Montserrat', 'sans-serif'],
       space: ['Space Mono', 'monospace'],
+      urb: ['Urbanist', 'sans-serif'],
 
       sans: [
         'Inter var',

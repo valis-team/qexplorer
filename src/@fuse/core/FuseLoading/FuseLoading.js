@@ -1,8 +1,6 @@
 import { useTimeout } from '@fuse/hooks';
-import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import clsx from 'clsx';
 import Box from '@mui/material/Box';
 
 function FuseLoading(props) {
@@ -13,15 +11,10 @@ function FuseLoading(props) {
   }, props.delay);
 
   return (
-    <div
-      className={clsx(
-        'flex flex-1 flex-col items-center justify-center p-24',
-        !showLoading && 'hidden'
-      )}
-    >
-      <Typography className="text-13 sm:text-20 font-medium -mb-16" color="text.secondary">
-        Loading
-      </Typography>
+    <div id="fuse-splash-screen">
+      <div className="logo">
+        <img width="128" src="assets/images/logo/logo.png" alt="logo" />
+      </div>
       <Box
         id="spinner"
         sx={{

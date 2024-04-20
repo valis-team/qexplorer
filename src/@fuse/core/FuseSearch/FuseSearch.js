@@ -13,6 +13,7 @@ import match from 'autosuggest-highlight/match';
 import parse from 'autosuggest-highlight/parse';
 import clsx from 'clsx';
 import _ from '@lodash';
+import SearchBar from 'src/app/pages/components/SearchBar/SearchBar';
 import { memo, useEffect, useReducer, useRef } from 'react';
 import Autosuggest from 'react-autosuggest';
 import withRouter from '@fuse/core/withRouter';
@@ -366,48 +367,8 @@ function FuseSearch(props) {
           {state.opened && (
             <ClickAwayListener onClickAway={handleClickAway}>
               <Paper className="absolute left-0 right-0 top-0 h-full z-9999 shadow-0" square>
-                <div className="flex items-center w-full h-full" ref={popperNode}>
-                  <Autosuggest
-                    {...autosuggestProps}
-                    inputProps={{
-                      placeholder: props.placeholder,
-                      value: state.searchText,
-                      onChange: handleChange,
-                      InputLabelProps: {
-                        shrink: true,
-                      },
-                      autoFocus: true,
-                    }}
-                    theme={{
-                      container: 'flex flex-1 w-full',
-                      suggestionsList: 'FuseSearch-suggestionsList',
-                      suggestion: 'FuseSearch-suggestion',
-                    }}
-                    renderSuggestionsContainer={(options) => (
-                      <Popper
-                        anchorEl={popperNode.current}
-                        open={Boolean(options.children) || state.noSuggestions}
-                        popperOptions={{ positionFixed: true }}
-                        className="z-9999"
-                      >
-                        <div ref={suggestionsNode}>
-                          <Paper
-                            className="shadow-lg"
-                            square
-                            {...options.containerProps}
-                            style={{
-                              width: popperNode.current ? popperNode.current.clientWidth : null,
-                            }}
-                          >
-                            {options.children}
-                            {state.noSuggestions && (
-                              <Typography className="px-16 py-12">{props.noResults}</Typography>
-                            )}
-                          </Paper>
-                        </div>
-                      </Popper>
-                    )}
-                  />
+                <div className="flex items-center pl-8 w-full h-full" ref={popperNode}>
+                  <SearchBar />
                   <IconButton onClick={hideSearch} className="mx-8" size="large">
                     <FuseSvgIcon>heroicons-outline:x</FuseSvgIcon>
                   </IconButton>

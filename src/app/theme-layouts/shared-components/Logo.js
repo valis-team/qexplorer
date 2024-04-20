@@ -1,4 +1,5 @@
 import { styled } from '@mui/material/styles';
+import { Link } from 'react-router-dom';
 
 const Root = styled('div')(({ theme }) => ({
   '& > .logo-icon': {
@@ -18,7 +19,9 @@ const Root = styled('div')(({ theme }) => ({
 function Logo() {
   return (
     <Root className="flex items-center">
-      <img className="logo-icon w-32 h-32" src="assets/images/logo/logo.svg" alt="logo" />
+      <Link to="/">
+        <img className="logo-icon h-28 md:h-32" src="assets/images/logo/logo.png" alt="logo" />
+      </Link>
     </Root>
   );
 }
