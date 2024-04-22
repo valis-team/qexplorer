@@ -48,6 +48,10 @@ html, body {
     flex: 1 1 auto;
 }
 
+a {
+    text-decoration: none !important;
+}
+
 #root {
     display: flex;
     flex: 1 1 auto;

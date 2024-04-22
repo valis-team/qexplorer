@@ -18,6 +18,8 @@ const useWebSocket = (socketUrl) => {
   const [tokens, setTokens] = useState([]);
   const [richlist, setRichList] = useState([]);
   const [address, setAddress] = useState({});
+  const [tick, setTick] = useState({});
+  const [tx, setTx] = useState({});
   const [websocket, setWebsocket] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const [loading, setLoading] = useState(false); // Added loading state
@@ -31,7 +33,6 @@ const useWebSocket = (socketUrl) => {
     const onMessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        // console.log('socket data ----->', data, socketUrl);
         if (data.richlist && data.name) {
           setRichList(data.richlist);
         } else if (data.tokens) {
@@ -46,6 +47,10 @@ const useWebSocket = (socketUrl) => {
           setRecenttx(data);
         } else if (data.address) {
           setAddress(data);
+        } else if (data.tick) {
+          setTick(data);
+        } else if (data.txid !== undefined && data.tick === 0) {
+          setTx(data);
         }
 
         setLoading(false);
@@ -101,6 +106,8 @@ const useWebSocket = (socketUrl) => {
     isConnected,
     loading,
     address,
+    tick,
+    tx,
   };
 };
 

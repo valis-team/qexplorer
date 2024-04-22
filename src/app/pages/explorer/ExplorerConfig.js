@@ -1,6 +1,8 @@
 import ExplorerPage from './ExplorerPage';
 import OverviewPage from './overview/OverviewPage';
 import TickPage from './tick/TickPage';
+import AddressPage from './address/AddressPage';
+import TransactionPage from './transaction/TransactionPage';
 
 const ExplorerConfig = {
   settings: {
@@ -16,6 +18,14 @@ const ExplorerConfig = {
         {
           path: 'tick/:tick',
           element: <TickPage />,
+        },
+        {
+          path: 'address/:address',
+          element: <AddressPage />,
+        },
+        {
+          path: 'tx/:tx',
+          element: <TransactionPage />,
         },
         {
           path: '',

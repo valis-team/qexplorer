@@ -23,18 +23,31 @@ const formatDate = (dateString) => {
   return '';
 };
 
-function formatEllipsis(str) {
+function formatEllipsis(str, letter = 4) {
   if (str) {
     if (str.length > 10) {
-      return `${str.substr(0, 4)}...${str.substr(-4)}`;
+      return `${str.substr(0, letter)} ... ${str.substr(-letter)}`;
     }
     return str;
   }
   return '';
 }
 
+function copyText(textToCopy) {
+  if (navigator.clipboard) {
+    navigator.clipboard
+      .writeText(`${textToCopy}`.trim())
+      .then(() => {
+        console.log('Text copied to clipboard');
+      })
+      .catch((err) => {
+        console.error('Unable to copy text to clipboard:', err);
+      });
+  }
+}
+
 // const getAddress = (add) => {
 //   const { marketcap, emptyticks, recenttx, loading, sendMessage } = useSocket();
 // }
 
-export { formatString, formatDate, formatEllipsis };
+export { formatString, formatDate, formatEllipsis, copyText };
