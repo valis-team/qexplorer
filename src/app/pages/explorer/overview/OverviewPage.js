@@ -111,10 +111,10 @@ function OverviewPage() {
                         scope="row"
                         className="border-b-main-80 text-celestial-100"
                       >
-                        <TransactionText tx={row.tx} letter={8} copy link />
+                        <TransactionText className="text-16" tx={row.tx} letter={8} copy link />
                       </TableCell>
                       <TableCell className="border-b-main-80 text-celestial-100">
-                        <TickText tick={row.tick} className="text-white" copy link />
+                        <TickText tick={row.tick} className="text-white text-16" copy link />
                       </TableCell>
                       <TableCell className="border-b-main-80 text-celestial-100">
                         <AddressText address={row.source} letter={8} copy link />

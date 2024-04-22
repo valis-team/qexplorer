@@ -14,7 +14,7 @@ const TickText = (props) => {
   return (
     <Box className="flex gap-3 items-start">
       <Link to={link ? `/explorer/tick/${tick}` : ''} className="no-underline text-transparent">
-        <Typography className={`font-urb ${className}`}>
+        <Typography className={`font-space ${className}`}>
           {' '}
           {format ? formatString(tick) : tick}
         </Typography>

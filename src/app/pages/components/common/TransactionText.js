@@ -13,7 +13,7 @@ const TransactionText = (props) => {
   return (
     <Box className="flex gap-3 items-start">
       <Link to={link ? `/explorer/tx/${tx}` : ''}>
-        <Typography className={`text-hawkes-100 text-14 font-urb ${className}`}>
+        <Typography className={`text-hawkes-100 font-space ${className}`}>
           {letter ? formatEllipsis(tx, letter) : tx}
         </Typography>
       </Link>

@@ -13,7 +13,7 @@ const AddressText = (props) => {
   return (
     <Box className="flex gap-3 items-start">
       <Link to={link ? `/explorer/address/${address}` : ''}>
-        <Typography className={`text-hawkes-100 font-urb ${className}`}>
+        <Typography className={`text-hawkes-100 font-space ${className}`}>
           {letter ? formatEllipsis(address, letter) : address}
         </Typography>
       </Link>

@@ -44,7 +44,7 @@ const TransactionBox = (props) => {
             <TransactionText
               tx={props?.txid}
               letter={isMobile ? 10 : null}
-              className="text-18"
+              className="text-16"
               copy
               link
             />

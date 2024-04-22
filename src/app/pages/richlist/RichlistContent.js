@@ -2,8 +2,8 @@ import { LinearProgress, Typography, useMediaQuery } from '@mui/material';
 import { useEffect } from 'react';
 import { useSocket } from 'src/app/context/SocketContext';
 import { useParams } from 'react-router-dom';
-import { formatEllipsis, formatString } from 'src/app/utils/function';
-import AddressLink from 'src/app/pages/components/AddressLink/AddressLink';
+import { formatString } from 'src/app/utils/function';
+import AddressText from '../components/common/AddressText';
 
 function RichlistContent() {
   const { richlist, loading, sendMessage } = useSocket();
@@ -46,10 +46,14 @@ function RichlistContent() {
                 <Typography className="w-28 xs:w-40 sm:w-80 md:w-120 text-hawkes-100 text-14 xs:text-16">
                   {item[0]}
                 </Typography>
-                <AddressLink
-                  className="flex flex-1 text-hawkes-100"
-                  value={isSp ? formatEllipsis(item[1]) : item[1]}
-                />
+                <div className="flex flex-1">
+                  <AddressText
+                    className="text-14"
+                    address={item[1]}
+                    letter={isSp ? 5 : null}
+                    link
+                  />
+                </div>
                 <Typography className="text-hawkes-100 font-space text-14 xs:text-16">
                   {formatString(item[2])}
                 </Typography>
