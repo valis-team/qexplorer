@@ -1,11 +1,16 @@
 import { Link } from 'react-router-dom';
 import { Box, Typography } from '@mui/material';
 import { formatString, copyText } from 'src/app/utils/function';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const TickText = (props) => {
   const { tick, copy, className, format, link } = props;
   const [isCopy, setIsCopy] = useState(false);
+  useEffect(() => {
+    if (isCopy) {
+      setTimeout(() => setIsCopy(false), 1000);
+    }
+  }, [isCopy]);
   const handleCopy = () => {
     copyText(tick);
     setIsCopy(true);
@@ -22,9 +27,9 @@ const TickText = (props) => {
       {copy && (
         <button type="button" onClick={handleCopy}>
           {isCopy ? (
-            <img className="w-16 h-16 mb-4" src="assets/icons/ok_icon_light.svg" alt="" />
+            <img className="w-14 h-14 mb-4" src="assets/icons/ok_icon_light.svg" alt="" />
           ) : (
-            <img className="w-20 h-20 mb-4" src="assets/icons/copy_icon.svg" alt="" />
+            <img className="w-14 h-14 mb-4" src="assets/icons/copy_icon.svg" alt="" />
           )}
         </button>
       )}

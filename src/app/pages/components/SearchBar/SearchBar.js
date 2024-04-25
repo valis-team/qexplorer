@@ -6,25 +6,28 @@ import { useSocket } from 'src/app/context/SocketContext';
 
 const SearchBar = () => {
   const [keyword, setKeyword] = useState('');
+  const [searchAvailable, setSearchAvailable] = useState(false);
   const navigate = useNavigate();
   const { tx, tick, address, loading, sendMessage } = useSocket();
   const handleKeyPress = (event) => {
     if (event.key === 'Enter' && keyword !== '') {
       sendMessage(keyword);
+      setSearchAvailable(true);
     }
   };
   useEffect(() => {
-    if (Object.keys(address).length > 0 && address?.address === keyword) {
-      navigate(`/explorer/address/${keyword}`);
+    if (searchAvailable) {
+      if (Object.keys(address).length > 0 && address?.address === keyword) {
+        navigate(`/explorer/address/${keyword}`);
+      } else if (Object.keys(tick).length > 0 && +tick?.tick === +keyword) {
+        navigate(`/explorer/tick/${keyword}`);
+      } else if (Object.keys(tx).length > 0) {
+        navigate(`/explorer/tx/${keyword}`);
+      } else {
+        navigate(`/explorer`);
+      }
       setKeyword('');
-    }
-    if (Object.keys(tick).length > 0 && +tick?.tick === +keyword) {
-      navigate(`/explorer/tick/${keyword}`);
-      setKeyword('');
-    }
-    if (Object.keys(tx).length > 0 && +tx?.tick === 0) {
-      navigate(`/explorer/tx/${keyword}`);
-      setKeyword('');
+      setSearchAvailable(false);
     }
   }, [address, tick, tx]);
   return (

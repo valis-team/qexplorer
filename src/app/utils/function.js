@@ -34,20 +34,12 @@ function formatEllipsis(str, letter = 4) {
 }
 
 function copyText(textToCopy) {
-  if (navigator.clipboard) {
-    navigator.clipboard
-      .writeText(`${textToCopy}`.trim())
-      .then(() => {
-        console.log('Text copied to clipboard');
-      })
-      .catch((err) => {
-        console.error('Unable to copy text to clipboard:', err);
-      });
-  }
+  const input = document.createElement('input');
+  input.value = textToCopy;
+  document.body.appendChild(input);
+  input.select();
+  document.execCommand('copy');
+  document.body.removeChild(input);
 }
-
-// const getAddress = (add) => {
-//   const { marketcap, emptyticks, recenttx, loading, sendMessage } = useSocket();
-// }
 
 export { formatString, formatDate, formatEllipsis, copyText };

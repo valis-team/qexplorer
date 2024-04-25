@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Typography, Box } from '@mui/material';
@@ -9,8 +10,9 @@ import TickText from '../../components/common/TickText';
 
 function AddressPage() {
   const { address: addressParam } = useParams();
-  const { address, tick, loading, sendMessage } = useSocket();
+  const { address, loading, sendMessage } = useSocket();
   const [addressData, setAddressData] = useState();
+  console.log('addresspage -->', address);
   const [isMobile, setIsMobile] = useState(window.matchMedia('(max-width: 768px)').matches);
 
   useEffect(() => {
@@ -67,34 +69,46 @@ function AddressPage() {
             <div className="flex justify-between items-center w-full gap-36 py-3 border-b-1">
               <div className="flex w-60 items-center gap-4">
                 <img className="w-20 h-20" src="assets/icons/information-icon.svg" alt="icon" />
-                <Typography className="text-hawkes-100 text-18 font-urb">Balance</Typography>
+                <Typography className="text-hawkes-100 text-16 font-urb">Balance</Typography>
               </div>
-              <Typography className="text-white text-20 font-urb">
+              <Typography className="text-white text-16 bold font-urb">
                 {addressData?.balance || 0}
               </Typography>
             </div>
             <div className="flex justify-between items-center w-full gap-36 py-3 border-b-1">
               <div className="flex w-60 items-center gap-4">
                 <img className="w-20 h-20" src="assets/icons/information-icon.svg" alt="icon" />
-                <Typography className="text-hawkes-100 text-18 font-urb">Rank</Typography>
+                <Typography className="text-hawkes-100 text-16 font-urb">Rank</Typography>
               </div>
-              <Typography className="text-white text-20 font-urb">{addressData?.rank}</Typography>
+              <Typography className="text-white text-16 bold font-urb">
+                {addressData?.rank}
+              </Typography>
             </div>
             <div className="flex justify-between items-center w-full gap-36 py-3 border-b-1">
               <div className="flex w-60 items-center gap-4">
                 <img className="w-20 h-20" src="assets/icons/information-icon.svg" alt="icon" />
-                <Typography className="text-hawkes-100 text-18 font-urb">Tick</Typography>
+                <Typography className="text-hawkes-100 text-16 font-urb">Tick</Typography>
               </div>
-              <TickText tick={addressData?.tick} className="text-20 text-baby-100" link />
+              <TickText
+                tick={addressData?.tick}
+                className="text-16 bold text-baby-100"
+                link
+                copy={!isEmpty(addressData?.tick)}
+              />
             </div>
             <div className="flex justify-between items-center w-full gap-36 py-3 border-b-1">
               <div className="flex items-center gap-4">
                 <img className="w-20 h-20" src="assets/icons/information-icon.svg" alt="icon" />
-                <Typography className="text-hawkes-100 text-18 font-urb">Lastest In</Typography>
+                <Typography className="text-hawkes-100 text-16 font-urb">Lastest In</Typography>
               </div>
               <div className="flex flex-col gap-4 justify-end">
-                <TickText tick={addressData?.latestin} className="text-18 text-baby-100" link />
-                <Typography className="text-white text-18 font-urb text-right">
+                <TickText
+                  tick={addressData?.latestin}
+                  className="text-16 text-baby-100"
+                  link
+                  copy={!isEmpty(addressData?.latestin)}
+                />
+                <Typography className="text-white text-16 font-urb text-right">
                   {addressData?.numin}
                 </Typography>
               </div>
@@ -102,11 +116,16 @@ function AddressPage() {
             <div className="flex justify-between items-center w-full gap-36 py-3 border-b-1">
               <div className="flex items-center gap-4">
                 <img className="w-20 h-20" src="assets/icons/information-icon.svg" alt="icon" />
-                <Typography className="text-hawkes-100 text-18 font-urb">Lastest Out</Typography>
+                <Typography className="text-hawkes-100 text-16 font-urb">Lastest Out</Typography>
               </div>
               <div className="flex flex-col gap-4 justify-end">
-                <TickText tick={addressData?.latestout} className="text-18 text-baby-100" link />
-                <Typography className="text-white text-18 font-urb text-right">
+                <TickText
+                  tick={addressData?.latestout}
+                  className="text-16 text-baby-100"
+                  link
+                  copy={!isEmpty(addressData?.latestout)}
+                />
+                <Typography className="text-white text-16 font-urb text-right">
                   {addressData?.numout}
                 </Typography>
               </div>

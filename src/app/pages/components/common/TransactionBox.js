@@ -5,7 +5,6 @@ import AddressText from './AddressText';
 
 const TransactionBox = (props) => {
   const [isMobile, setIsMobile] = useState(window.matchMedia('(max-width: 768px)').matches);
-
   useEffect(() => {
     const mediaQuery = window.matchMedia('(max-width: 768px)');
     const handleChange = (event) => {

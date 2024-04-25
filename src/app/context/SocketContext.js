@@ -20,6 +20,7 @@ const useWebSocket = (socketUrl) => {
   const [address, setAddress] = useState({});
   const [tick, setTick] = useState({});
   const [tx, setTx] = useState({});
+  const [currentTick, setCurrentTick] = useState({});
   const [websocket, setWebsocket] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const [loading, setLoading] = useState(false); // Added loading state
@@ -35,6 +36,8 @@ const useWebSocket = (socketUrl) => {
         const data = JSON.parse(event.data);
         if (data.richlist && data.name) {
           setRichList(data.richlist);
+        } else if (data.command === 'CurrentTickInfo') {
+          setCurrentTick(data);
         } else if (data.tokens) {
           setTokens(data.tokens);
         } else if (data.marketcap) {
@@ -43,13 +46,11 @@ const useWebSocket = (socketUrl) => {
           setEmptyticks(data);
         } else if (data.recenttx) {
           setRecenttx(data);
-        } else if (data.recenttx) {
-          setRecenttx(data);
+        } else if (data.tick && data.spectrum) {
+          setTick(data);
         } else if (data.address) {
           setAddress(data);
-        } else if (data.tick) {
-          setTick(data);
-        } else if (data.txid !== undefined && data.tick === 0) {
+        } else if (data.command === 'txidrequest') {
           setTx(data);
         }
 
@@ -108,6 +109,7 @@ const useWebSocket = (socketUrl) => {
     address,
     tick,
     tx,
+    currentTick,
   };
 };
 

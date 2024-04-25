@@ -31,7 +31,7 @@ function RichlistContent() {
     <>
       <div className="container px-10 md:px-40 lg:px-60">
         <div className="flex w-full border-1 border-main-50 flex-col p-12">
-          <div className="p-10 flex justify-between items-center bg-main-80">
+          <div className="p-10 flex justify-between items-center bg-celestial-10">
             <Typography className="text-moonstone-100 w-28 xs:w-40 sm:w-80 md:w-120 text-12 md:text-16">
               No
             </Typography>

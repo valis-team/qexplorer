@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Typography, Box } from '@mui/material';
@@ -5,6 +6,7 @@ import { useSocket } from 'src/app/context/SocketContext';
 import LinearProgress from '../../components/common/LinearProgress';
 import CardItem from '../../components/CardItem/CardItem';
 import TransactionText from '../../components/common/TransactionText';
+import AddressText from '../../components/common/AddressText';
 
 function TransactionPage() {
   const { tx: txParam } = useParams();
@@ -33,11 +35,10 @@ function TransactionPage() {
   }, [txParam]);
 
   useEffect(() => {
-    if (+tx?.tick === 0) {
+    if (Object.keys(tx).length > 0) {
       setTxData(tx);
     }
   }, [tx]);
-
   if (loading) {
     return <LinearProgress />;
   }
@@ -54,40 +55,54 @@ function TransactionPage() {
               src="assets/icons/transaction_mark.svg"
               alt="icon"
             />
-            <TransactionText tx={txParam} letter={isMobile ? 10 : null} className="text-18" />
+            <TransactionText tx={txParam} letter={isMobile ? 10 : null} className="text-16" />
           </div>
         </div>
         <div className="flex justify-center">
-          <CardItem className="flex flex-col w-full md:w-1/2 py-8 sm:py-12 px-4 sm:px-16 gap-5 md:gap-10 items-center bg-celestial-10">
+          <CardItem className="flex flex-col w-full md:w-2/3 py-8 sm:py-12 px-8 sm:px-16 gap-5 md:gap-10 items-center bg-celestial-10">
             <div className="flex justify-between items-center w-full gap-36 py-3 border-b-1">
               <div className="flex w-60 items-center gap-4">
                 <img className="w-20 h-20" src="assets/icons/information-icon.svg" alt="icon" />
-                <Typography className="text-hawkes-100 text-18 font-urb">Amount</Typography>
+                <Typography className="text-hawkes-100 text-16 font-urb">Amount</Typography>
               </div>
-              <Typography className="text-white text-20 font-urb">{txData?.amount || 0}</Typography>
+              <Typography className="text-white text-16 bold font-urb">
+                {txData?.amount || 0}
+              </Typography>
             </div>
             <div className="flex justify-between items-center w-full gap-36 py-3 border-b-1">
               <div className="flex w-60 items-center gap-4">
                 <img className="w-20 h-20" src="assets/icons/information-icon.svg" alt="icon" />
-                <Typography className="text-hawkes-100 text-18 font-urb">Type</Typography>
+                <Typography className="text-hawkes-100 text-16 font-urb">Type</Typography>
               </div>
-              <Typography className="text-white text-20 font-urb">
+              <Typography className="text-white text-16 bold font-urb">
                 {txData?.type} Standard
               </Typography>
             </div>
             <div className="flex justify-between items-center w-full gap-36 py-3 border-b-1">
               <div className="flex w-60 items-center gap-4">
                 <img className="w-20 h-20" src="assets/icons/information-icon.svg" alt="icon" />
-                <Typography className="text-hawkes-100 text-18 font-urb">From</Typography>
+                <Typography className="text-hawkes-100 text-16 font-urb">From</Typography>
               </div>
-              <Typography className="text-white text-20 font-urb">{txData?.src}</Typography>
+              <AddressText
+                address={txData?.src}
+                className="text-white text-16"
+                letter={isMobile ? 5 : null}
+                link
+                copy={!isEmpty(txData?.src)}
+              />
             </div>
             <div className="flex justify-between items-center w-full gap-36 py-3 border-b-1">
               <div className="flex w-60 items-center gap-4">
                 <img className="w-20 h-20" src="assets/icons/information-icon.svg" alt="icon" />
-                <Typography className="text-hawkes-100 text-18 font-urb">To</Typography>
+                <Typography className="text-hawkes-100 text-16 font-urb">To</Typography>
               </div>
-              <Typography className="text-white text-20 font-urb">{txData?.dest}</Typography>
+              <AddressText
+                address={txData?.dest}
+                className="text-white text-16"
+                letter={isMobile ? 5 : null}
+                link
+                copy={!isEmpty(txData?.src)}
+              />
             </div>
           </CardItem>
         </div>
