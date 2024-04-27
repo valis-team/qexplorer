@@ -8,7 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useSocket } from 'src/app/context/SocketContext';
-import { formatString } from 'src/app/utils/function';
+import { formatString, getStandardTime } from 'src/app/utils/function';
 import CardItem from '../../components/CardItem/CardItem';
 import TransactionText from '../../components/common/TransactionText';
 import TickText from '../../components/common/TickText';
@@ -96,7 +96,7 @@ function OverviewPage() {
           <div className="w-full md:w-1/3 flex flex-col gap-5 md:gap-">
             <CardItem className="flex flex-col gap-10 p-8 md:p-20">
               <Typography className="text-24 md:text-32 font-urb text-hawkes-100">
-                Ticks{' '}
+                Empty Ticks{' '}
                 <sapn className="text-20">{`(${emptyticks.begintick} - ${emptyticks.endtick})`}</sapn>
               </Typography>
               <div className="flex gap-6 flex-wrap">
@@ -120,7 +120,7 @@ function OverviewPage() {
                       Current Tick #
                     </Typography>
                     <TickText
-                      className={`text-14 text-hawkes-50 transition-all duration-500 ease-in-out ${
+                      className={`text-18 text-hawkes-100 transition-all duration-500 ease-in-out ${
                         loadCurrentT ? 'opacity-70' : 'opacity-100'
                       }`}
                       tick={`${currentT.tick}`}
@@ -128,11 +128,11 @@ function OverviewPage() {
                     />
                   </div>
                   <Typography
-                    className={`font-space text-16 md:text-20 text-hawkes-100 ${
+                    className={`font-space text-14 text-hawkes-50 ${
                       loadCurrentT ? 'opacity-70' : 'opacity-100'
                     }`}
                   >
-                    {currentT.utc}
+                    {getStandardTime(currentT.utc)}
                   </Typography>
                 </div>
               </CardItem>
@@ -147,7 +147,7 @@ function OverviewPage() {
                 <Autocomplete
                   disablePortal
                   defaultValue={{ value: 0, label: 'QU' }}
-                  options={(tokens || []).map((token, key) => ({
+                  options={['QU', ...(tokens || [])].map((token, key) => ({
                     value: key,
                     label: token,
                   }))}

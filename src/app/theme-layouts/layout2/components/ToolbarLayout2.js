@@ -46,18 +46,18 @@ function ToolbarLayout2(props) {
                 <Typography>{marketcap?.marketcap}</Typography>
               </div>
             </div>
-            <div className="">
+            <div className="w-1/2">
+              <Hidden mdDown>
+                <SearchBar />
+              </Hidden>
+            </div>
+            <div className="flex items-center">
               <img className="w-16 h-16" src="assets/icons/setting.svg" alt="icon" />
             </div>
           </div>
           <div className="flex justify-between gap-40 items-center w-full">
-            <div className="flex w-1/2 justify-between">
+            <div>
               <Logo />
-              <Hidden mdDown>
-                <FuseScrollbars className="flex h-full items-center">
-                  <Navigation className="w-full" layout="horizontal" />
-                </FuseScrollbars>
-              </Hidden>
             </div>
             <div className="flex w-1/2 items-center justify-end">
               {config.navbar.display && (
@@ -67,7 +67,9 @@ function ToolbarLayout2(props) {
                 </Hidden>
               )}
               <Hidden mdDown>
-                <SearchBar />
+                <FuseScrollbars className="flex h-full items-center">
+                  <Navigation className="w-full" layout="horizontal" />
+                </FuseScrollbars>
               </Hidden>
             </div>
           </div>

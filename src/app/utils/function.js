@@ -42,4 +42,24 @@ function copyText(textToCopy) {
   document.body.removeChild(input);
 }
 
-export { formatString, formatDate, formatEllipsis, copyText };
+function getStandardTime(utcTimestamp) {
+  // Create a Date object with the UTC timestamp
+  const utcDate = new Date(utcTimestamp * 1000); // Multiply by 1000 to convert seconds to milliseconds
+
+  // Get local time zone offset in minutes
+  const localTimeZoneOffsetMinutes = utcDate.getTimezoneOffset();
+
+  // Convert local time zone offset to milliseconds
+  const localTimeZoneOffsetMilliseconds = localTimeZoneOffsetMinutes * 60 * 1000;
+
+  // Convert UTC timestamp to local timestamp
+  const localTimestamp = utcTimestamp + localTimeZoneOffsetMilliseconds / 1000;
+
+  // Create a Date object with the local timestamp
+  const localDate = new Date(localTimestamp * 1000);
+
+  // Return standard time as a string
+  return localDate.toLocaleString();
+}
+
+export { formatString, formatDate, formatEllipsis, copyText, getStandardTime };
