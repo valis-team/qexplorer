@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom';
 import {
   Typography,
   Box,
-  Tooltip,
   TableContainer,
   Table,
   TableHead,
@@ -16,8 +15,7 @@ import { useSocket } from 'src/app/context/SocketContext';
 import LinearProgress from '../../components/common/LinearProgress';
 import CardItem from '../../components/CardItem/CardItem';
 import AddressText from '../../components/common/AddressText';
-import TickText from '../../components/common/TickText';
-import TransactionText from '../../components/common/TransactionText';
+import AddressTableRow from '../../components/AddressTableRow';
 
 function AddressPage() {
   const { address: addressParam } = useParams();
@@ -147,91 +145,23 @@ function AddressPage() {
             <Table stickyHeader sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead className="bg-celestial-20">
                 <TableRow>
+                  <TableCell className="border-b-main-80" />
                   <TableCell className="border-b-main-80 text-white">Balance</TableCell>
                   <TableCell className="border-b-main-80 text-white">
-                    In <span className="text-12 text-hawkes-50">Tick | Balance</span>
+                    In <span className="text-12 text-hawkes-50">Count | Balance</span>
                   </TableCell>
                   <TableCell className="border-b-main-80 text-white">New In</TableCell>
                   <TableCell className="border-b-main-80 text-white">
-                    Out <span className="text-12 text-hawkes-50">Tick | Balance</span>
+                    Out <span className="text-12 text-hawkes-50">Count | Balance</span>
                   </TableCell>
                   <TableCell className="border-b-main-80 text-white">New Out</TableCell>
                   <TableCell className="border-b-main-80 text-white">Rank</TableCell>
                   <TableCell className="border-b-main-80 text-white">Tick</TableCell>
-                  <TableCell className="border-b-main-80 text-white">
-                    Tx IDs{' '}
-                    <span className="text-12 text-hawkes-50">Tick | Tx | Address | Balance</span>
-                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {(historyData.changes || []).map((row) => (
-                  <TableRow key={row.tx} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      className="border-b-main-80 text-celestial-100"
-                    >
-                      <Tooltip title={row.status}>
-                        <Typography className="text-blue-A100 text-14">{row.balance}</Typography>
-                      </Tooltip>
-                    </TableCell>
-                    <TableCell className="border-b-main-80 text-celestial-100">
-                      <div className="flex items-center gap-2">
-                        <TickText tick={row.in[1]} className="text-14 text-baby-100" link />
-                        <sapn className="text-hawkes-50 text-14">|</sapn>
-                        <Typography className="text-hawkes-50 text-14">{row.in[2]}</Typography>
-                      </div>
-                    </TableCell>
-                    <TableCell className="border-b-main-80 text-hawkes-100">
-                      {row.newin[1]}
-                    </TableCell>
-                    <TableCell className="border-b-main-80">
-                      <div className="flex items-center gap-2">
-                        <TickText tick={row.out[1]} className="text-14 text-baby-100" link />
-                        <sapn className="text-hawkes-50 text-14">|</sapn>
-                        <Typography className="text-hawkes-100 text-14">{row.out[2]}</Typography>
-                      </div>
-                    </TableCell>
-                    <TableCell className="border-b-main-80 text-hawkes-100">
-                      {row.newout[1]}
-                    </TableCell>
-                    <TableCell className="border-b-main-80 text-hawkes-100">{row.rank}</TableCell>
-                    <TableCell className="border-b-main-80">
-                      <TickText tick={row.tick} className="text-14 text-baby-100" link />
-                    </TableCell>
-                    <TableCell className="border-b-main-80" align="center">
-                      {(row.txids || []).length ? (
-                        <div className="flex flex-col gap-2">
-                          {(row.txids || []).map((item) => (
-                            <div className="flex items-center gap-2">
-                              <TickText tick={item[0]} className="text-14 text-baby-100" link />
-                              <sapn className="text-hawkes-50 text-14">|</sapn>
-                              <TransactionText
-                                tx={item[1]}
-                                className="text-14 text-baby-100"
-                                letter={3}
-                                link
-                              />
-                              <sapn className="text-hawkes-50 text-14">|</sapn>
-                              <AddressText
-                                address={item[2]}
-                                className="text-14 text-baby-100"
-                                letter={3}
-                                link
-                              />
-                              <sapn className="text-hawkes-50 text-14">|</sapn>
-                              <Typography className="text-hawkes-100 text-14">
-                                {item[4] || 0}
-                              </Typography>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <Typography className="text-hawkes-50 text-14">-</Typography>
-                      )}
-                    </TableCell>
-                  </TableRow>
+                  <AddressTableRow row={row} />
                 ))}
               </TableBody>
             </Table>
