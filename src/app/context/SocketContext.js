@@ -23,6 +23,7 @@ const useWebSocket = (socketUrl) => {
   const [currentTick, setCurrentTick] = useState({});
   const [websocket, setWebsocket] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
+  const [history, setHistory] = useState({});
   const [loading, setLoading] = useState(false); // Added loading state
   useEffect(() => {
     const ws = new WebSocket(socketUrl);
@@ -48,8 +49,10 @@ const useWebSocket = (socketUrl) => {
           setRecenttx(data);
         } else if (data.tick && data.spectrum) {
           setTick(data);
-        } else if (data.address) {
+        } else if (data.address && data.command === 'EntityInfo') {
           setAddress(data);
+        } else if (data.address && data.changes) {
+          setHistory(data);
         } else if (data.command === 'txidrequest') {
           setTx(data);
         }
@@ -110,6 +113,7 @@ const useWebSocket = (socketUrl) => {
     tick,
     tx,
     currentTick,
+    history,
   };
 };
 

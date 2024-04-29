@@ -62,4 +62,15 @@ function getStandardTime(utcTimestamp) {
   return localDate.toLocaleString();
 }
 
-export { formatString, formatDate, formatEllipsis, copyText, getStandardTime };
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+export {
+  formatString,
+  formatDate,
+  formatEllipsis,
+  copyText,
+  getStandardTime,
+  capitalizeFirstLetter,
+};

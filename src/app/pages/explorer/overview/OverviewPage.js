@@ -14,6 +14,7 @@ import TransactionText from '../../components/common/TransactionText';
 import TickText from '../../components/common/TickText';
 import AddressText from '../../components/common/AddressText';
 import TransactionBox from '../../components/common/TransactionBox';
+import Chart from '../../components/Chart';
 
 function OverviewPage() {
   const { marketcap, emptyticks, currentTick, recenttx, tokens, loading, sendMessage } =
@@ -48,16 +49,18 @@ function OverviewPage() {
       </div>
     );
   }
-  const rows = () => {
-    return (recenttx.recenttx || []).slice(0, 5);
-  };
   return (
     <>
       <div className="container px-12 py-24 md:px-24 flex flex-col gap-10">
-        <CardItem className="flex flex-col gap-10 p-16 md:p-32">
-          <Typography className="text-32 text-hawkes-100 text-bold font-urb">Overview</Typography>
-          <div className="flex gap-10 flex-wrap">
-            <CardItem className="flex py-8 sm:py-12 px-12 sm:px-16 gap-10 items-center w-[255px] bg-celestial-10">
+        <CardItem className="flex gap-10 p-16 md:p-24 flex-wrap justify-center md:justify-between">
+          <div className="flex flex-col gap-10 justify-center">
+            <Typography className="text-32 text-hawkes-100 text-bold font-urb">Overview</Typography>
+            <div className="flex w-full justify-center ml-0 lg:ml-40">
+              <Chart />
+            </div>
+          </div>
+          <div className="flex flex-col md:flex-row lg:flex-col gap-3 flex-wrap justify-center md:justify-start">
+            <CardItem className="flex py-8 sm:py-12 px-12 sm:px-16 gap-10 items-center w-[310px] bg-celestial-10">
               <img className="w-40 h-40" src="assets/icons/mainbrand.svg" alt="icon" />
               <div className="flex flex-col items-center">
                 <Typography className="text-14 text-hawkes-30 font-urb w-full flex justify-start">
@@ -68,7 +71,7 @@ function OverviewPage() {
                 </Typography>
               </div>
             </CardItem>
-            <CardItem className="flex py-8 sm:py-12 px-12 sm:px-16 gap-10 items-center w-[255px] bg-celestial-10">
+            <CardItem className="flex py-8 sm:py-12 px-12 sm:px-16 gap-10 items-center w-[310px] bg-celestial-10">
               <img className="w-40 h-40" src="assets/icons/market_icon.svg" alt="icon" />
               <div className="flex flex-col items-center">
                 <Typography className="text-14 text-hawkes-30 font-urb w-full flex justify-start">
@@ -76,6 +79,17 @@ function OverviewPage() {
                 </Typography>
                 <Typography className="font-space text-16 md:text-20 text-hawkes-100">
                   {formatString(marketcap?.marketcap)}
+                </Typography>
+              </div>
+            </CardItem>
+            <CardItem className="flex py-8 sm:py-12 px-12 sm:px-16 gap-10 items-center w-[310px] bg-celestial-10">
+              <img className="w-44 h-44" src="assets/icons/transaction_mark_blue.svg" alt="icon" />
+              <div className="flex flex-col">
+                <Typography className="text-14 text-hawkes-30 font-urb w-full flex justify-start">
+                  Recent Transaction
+                </Typography>
+                <Typography className="font-space text-16 md:text-20 text-hawkes-100">
+                  {(recenttx?.recenttx || []).length}
                 </Typography>
               </div>
             </CardItem>
@@ -87,6 +101,17 @@ function OverviewPage() {
                 </Typography>
                 <Typography className="font-space text-16 md:text-20 text-hawkes-100">
                   {formatString(marketcap?.supply)}
+                </Typography>
+              </div>
+            </CardItem>
+            <CardItem className="flex py-8 sm:py-12 px-12 sm:px-16 gap-10 items-center w-[310px] bg-celestial-10">
+              <img className="w-36 h-36" src="assets/icons/tick_mark_blue.svg" alt="icon" />
+              <div className="flex flex-col">
+                <Typography className="text-14 text-hawkes-30 font-urb w-full flex justify-start">
+                  Empty Ticks
+                </Typography>
+                <Typography className="font-space text-16 md:text-20 text-hawkes-100">
+                  {(emptyticks?.emptyticks || []).length}
                 </Typography>
               </div>
             </CardItem>
@@ -147,7 +172,7 @@ function OverviewPage() {
                 <Autocomplete
                   disablePortal
                   defaultValue={{ value: 0, label: 'QU' }}
-                  options={['QU', ...(tokens || [])].map((token, key) => ({
+                  options={['QU', ...(tokens || []).slice(0, 4)].map((token, key) => ({
                     value: key,
                     label: token,
                   }))}
@@ -161,22 +186,25 @@ function OverviewPage() {
                     },
                   }}
                   onChange={(e, val) => setSelectedToken(val.value)}
-                  renderInput={(params) => <TextField {...params} label="TOKEN" />}
+                  renderInput={(params) => <TextField {...params} label="SC" />}
                 />
               </div>
-              <Hidden mdUp>
-                {rows().map((item, key) => (
-                  <div key={key} className="py-4 border-b-1">
-                    <TransactionBox {...item} />
-                  </div>
-                ))}
-              </Hidden>
+              <div className="max-h-320 overflow-auto">
+                <Hidden mdUp>
+                  {(recenttx.recenttx || []).slice(0, 20).map((item, key) => (
+                    <div key={key} className="py-4 border-b-1">
+                      <TransactionBox {...item} />
+                    </div>
+                  ))}
+                </Hidden>
+              </div>
               <Hidden mdDown>
                 <TableContainer
                   component={Paper}
                   className="rounded-0 bg-transparent text-hawkes-100"
+                  sx={{ maxHeight: 350 }}
                 >
-                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  <Table stickyHeader sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead className="bg-celestial-20">
                       <TableRow>
                         <TableCell className="border-b-main-80 text-hawkes-100">Tx</TableCell>
@@ -192,7 +220,7 @@ function OverviewPage() {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {rows().map((row) => (
+                      {(recenttx.recenttx || []).slice(0, 20).map((row) => (
                         <TableRow
                           key={row.tx}
                           sx={{ '&:last-child td, &:last-child th': { border: 0 } }}

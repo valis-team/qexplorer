@@ -66,7 +66,7 @@ function TransactionPage() {
                 <Typography className="text-hawkes-100 text-16 font-urb">Amount</Typography>
               </div>
               <Typography className="text-white text-16 bold font-urb">
-                {txData?.amount || 0}
+                {txData?.amount || 0} QUBIC
               </Typography>
             </div>
             <div className="flex justify-between items-center w-full gap-36 py-3 border-b-1">

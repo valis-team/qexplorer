@@ -52,6 +52,7 @@ function RichlistContent() {
                     address={item[1]}
                     letter={isSp ? 5 : null}
                     link
+                    copy
                   />
                 </div>
                 <Typography className="text-hawkes-100 font-space text-14 xs:text-16">
