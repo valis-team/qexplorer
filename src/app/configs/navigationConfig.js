@@ -16,6 +16,13 @@ const navigationConfig = [
     url: 'explorer',
   },
   {
+    id: 'orderbood',
+    title: 'Order Book',
+    type: 'item',
+    icon: 'heroicons-outline:shopping-cart',
+    url: 'orderbook',
+  },
+  {
     id: 'richlist',
     title: 'Rich List',
     type: 'item',

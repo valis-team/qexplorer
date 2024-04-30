@@ -103,13 +103,13 @@ function AddressPage() {
           <CardItem className="flex py-8 sm:py-12 px-12 sm:px-16 gap-10 items-center bg-celestial-10 w-full md:w-auto">
             <img className="w-40 h-40" src="assets/icons/arrow_down.svg" alt="icon" />
             <div className="flex flex-col gap-4">
-              <div className="flex items-end gap-6 w-[150px] justify-between">
+              <div className="flex items-end gap-6 w-[180px] justify-between">
                 <Typography className="text-14 text-hawkes-30 font-urb">Incoming</Typography>
                 <Typography className="text-16 text-hawkes-100 font-urb">
                   {addressData?.totalincoming || 0}
                 </Typography>
               </div>
-              <div className="flex items-end gap-6 w-[150px] justify-between">
+              <div className="flex items-end gap-6 w-[180px] justify-between">
                 <Typography className="text-14 text-hawkes-30 font-urb">Latest</Typography>
                 <Typography className="text-16 text-hawkes-100 font-urb">
                   {addressData?.latestin || 0}
@@ -120,13 +120,13 @@ function AddressPage() {
           <CardItem className="flex py-8 sm:py-12 px-12 sm:px-16 gap-10 items-center bg-celestial-10 w-full md:w-auto">
             <img className="w-40 h-40 rotate-180" src="assets/icons/arrow_down.svg" alt="icon" />
             <div className="flex flex-col gap-4 w-auto">
-              <div className="flex items-end gap-6 w-[150px] justify-between">
+              <div className="flex items-end gap-6 w-[180px] justify-between">
                 <Typography className="text-14 text-hawkes-30 font-urb">Outgoing</Typography>
                 <Typography className="text-16 text-hawkes-100 font-urb">
                   {addressData?.totaloutgoing || 0}
                 </Typography>
               </div>
-              <div className="flex items-end gap-6 w-[150px] justify-between">
+              <div className="flex items-end gap-6 w-[180px] justify-between">
                 <Typography className="text-14 text-hawkes-30 font-urb">Latest</Typography>
                 <Typography className="text-16 text-hawkes-100 font-urb">
                   {addressData?.latestout || 0}

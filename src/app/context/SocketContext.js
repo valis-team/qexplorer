@@ -24,15 +24,18 @@ const useWebSocket = (socketUrl) => {
   const [websocket, setWebsocket] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const [history, setHistory] = useState({});
+  const [orderbook, setOrderbook] = useState({});
   const [loading, setLoading] = useState(false); // Added loading state
+  const [fetchError, setFetchError] = useState({});
+
   useEffect(() => {
     const ws = new WebSocket(socketUrl);
 
     const onOpen = () => {
       setIsConnected(true);
     };
-
     const onMessage = (event) => {
+      console.log('token', event.data);
       try {
         const data = JSON.parse(event.data);
         if (data.richlist && data.name) {
@@ -55,6 +58,10 @@ const useWebSocket = (socketUrl) => {
           setHistory(data);
         } else if (data.command === 'txidrequest') {
           setTx(data);
+        } else if (data.bids && data.asks) {
+          setOrderbook(data);
+        } else if (data.error) {
+          setFetchError(data);
         }
 
         setLoading(false);
@@ -113,7 +120,9 @@ const useWebSocket = (socketUrl) => {
     tick,
     tx,
     currentTick,
+    orderbook,
     history,
+    fetchError,
   };
 };
 

@@ -6,6 +6,7 @@ import { formatEllipsis, copyText } from 'src/app/utils/function';
 const TransactionText = (props) => {
   const { tx, letter, copy, className, link } = props;
   const [isCopy, setIsCopy] = useState(false);
+
   useEffect(() => {
     if (isCopy) {
       setTimeout(() => setIsCopy(false), 1000);
