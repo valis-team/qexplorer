@@ -41,8 +41,8 @@ function OverviewPage() {
     }, 500);
   }, [currentTick]);
 
-  if (loading && initLoad) {
-    setInitLoad(false);
+  if (loading) {
+    // setInitLoad(false);
     return (
       <div className="w-full md:w-4/5 absolute">
         <LinearProgress color="primary" />

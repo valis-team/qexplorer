@@ -26,7 +26,7 @@ const RichlistHeader = () => {
         >
           QU
         </Typography>
-        {tokens?.map((item, key) => (
+        {tokens?.slice(0, 6).map((item, key) => (
           <Typography
             key={key}
             className={`px-16 py-8 rounded-t-8 ${

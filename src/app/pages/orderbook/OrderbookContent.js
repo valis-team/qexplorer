@@ -16,7 +16,6 @@ import CardItem from '../components/CardItem/CardItem';
 import AddressText from '../components/common/AddressText';
 
 export default function OrderbookContent() {
-  const [isMobile, setIsMobile] = useState(window.matchMedia('(max-width: 768px)').matches);
   const orderbooks = {
     name: 'QX',
     issuer: 'QubicSmartContract',
@@ -29,6 +28,7 @@ export default function OrderbookContent() {
       ['LIYVCGRCGBDMKCPOBSXRJLKFPTABHMQSVWOATAMVGFCTSXXJZZTMLOGCSEKB', '1', '4669'],
     ],
   };
+  const [isMobile, setIsMobile] = useState(window.matchMedia('(max-width: 768px)').matches);
   const { orderbook, sendMessage, loading } = useSocket();
   const { token } = useParams();
 
@@ -78,7 +78,7 @@ export default function OrderbookContent() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {(orderbook?.bids || []).map((row, key) => (
+                {(orderbook?.bids || orderbooks.bids || []).map((row, key) => (
                   <TableRow key={row} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                     <TableCell
                       component="th"
@@ -119,7 +119,7 @@ export default function OrderbookContent() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {(orderbook?.asks || []).map((row, key) => (
+                {(orderbook?.asks || orderbooks.asks || []).map((row, key) => (
                   <TableRow key={row} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                     <TableCell
                       component="th"
