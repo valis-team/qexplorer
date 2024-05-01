@@ -18,7 +18,7 @@ const OrderbookHeader = () => {
         <Typography className="text-hawkes-100 text-24 font-urb text-bold">Order Book</Typography>
       </div>
       <div className="mt-4 flex gap-12 flex-wrap">
-        {tokens?.slice(0, 4).map((item, key) => (
+        {tokens?.slice(0, 6).map((item, key) => (
           <Typography
             key={key}
             className={`px-16 py-8 rounded-t-8 ${

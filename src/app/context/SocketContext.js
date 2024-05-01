@@ -35,7 +35,6 @@ const useWebSocket = (socketUrl) => {
       setIsConnected(true);
     };
     const onMessage = (event) => {
-      console.log('token', event.data);
       try {
         const data = JSON.parse(event.data);
         if (data.richlist && data.name) {

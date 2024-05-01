@@ -15,7 +15,7 @@ const OrderbookConfig = {
       children: [
         {
           path: '',
-          element: <Navigate to="QX" />,
+          element: <Navigate to="QWALLET" />,
         },
         {
           path: ':token',

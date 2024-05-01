@@ -15,6 +15,7 @@ import TickText from '../../components/common/TickText';
 import AddressText from '../../components/common/AddressText';
 import TransactionBox from '../../components/common/TransactionBox';
 import Chart from '../../components/Chart';
+import EmptyBox from '../../components/EmptyBox';
 
 function OverviewPage() {
   const { marketcap, emptyticks, currentTick, recenttx, tokens, loading, sendMessage } =
@@ -220,39 +221,47 @@ function OverviewPage() {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {(recenttx.recenttx || []).slice(0, 20).map((row) => (
-                        <TableRow
-                          key={row.tx}
-                          sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                        >
-                          <TableCell
-                            component="th"
-                            scope="row"
-                            className="border-b-main-80 text-celestial-100"
+                      {(recenttx.recenttx || []).length > 0 ? (
+                        (recenttx.recenttx || []).slice(0, 20).map((row, key) => (
+                          <TableRow
+                            key={row.tx}
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                           >
-                            <TransactionText
-                              className="text-16"
-                              tx={row.txid}
-                              letter={4}
-                              copy
-                              link
-                            />
-                          </TableCell>
-                          <TableCell className="border-b-main-80 text-celestial-100">
-                            <TickText tick={row.tick} className="text-white text-16" copy link />
-                          </TableCell>
-                          <TableCell className="border-b-main-80 text-celestial-100">
-                            <AddressText address={row.src} letter={4} copy link />
-                          </TableCell>
-                          <TableCell className="border-b-main-80 text-celestial-100">
-                            <AddressText address={row.dest} letter={4} copy link />
-                          </TableCell>
-                          <TableCell className="border-b-main-80">{row.type}</TableCell>
-                          <TableCell className="border-b-main-80" align="right">
-                            {row.amount}
+                            <TableCell
+                              component="th"
+                              scope="row"
+                              className="border-b-main-80 text-celestial-100"
+                            >
+                              <TransactionText
+                                className="text-16"
+                                tx={row.txid}
+                                letter={4}
+                                copy
+                                link
+                              />
+                            </TableCell>
+                            <TableCell className="border-b-main-80 text-celestial-100">
+                              <TickText tick={row.tick} className="text-white text-16" copy link />
+                            </TableCell>
+                            <TableCell className="border-b-main-80 text-celestial-100">
+                              <AddressText address={row.src} letter={4} copy link />
+                            </TableCell>
+                            <TableCell className="border-b-main-80 text-celestial-100">
+                              <AddressText address={row.dest} letter={4} copy link />
+                            </TableCell>
+                            <TableCell className="border-b-main-80">{row.type}</TableCell>
+                            <TableCell className="border-b-main-80" align="right">
+                              {row.amount}
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      ) : (
+                        <TableRow>
+                          <TableCell colSpan={6}>
+                            <EmptyBox />
                           </TableCell>
                         </TableRow>
-                      ))}
+                      )}
                     </TableBody>
                   </Table>
                 </TableContainer>

@@ -55,9 +55,9 @@ function AddressTableRow(props) {
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7} className="border-0">
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8} className="border-0">
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
+            <Box sx={{ margin: 1 }} className="flex w-full justify-center px-4 md:px-16">
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>

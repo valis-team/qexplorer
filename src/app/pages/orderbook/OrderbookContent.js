@@ -14,6 +14,7 @@ import {
 import { useSocket } from 'src/app/context/SocketContext';
 import CardItem from '../components/CardItem/CardItem';
 import AddressText from '../components/common/AddressText';
+import EmptyBox from '../components/EmptyBox';
 
 export default function OrderbookContent() {
   const orderbooks = {
@@ -50,7 +51,6 @@ export default function OrderbookContent() {
       sendMessage(`orders ${token}`);
     }
   }, [token, sendMessage]);
-  console.log('token --->', orderbook, token);
   if (loading) {
     return (
       <div className="absolute w-full md:w-4/5">
@@ -78,26 +78,34 @@ export default function OrderbookContent() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {(orderbook?.bids || orderbooks.bids || []).map((row, key) => (
-                  <TableRow key={row} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      className="border-b-main-80 text-hawkes-100"
-                    >{`Buy ${key + 1}`}</TableCell>
-                    <TableCell className="border-b-main-80">
-                      <AddressText
-                        address={row[0]}
-                        className="text-hawkes-100 text-14"
-                        letter={isMobile ? 4 : 8}
-                        link
-                        copy
-                      />
+                {(orderbook?.bids || []).length > 0 ? (
+                  (orderbook?.bids || []).map((row, key) => (
+                    <TableRow key={row} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        className="border-b-main-80 text-hawkes-100"
+                      >{`Buy ${key + 1}`}</TableCell>
+                      <TableCell className="border-b-main-80">
+                        <AddressText
+                          address={row[0]}
+                          className="text-hawkes-100 text-14"
+                          letter={isMobile ? 4 : 8}
+                          link
+                          copy
+                        />
+                      </TableCell>
+                      <TableCell className="border-b-main-80 text-hawkes-100">{row[1]}</TableCell>
+                      <TableCell className="border-b-main-80 text-hawkes-100">{row[2]}</TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={4}>
+                      <EmptyBox />
                     </TableCell>
-                    <TableCell className="border-b-main-80 text-hawkes-100">{row[1]}</TableCell>
-                    <TableCell className="border-b-main-80 text-hawkes-100">{row[2]}</TableCell>
                   </TableRow>
-                ))}
+                )}
               </TableBody>
             </Table>
           </TableContainer>
@@ -119,26 +127,34 @@ export default function OrderbookContent() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {(orderbook?.asks || orderbooks.asks || []).map((row, key) => (
-                  <TableRow key={row} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      className="border-b-main-80 text-hawkes-100"
-                    >{`Sell ${key + 1}`}</TableCell>
-                    <TableCell className="border-b-main-80">
-                      <AddressText
-                        address={row[0]}
-                        className="text-hawkes-100 text-14"
-                        letter={isMobile ? 4 : 8}
-                        copy
-                        link
-                      />
+                {(orderbook?.asks || []).length > 0 ? (
+                  (orderbook?.asks || []).map((row, key) => (
+                    <TableRow key={row} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        className="border-b-main-80 text-hawkes-100"
+                      >{`Sell ${key + 1}`}</TableCell>
+                      <TableCell className="border-b-main-80">
+                        <AddressText
+                          address={row[0]}
+                          className="text-hawkes-100 text-14"
+                          letter={isMobile ? 4 : 8}
+                          copy
+                          link
+                        />
+                      </TableCell>
+                      <TableCell className="border-b-main-80 text-hawkes-100">{row[1]}</TableCell>
+                      <TableCell className="border-b-main-80 text-hawkes-100">{row[2]}</TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={4}>
+                      <EmptyBox />
                     </TableCell>
-                    <TableCell className="border-b-main-80 text-hawkes-100">{row[1]}</TableCell>
-                    <TableCell className="border-b-main-80 text-hawkes-100">{row[2]}</TableCell>
                   </TableRow>
-                ))}
+                )}
               </TableBody>
             </Table>
           </TableContainer>
