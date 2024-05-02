@@ -52,7 +52,7 @@ function TransactionPage() {
           <div className="flex items-center gap-6 justify-start mt-4">
             <img
               className="w-24 md:w-28 h-24 md:h-28"
-              src="assets/icons/transaction_mark.svg"
+              src="assets/icons/transaction_mark.webp"
               alt="icon"
             />
             <TransactionText tx={txParam} letter={isMobile ? 10 : null} className="text-16" />

@@ -83,7 +83,7 @@ function TickPage() {
         <div className="flex items-center gap-6">
           <img
             className="w-24 md:w-28 h-24 md:h-28"
-            src="assets/icons/transaction_mark.svg"
+            src="assets/icons/transaction_mark.webp"
             alt="icon"
           />
           <Typography className="text-hawkes-100 text-20 font-urb text-bold">

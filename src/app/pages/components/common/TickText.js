@@ -29,7 +29,7 @@ const TickText = (props) => {
           {isCopy ? (
             <img className="w-14 h-14 mb-4" src="assets/icons/ok_icon_light.svg" alt="" />
           ) : (
-            <img className="w-14 h-14 mb-4" src="assets/icons/copy_icon.svg" alt="" />
+            <img className="w-14 h-14 mb-4" src="assets/icons/copy_icon.webp" alt="" />
           )}
         </button>
       )}
