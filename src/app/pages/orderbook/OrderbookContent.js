@@ -63,7 +63,7 @@ export default function OrderbookContent() {
     );
   }
   return (
-    <div className="flex min-h-[500px] h-full w-full justify-center items-center">
+    <div className="flex min-h-[500px] h-full w-full justify-center items-center px-8 md:px-32">
       <CardItem className="flex flex-col lg:flex-row w-full p-4 md:p-12 gap-5 md:gap-16">
         <CardItem className="flex flex-col w-full lg:w-1/2 gap-6 p-4 md:p-16">
           <Typography className="text-20 text-hawkes-100 text-bold font-urb">Buy Order</Typography>

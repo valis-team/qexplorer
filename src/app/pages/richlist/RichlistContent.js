@@ -55,7 +55,7 @@ function RichlistContent() {
 
   return (
     <>
-      <div className="container flex justify-center">
+      <div className="container flex justify-center px-8">
         <div className="flex w-full border-1 border-main-50 flex-col p-12 max-w-[1220px]">
           <TableContainer
             component={Paper}

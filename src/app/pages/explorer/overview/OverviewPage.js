@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import InfiniteScroll from 'react-infinite-scroll-component';
+import { useEffect, useMemo, useState } from 'react';
 import { Typography, LinearProgress, Hidden, Autocomplete, TextField } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -19,16 +18,23 @@ import Chart from '../../components/Chart';
 import EmptyBox from '../../components/EmptyBox';
 
 function OverviewPage() {
-  const { marketcap, emptyticks, currentTick, recenttx, tokens, loading, sendMessage } =
-    useSocket();
+  const {
+    marketcap,
+    emptyticks,
+    currentTick,
+    recenttx: socketRecentTx,
+    tokens,
+    loading,
+    sendMessage,
+  } = useSocket();
 
   const [currentT, setCurrentT] = useState({});
   const [displayRecentTx, setDisplayRecentTx] = useState([]);
   const [mobielDisplayRecentTx, setMobileDisplayRecentTx] = useState([]);
   const [selectedToken, setSelectedToken] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
+  const recenttx = useMemo(() => socketRecentTx, [socketRecentTx]);
   const [loadCurrentT, setLoadCurrentT] = useState(false);
-  const batchSize = 5;
+
   useEffect(() => {
     sendMessage('marketcap');
     sendMessage('emptyticks 1 100000');
@@ -39,6 +45,7 @@ function OverviewPage() {
   useEffect(() => {
     sendMessage(`recenttx 10000 ${selectedToken}`);
   }, [selectedToken]);
+
   useEffect(() => {
     setLoadCurrentT(true);
     setTimeout(() => {
@@ -62,16 +69,13 @@ function OverviewPage() {
     }
   };
 
-  const loadMoreRecentTx = () => {
-    if (mobielDisplayRecentTx.length < (recenttx?.recenttx || []).length) {
-      const nextRecentTx = (recenttx?.recenttx || []).slice(
-        mobielDisplayRecentTx.length,
-        mobielDisplayRecentTx.length + batchSize
-      );
-      setMobileDisplayRecentTx((prev) => [...prev, ...nextRecentTx]);
-      setHasMore(mobielDisplayRecentTx.length + batchSize < (recenttx?.recenttx || []).length);
-    } else {
-      setHasMore(false);
+  const handleMobileScroll = (e) => {
+    const { scrollTop, clientHeight, scrollHeight } = e.currentTarget;
+    if (scrollHeight - scrollTop === clientHeight) {
+      const newLength = mobielDisplayRecentTx.length + 5;
+      if ((recenttx?.recenttx || []).length >= newLength) {
+        setMobileDisplayRecentTx((recenttx?.recenttx || []).slice(0, newLength));
+      }
     }
   };
 
@@ -84,7 +88,7 @@ function OverviewPage() {
   }
   return (
     <>
-      <div className="container px-12 py-20 md:px-24 flex flex-col gap-10">
+      <div className="container px-12 py-20 md:px-24 flex flex-col gap-10 max-h-[calc(100vh-76px)] overflow-y-auto">
         <div className="flex items-center gap-6 pl-10">
           <img className="w-24 md:w-36 h-24 md:h-36" src="assets/icons/mainbrand.svg" alt="icon" />
           <Typography className="text-hawkes-100 text-24 md:text-28 font-urb text-bold">
@@ -230,38 +234,18 @@ function OverviewPage() {
                   renderInput={(params) => <TextField {...params} label="SC" />}
                 />
               </div>
-              <div className="max-h-320 overflow-auto">
+              <div>
                 <Hidden mdUp>
-                  <InfiniteScroll
-                    dataLength={mobielDisplayRecentTx.length}
-                    next={loadMoreRecentTx}
-                    hasMore={hasMore}
-                    scrollableTarget="scrollableDiv"
-                    loader={
-                      <Typography className="text-14 text-primary-50 font-bold py-10 text-center">
-                        Loading...
-                      </Typography>
-                    }
-                    endMessage={
-                      mobielDisplayRecentTx.length === 0 ? (
-                        <Typography className="text-14 font-bold py-10 text-center">
-                          There are no data
-                        </Typography>
-                      ) : (
-                        <Typography className="text-14 font-bold py-10 text-center">
-                          You have seen all transactions
-                        </Typography>
-                      )
-                    }
+                  <div
+                    className="flex flex-col gap-2 max-h-360 overflow-auto"
+                    onScroll={handleMobileScroll}
                   >
-                    <div className="flex flex-col gap-2">
-                      {mobielDisplayRecentTx.map((item, key) => (
-                        <div key={key} className="py-4 border-b-1">
-                          <TransactionBox {...item} />
-                        </div>
-                      ))}
-                    </div>
-                  </InfiniteScroll>
+                    {mobielDisplayRecentTx.map((item, key) => (
+                      <div key={key} className="py-4 border-b-1">
+                        <TransactionBox {...item} />
+                      </div>
+                    ))}
+                  </div>
                 </Hidden>
               </div>
               <Hidden mdDown>
