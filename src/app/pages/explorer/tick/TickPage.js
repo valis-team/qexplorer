@@ -1,17 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import InfiniteScroll from 'react-infinite-scroll-component';
 import { Typography, Box } from '@mui/material';
 import { useSocket } from 'src/app/context/SocketContext';
 import LinearProgress from '../../components/common/LinearProgress';
 import CardItem from '../../components/CardItem/CardItem';
 import TransactionBox from '../../components/common/TransactionBox';
+import EmptyBox from '../../components/EmptyBox';
 
 function TickPage() {
   const { tick: tickId } = useParams();
   const { tick, loading, sendMessage } = useSocket();
   const [tickData, setTickData] = useState();
-  const [hasMore, setHasMore] = useState(false);
   const [displayTx, setDisplayTx] = useState([]);
   const batchSize = 5;
 
@@ -28,13 +27,13 @@ function TickPage() {
     }
   }, [tick]);
 
-  const loadMore = () => {
-    if (displayTx.length < (tickData?.tx || []).length) {
-      const nextTxs = (tickData?.tx || []).slice(displayTx.length, displayTx.length + batchSize);
-      setDisplayTx((prev) => [...prev, ...nextTxs]);
-      setHasMore(displayTx.length + batchSize < (tickData?.tx || []).length);
-    } else {
-      setHasMore(false);
+  const handleScroll = (e) => {
+    const { scrollTop, clientHeight, scrollHeight } = e.currentTarget;
+    if (scrollHeight - scrollTop === clientHeight) {
+      const newLength = displayTx.length + batchSize;
+      if ((tick.tx || []).length >= newLength) {
+        setDisplayTx((tick.tx || []).slice(0, newLength));
+      }
     }
   };
 
@@ -106,38 +105,24 @@ function TickPage() {
             Transactions
           </Typography>
         </div>
-        <InfiniteScroll
-          dataLength={displayTx.length}
-          next={loadMore}
-          hasMore={hasMore}
-          scrollableTarget="scrollableDiv"
-          loader={
-            <Typography className="text-14 text-primary-50 font-bold py-10 text-center">
-              Loading...
-            </Typography>
-          }
-          endMessage={
-            displayTx.length === 0 ? (
-              <Typography className="text-14 font-bold py-10 text-center">
-                There are no data
-              </Typography>
-            ) : (
-              <Typography className="text-14 font-bold py-10 text-center">
-                You have seen all transactions
-              </Typography>
-            )
-          }
+        <div
+          className="flex flex-col gap-4 md:gap-8 max-h-[500px] overflow-y-auto"
+          onScroll={handleScroll}
         >
-          <div className="flex flex-col gap-4 md:gap-8">
-            {displayTx.map((item, key) => {
+          {displayTx.length > 0 ? (
+            displayTx.map((item, key) => {
               return (
                 <div key={key} className="py-4 border-b-1">
                   <TransactionBox {...item} />
                 </div>
               );
-            })}
-          </div>
-        </InfiniteScroll>
+            })
+          ) : (
+            <div className="h-120 flex w-full justify-center items-center">
+              <EmptyBox />
+            </div>
+          )}
+        </div>
       </CardItem>
     </Box>
   );

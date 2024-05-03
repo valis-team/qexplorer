@@ -25,6 +25,7 @@ const useWebSocket = (socketUrl) => {
   const [isConnected, setIsConnected] = useState(false);
   const [history, setHistory] = useState({});
   const [orderbook, setOrderbook] = useState({});
+  const [tokenissuer, setTokenissure] = useState({});
   const [loading, setLoading] = useState(false); // Added loading state
   const [fetchError, setFetchError] = useState({});
 
@@ -59,6 +60,8 @@ const useWebSocket = (socketUrl) => {
           setTx(data);
         } else if (data.bids && data.asks) {
           setOrderbook(data);
+        } else if (data.issuer && (data.address || data.contractid)) {
+          setTokenissure(data);
         } else if (data.error) {
           setFetchError(data);
         }
@@ -120,6 +123,7 @@ const useWebSocket = (socketUrl) => {
     tx,
     currentTick,
     orderbook,
+    tokenissuer,
     history,
     fetchError,
   };
