@@ -17,17 +17,19 @@ const OrderbookHeader = () => {
         <img className="w-24 md:w-28 h-24 md:h-28" src="assets/icons/book_mark.svg" alt="icon" />
         <Typography className="text-hawkes-100 text-24 font-urb text-bold">Order Book</Typography>
       </div>
-      <div className="mt-4 flex gap-12 flex-wrap">
-        {tokens?.slice(0, 6).map((item, key) => (
+      <div className="mt-4 flex flex-wrap">
+        {tokens.map((item, key) => (
           <Typography
             key={key}
-            className={`px-16 py-8 rounded-t-8 ${
-              token === item ? 'border-b-2 text-bold text-white' : 'text-main-50'
+            className={`px-16 md:px-32 py-8 rounded-t-8 ${
+              token === item
+                ? 'border-b-2 border-hawkes-100 text-bold text-white'
+                : 'text-main-50  border-b-1'
             }`}
+            style={{ borderColor: token === item ? '#D2E0FC' : '#d2e0fc4d' }}
             role="button"
             component={Link}
             to={`/orderbook/${item}`}
-            style={{ borderColor: '#d2e0fc80' }}
           >
             {item}
           </Typography>

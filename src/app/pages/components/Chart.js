@@ -1,22 +1,9 @@
-import * as React from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
+import { useMediaQuery } from '@mui/material';
 
 export default function BasicLineChart() {
-  const [isMobile, setIsMobile] = React.useState(window.matchMedia('(max-width: 768px)').matches);
+  const isMobile = useMediaQuery('(max-width:768px)');
 
-  React.useEffect(() => {
-    const mediaQuery = window.matchMedia('(max-width: 768px)');
-    const handleChange = (event) => {
-      setIsMobile(event.matches);
-    };
-
-    mediaQuery.addEventListener('change', handleChange);
-
-    // Cleanup function
-    return () => {
-      mediaQuery.removeEventListener('change', handleChange);
-    };
-  }, []);
   return (
     <LineChart
       xAxis={[
@@ -34,7 +21,7 @@ export default function BasicLineChart() {
           ],
         },
       ]}
-      width={isMobile ? 400 : 700}
+      width={isMobile ? 400 : 900}
       height={isMobile ? 300 : 350}
     />
   );

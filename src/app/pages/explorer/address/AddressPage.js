@@ -9,34 +9,24 @@ import {
   TableRow,
   TableCell,
   TableBody,
+  useMediaQuery,
 } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { useSocket } from 'src/app/context/SocketContext';
+import { formatString } from 'src/app/utils/function';
 import LinearProgress from '../../components/common/LinearProgress';
 import CardItem from '../../components/CardItem/CardItem';
 import AddressText from '../../components/common/AddressText';
 import AddressTableRow from '../../components/AddressTableRow';
+import EmptyBox from '../../components/EmptyBox';
+import TickText from '../../components/common/TickText';
 
 function AddressPage() {
   const { address: addressParam } = useParams();
   const { address, history, loading, sendMessage } = useSocket();
   const [addressData, setAddressData] = useState({});
-  const [historyData, setHistoryData] = useState({});
-  const [isMobile, setIsMobile] = useState(window.matchMedia('(max-width: 768px)').matches);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(max-width: 768px)');
-    const handleChange = (event) => {
-      setIsMobile(event.matches);
-    };
-
-    mediaQuery.addEventListener('change', handleChange);
-
-    // Cleanup function
-    return () => {
-      mediaQuery.removeEventListener('change', handleChange);
-    };
-  }, []);
+  const [displayAddressHistory, setDisplayAddressHistory] = useState([]);
+  const isMobile = useMediaQuery('(max-width:768px)');
 
   useEffect(() => {
     if (addressParam) {
@@ -51,12 +41,15 @@ function AddressPage() {
     }
   }, [address]);
 
-  useEffect(() => {
-    if (addressParam === history?.address) {
-      console.log('history', history.changes);
-      setHistoryData(history);
+  const handleScroll = (e) => {
+    const { scrollTop, clientHeight, scrollHeight } = e.currentTarget;
+    if (scrollHeight - scrollTop === clientHeight) {
+      const newLength = displayAddressHistory.length + 5;
+      if ((history?.changes || []).length >= newLength) {
+        setDisplayAddressHistory((history?.changes || []).slice(0, newLength));
+      }
     }
-  }, [history]);
+  };
 
   if (loading) {
     return <LinearProgress />;
@@ -73,7 +66,7 @@ function AddressPage() {
               <div className="flex gap-4 items-center">
                 <img className="w-14 h-14" src="assets/icons/price_mark_white.svg" alt="icon" />
                 <Typography className="text-white text-14 bold font-urb">
-                  {addressData?.balance ? `${addressData?.balance} QUBIC` : 0}
+                  {addressData?.balance ? `${formatString(addressData?.balance)} QUBIC` : 0}
                 </Typography>
               </div>
               {addressData?.rank && (
@@ -106,14 +99,19 @@ function AddressPage() {
               <div className="flex items-end gap-6 w-[180px] justify-between">
                 <Typography className="text-14 text-hawkes-30 font-urb">Incoming</Typography>
                 <Typography className="text-16 text-hawkes-100 font-urb">
-                  {addressData?.totalincoming || 0}
+                  {formatString(addressData?.totalincoming) || 0}
                 </Typography>
               </div>
               <div className="flex items-end gap-6 w-[180px] justify-between">
                 <Typography className="text-14 text-hawkes-30 font-urb">Latest</Typography>
-                <Typography className="text-16 text-hawkes-100 font-urb">
-                  {addressData?.latestin || 0}
-                </Typography>
+                {addressData?.latestin ? (
+                  <TickText
+                    className="text-16 text-hawkes-100 font-urb"
+                    tick={addressData?.latestin || 0}
+                    copy
+                    link
+                  />
+                ) : null}
               </div>
             </div>
           </CardItem>
@@ -123,14 +121,19 @@ function AddressPage() {
               <div className="flex items-end gap-6 w-[180px] justify-between">
                 <Typography className="text-14 text-hawkes-30 font-urb">Outgoing</Typography>
                 <Typography className="text-16 text-hawkes-100 font-urb">
-                  {addressData?.totaloutgoing || 0}
+                  {formatString(addressData?.totaloutgoing) || 0}
                 </Typography>
               </div>
               <div className="flex items-end gap-6 w-[180px] justify-between">
                 <Typography className="text-14 text-hawkes-30 font-urb">Latest</Typography>
-                <Typography className="text-16 text-hawkes-100 font-urb">
-                  {addressData?.latestout || 0}
-                </Typography>
+                {addressData?.latestout ? (
+                  <TickText
+                    className="text-16 text-hawkes-100 font-urb"
+                    tick={addressData?.latestout || 0}
+                    copy
+                    link
+                  />
+                ) : null}
               </div>
             </div>
           </CardItem>
@@ -140,6 +143,7 @@ function AddressPage() {
           <TableContainer
             component={Paper}
             className="rounded-0 bg-transparent text-hawkes-100"
+            onScroll={handleScroll}
             sx={{ maxHeight: 430 }}
           >
             <Table stickyHeader sx={{ minWidth: 650 }} aria-label="simple table">
@@ -160,9 +164,15 @@ function AddressPage() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {(historyData.changes || []).map((row) => (
-                  <AddressTableRow row={row} />
-                ))}
+                {displayAddressHistory.length > 0 ? (
+                  displayAddressHistory.map((row, key) => <AddressTableRow row={row} />)
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={8}>
+                      <EmptyBox />
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </TableContainer>

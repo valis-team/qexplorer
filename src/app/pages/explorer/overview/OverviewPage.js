@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import { Typography, LinearProgress, Hidden, Autocomplete, TextField } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -22,15 +23,19 @@ function OverviewPage() {
     useSocket();
 
   const [currentT, setCurrentT] = useState({});
-  const [initLoad, setInitLoad] = useState(true);
+  const [displayRecentTx, setDisplayRecentTx] = useState([]);
+  const [mobielDisplayRecentTx, setMobileDisplayRecentTx] = useState([]);
   const [selectedToken, setSelectedToken] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
   const [loadCurrentT, setLoadCurrentT] = useState(false);
+  const batchSize = 5;
   useEffect(() => {
     sendMessage('marketcap');
     sendMessage('emptyticks 1 100000');
     sendMessage('LKBOPOUKGSYTODWVEPXHUXDTRSOCDOXXXIEAGBJXAGJRMGXRXMCHDNCHWRLK');
     sendMessage('tokenlist');
   }, [sendMessage]);
+
   useEffect(() => {
     sendMessage(`recenttx 10000 ${selectedToken}`);
   }, [selectedToken]);
@@ -42,8 +47,35 @@ function OverviewPage() {
     }, 500);
   }, [currentTick]);
 
+  useEffect(() => {
+    setDisplayRecentTx((recenttx?.recenttx || []).slice(0, 10));
+    setMobileDisplayRecentTx((recenttx?.recenttx || []).slice(0, 10));
+  }, [currentT]);
+
+  const handleScroll = (e) => {
+    const { scrollTop, clientHeight, scrollHeight } = e.currentTarget;
+    if (scrollHeight - scrollTop === clientHeight) {
+      const newLength = displayRecentTx.length + 5;
+      if ((recenttx?.recenttx || []).length >= newLength) {
+        setDisplayRecentTx((recenttx?.recenttx || []).slice(0, newLength));
+      }
+    }
+  };
+
+  const loadMoreRecentTx = () => {
+    if (mobielDisplayRecentTx.length < (recenttx?.recenttx || []).length) {
+      const nextRecentTx = (recenttx?.recenttx || []).slice(
+        mobielDisplayRecentTx.length,
+        mobielDisplayRecentTx.length + batchSize
+      );
+      setMobileDisplayRecentTx((prev) => [...prev, ...nextRecentTx]);
+      setHasMore(mobielDisplayRecentTx.length + batchSize < (recenttx?.recenttx || []).length);
+    } else {
+      setHasMore(false);
+    }
+  };
+
   if (loading) {
-    // setInitLoad(false);
     return (
       <div className="w-full md:w-4/5 absolute">
         <LinearProgress color="primary" />
@@ -52,10 +84,15 @@ function OverviewPage() {
   }
   return (
     <>
-      <div className="container px-12 py-24 md:px-24 flex flex-col gap-10">
+      <div className="container px-12 py-20 md:px-24 flex flex-col gap-10">
+        <div className="flex items-center gap-6 pl-10">
+          <img className="w-24 md:w-36 h-24 md:h-36" src="assets/icons/mainbrand.svg" alt="icon" />
+          <Typography className="text-hawkes-100 text-24 md:text-28 font-urb text-bold">
+            Overview
+          </Typography>
+        </div>
         <CardItem className="flex gap-10 p-16 md:p-24 flex-wrap justify-center md:justify-between">
           <div className="flex flex-col gap-10 justify-center">
-            <Typography className="text-32 text-hawkes-100 text-bold font-urb">Overview</Typography>
             <div className="flex w-full justify-center ml-0 lg:ml-40">
               <Chart />
             </div>
@@ -125,8 +162,8 @@ function OverviewPage() {
                 Empty Ticks{' '}
                 <sapn className="text-20">{`(${emptyticks.begintick} - ${emptyticks.endtick})`}</sapn>
               </Typography>
-              <div className="flex gap-6 flex-wrap">
-                {(emptyticks?.emptyticks || []).slice(0, 50).map((tick, key) => {
+              <div className="flex gap-6 flex-wrap max-h-[310px] justify-between overflow-auto">
+                {(emptyticks?.emptyticks || []).map((tick, key) => {
                   return <TickText className="text-16 text-main-40" tick={tick} key={key} link />;
                 })}
               </div>
@@ -172,7 +209,10 @@ function OverviewPage() {
                 </Typography>
                 <Autocomplete
                   disablePortal
-                  defaultValue={{ value: 0, label: 'QU' }}
+                  defaultValue={{
+                    value: selectedToken,
+                    label: ['QU', ...(tokens || [])][selectedToken],
+                  }}
                   options={['QU', ...(tokens || []).slice(0, 4)].map((token, key) => ({
                     value: key,
                     label: token,
@@ -192,11 +232,36 @@ function OverviewPage() {
               </div>
               <div className="max-h-320 overflow-auto">
                 <Hidden mdUp>
-                  {(recenttx.recenttx || []).slice(0, 20).map((item, key) => (
-                    <div key={key} className="py-4 border-b-1">
-                      <TransactionBox {...item} />
+                  <InfiniteScroll
+                    dataLength={mobielDisplayRecentTx.length}
+                    next={loadMoreRecentTx}
+                    hasMore={hasMore}
+                    scrollableTarget="scrollableDiv"
+                    loader={
+                      <Typography className="text-14 text-primary-50 font-bold py-10 text-center">
+                        Loading...
+                      </Typography>
+                    }
+                    endMessage={
+                      mobielDisplayRecentTx.length === 0 ? (
+                        <Typography className="text-14 font-bold py-10 text-center">
+                          There are no data
+                        </Typography>
+                      ) : (
+                        <Typography className="text-14 font-bold py-10 text-center">
+                          You have seen all transactions
+                        </Typography>
+                      )
+                    }
+                  >
+                    <div className="flex flex-col gap-2">
+                      {mobielDisplayRecentTx.map((item, key) => (
+                        <div key={key} className="py-4 border-b-1">
+                          <TransactionBox {...item} />
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  </InfiniteScroll>
                 </Hidden>
               </div>
               <Hidden mdDown>
@@ -204,6 +269,7 @@ function OverviewPage() {
                   component={Paper}
                   className="rounded-0 bg-transparent text-hawkes-100"
                   sx={{ maxHeight: 350 }}
+                  onScroll={handleScroll}
                 >
                   <Table stickyHeader sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead className="bg-celestial-20">
@@ -221,8 +287,8 @@ function OverviewPage() {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {(recenttx.recenttx || []).length > 0 ? (
-                        (recenttx.recenttx || []).slice(0, 20).map((row, key) => (
+                      {displayRecentTx.length > 0 ? (
+                        displayRecentTx.map((row, key) => (
                           <TableRow
                             key={row.tx}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -251,7 +317,7 @@ function OverviewPage() {
                             </TableCell>
                             <TableCell className="border-b-main-80">{row.type}</TableCell>
                             <TableCell className="border-b-main-80" align="right">
-                              {row.amount}
+                              {formatString(row.amount)}
                             </TableCell>
                           </TableRow>
                         ))

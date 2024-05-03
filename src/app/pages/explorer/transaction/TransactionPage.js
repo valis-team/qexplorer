@@ -1,7 +1,8 @@
 import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Typography, Box } from '@mui/material';
+import { Typography, Box, useMediaQuery } from '@mui/material';
+import { formatString } from 'src/app/utils/function';
 import { useSocket } from 'src/app/context/SocketContext';
 import LinearProgress from '../../components/common/LinearProgress';
 import CardItem from '../../components/CardItem/CardItem';
@@ -12,21 +13,7 @@ function TransactionPage() {
   const { tx: txParam } = useParams();
   const { tx, loading, sendMessage } = useSocket();
   const [txData, setTxData] = useState();
-  const [isMobile, setIsMobile] = useState(window.matchMedia('(max-width: 768px)').matches);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(max-width: 768px)');
-    const handleChange = (event) => {
-      setIsMobile(event.matches);
-    };
-
-    mediaQuery.addEventListener('change', handleChange);
-
-    // Cleanup function
-    return () => {
-      mediaQuery.removeEventListener('change', handleChange);
-    };
-  }, []);
+  const isMobile = useMediaQuery('(max-width:768px)');
 
   useEffect(() => {
     if (txParam) {
@@ -66,7 +53,7 @@ function TransactionPage() {
                 <Typography className="text-hawkes-100 text-16 font-urb">Amount</Typography>
               </div>
               <Typography className="text-white text-16 bold font-urb">
-                {txData?.amount || 0} QUBIC
+                {formatString(txData?.amount || 0)} QUBIC
               </Typography>
             </div>
             <div className="flex justify-between items-center w-full gap-36 py-3 border-b-1">

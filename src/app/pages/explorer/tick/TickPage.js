@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import { Typography, Box } from '@mui/material';
 import { useSocket } from 'src/app/context/SocketContext';
 import LinearProgress from '../../components/common/LinearProgress';
@@ -10,6 +11,10 @@ function TickPage() {
   const { tick: tickId } = useParams();
   const { tick, loading, sendMessage } = useSocket();
   const [tickData, setTickData] = useState();
+  const [hasMore, setHasMore] = useState(false);
+  const [displayTx, setDisplayTx] = useState([]);
+  const batchSize = 5;
+
   useEffect(() => {
     if (tickId) {
       sendMessage(tickId);
@@ -19,8 +24,19 @@ function TickPage() {
   useEffect(() => {
     if (+tickId === +tick?.tick) {
       setTickData(tick);
+      setDisplayTx((tick.tx || []).slice(0, 10));
     }
   }, [tick]);
+
+  const loadMore = () => {
+    if (displayTx.length < (tickData?.tx || []).length) {
+      const nextTxs = (tickData?.tx || []).slice(displayTx.length, displayTx.length + batchSize);
+      setDisplayTx((prev) => [...prev, ...nextTxs]);
+      setHasMore(displayTx.length + batchSize < (tickData?.tx || []).length);
+    } else {
+      setHasMore(false);
+    }
+  };
 
   if (loading) {
     return <LinearProgress />;
@@ -90,15 +106,38 @@ function TickPage() {
             Transactions
           </Typography>
         </div>
-        <div className="flex flex-col gap-4 md:gap-8">
-          {(tickData?.tx || []).map((item, key) => {
-            return (
-              <div key={key} className="py-4 border-b-1">
-                <TransactionBox {...item} />
-              </div>
-            );
-          })}
-        </div>
+        <InfiniteScroll
+          dataLength={displayTx.length}
+          next={loadMore}
+          hasMore={hasMore}
+          scrollableTarget="scrollableDiv"
+          loader={
+            <Typography className="text-14 text-primary-50 font-bold py-10 text-center">
+              Loading...
+            </Typography>
+          }
+          endMessage={
+            displayTx.length === 0 ? (
+              <Typography className="text-14 font-bold py-10 text-center">
+                There are no data
+              </Typography>
+            ) : (
+              <Typography className="text-14 font-bold py-10 text-center">
+                You have seen all transactions
+              </Typography>
+            )
+          }
+        >
+          <div className="flex flex-col gap-4 md:gap-8">
+            {displayTx.map((item, key) => {
+              return (
+                <div key={key} className="py-4 border-b-1">
+                  <TransactionBox {...item} />
+                </div>
+              );
+            })}
+          </div>
+        </InfiniteScroll>
       </CardItem>
     </Box>
   );

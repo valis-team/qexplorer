@@ -1,23 +1,9 @@
-import { Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { Typography, useMediaQuery } from '@mui/material';
 import TransactionText from './TransactionText';
 import AddressText from './AddressText';
 
 const TransactionBox = (props) => {
-  const [isMobile, setIsMobile] = useState(window.matchMedia('(max-width: 768px)').matches);
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(max-width: 768px)');
-    const handleChange = (event) => {
-      setIsMobile(event.matches);
-    };
-
-    mediaQuery.addEventListener('change', handleChange);
-
-    // Cleanup function
-    return () => {
-      mediaQuery.removeEventListener('change', handleChange);
-    };
-  }, []);
+  const isMobile = useMediaQuery('(max-width:768px)');
   return (
     <div className="flex gap-10 md:gap-20 flex-wrap items-center">
       <div className="flex gap-4 md:gap-6 items-start">
