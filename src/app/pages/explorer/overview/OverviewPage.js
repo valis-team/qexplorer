@@ -83,8 +83,6 @@ function OverviewPage() {
     }
   };
 
-  console.log('sc', tokens);
-
   if (loading) {
     return (
       <div className="w-full md:w-4/5 absolute">
