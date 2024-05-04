@@ -23,7 +23,7 @@ function OverviewPage() {
     emptyticks,
     currentTick,
     recenttx: socketRecentTx,
-    tokens,
+    tokens: socketTokens,
     loading,
     sendMessage,
   } = useSocket();
@@ -34,6 +34,10 @@ function OverviewPage() {
   const [selectedToken, setSelectedToken] = useState(0);
   const recenttx = useMemo(() => socketRecentTx, [socketRecentTx]);
   const [loadCurrentT, setLoadCurrentT] = useState(false);
+  const tokens = useMemo(
+    () => (socketTokens || []).filter((item) => item !== 'QWALLET' && item !== 'QFT'),
+    [socketTokens]
+  );
 
   useEffect(() => {
     sendMessage('marketcap');
@@ -78,6 +82,8 @@ function OverviewPage() {
       }
     }
   };
+
+  console.log('sc', tokens);
 
   if (loading) {
     return (
@@ -217,7 +223,7 @@ function OverviewPage() {
                     value: selectedToken,
                     label: ['QU', ...(tokens || [])][selectedToken],
                   }}
-                  options={['QU', ...(tokens || []).slice(0, 4)].map((token, key) => ({
+                  options={['QU', ...(tokens || [])].map((token, key) => ({
                     value: key,
                     label: token,
                   }))}
