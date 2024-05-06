@@ -38,11 +38,11 @@ function ToolbarLayout2(props) {
           >
             <div className="flex gap-14 items-center">
               <div className="flex gap-4 items-center">
-                <img className="w-16 h-16" src="assets/icons/price_mark.svg" alt="icon" />
+                <img className="w-24 h-24" src="assets/icons/price_mark.svg" alt="icon" />
                 <Typography>{marketcap?.price}</Typography>
               </div>
               <div className="flex gap-4 items-center">
-                <img className="w-16 h-16" src="assets/icons/market_mark.svg" alt="icon" />
+                <img className="w-20 h-20" src="assets/icons/market_mark.svg" alt="icon" />
                 <Typography>{marketcap?.marketcap}</Typography>
               </div>
             </div>
@@ -52,7 +52,7 @@ function ToolbarLayout2(props) {
               </Hidden>
             </div>
             <div className="flex items-center">
-              <img className="w-16 h-16" src="assets/icons/setting.svg" alt="icon" />
+              <img className="w-20 h-20" src="assets/icons/setting.svg" alt="icon" />
             </div>
           </div>
           <div className="flex justify-between gap-40 items-center w-full">

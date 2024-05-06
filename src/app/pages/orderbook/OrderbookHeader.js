@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
 import { Typography, useMediaQuery } from '@mui/material';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useSocket } from 'src/app/context/SocketContext';
 import AddressText from '../components/common/AddressText';
+import TokenTab from '../components/TokenTab';
 
 const OrderbookHeader = () => {
   const { tokens, tokenissuer, sendMessage } = useSocket();
@@ -38,24 +39,7 @@ const OrderbookHeader = () => {
           }`}</Typography>
         )}
       </div>
-      <div className="mt-4 flex flex-wrap">
-        {tokens.map((item, key) => (
-          <Typography
-            key={key}
-            className={`px-16 md:px-32 py-8 rounded-t-8 ${
-              token === item
-                ? 'border-b-2 border-hawkes-100 text-bold text-white'
-                : 'text-main-50  border-b-1'
-            }`}
-            style={{ borderColor: token === item ? '#D2E0FC' : '#d2e0fc4d' }}
-            role="button"
-            component={Link}
-            to={`/orderbook/${item}`}
-          >
-            {item}
-          </Typography>
-        ))}
-      </div>
+      <TokenTab tokens={tokens} />
     </div>
   );
 };
