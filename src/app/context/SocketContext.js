@@ -26,6 +26,7 @@ const useWebSocket = (socketUrl) => {
   const [history, setHistory] = useState({});
   const [orderbook, setOrderbook] = useState({});
   const [tokenissuer, setTokenissure] = useState({});
+  const [prices, setPrices] = useState({});
   const [loading, setLoading] = useState(false); // Added loading state
   const [fetchError, setFetchError] = useState({});
 
@@ -42,17 +43,9 @@ const useWebSocket = (socketUrl) => {
           setRichList(data.richlist);
         } else if (data.command === 'CurrentTickInfo') {
           setCurrentTick(data);
-        } else if (data.tokens) {
-          setTokens(data.tokens);
-        } else if (data.marketcap) {
-          setMarketcap(data);
-        } else if (data.emptyticks) {
-          setEmptyticks(data);
-        } else if (data.recenttx) {
-          setRecenttx(data);
         } else if (data.tick && data.spectrum) {
           setTick(data);
-        } else if (data.address && data.command === 'EntityInfo') {
+        } else if (data.rank && data.address) {
           setAddress(data);
         } else if (data.address && data.changes) {
           setHistory(data);
@@ -62,6 +55,16 @@ const useWebSocket = (socketUrl) => {
           setOrderbook(data);
         } else if (data.issuer && (data.address || data.contractid)) {
           setTokenissure(data);
+        } else if (data.marketcap) {
+          setMarketcap(data);
+        } else if (data.emptyticks) {
+          setEmptyticks(data);
+        } else if (data.recenttx) {
+          setRecenttx(data);
+        } else if (data.tokens) {
+          setTokens(data.tokens);
+        } else if (data.prices) {
+          setPrices(data);
         } else if (data.error) {
           setFetchError(data);
         }
@@ -125,6 +128,7 @@ const useWebSocket = (socketUrl) => {
     orderbook,
     tokenissuer,
     history,
+    prices,
     fetchError,
   };
 };
