@@ -21,7 +21,7 @@ const OrderbookHeader = () => {
   }, [token]);
 
   return (
-    <div className="flex w-full flex-col md:flex-row justify-start md:justify-between px-8 py-8 md:px-36 md:p-16">
+    <div className="flex w-full flex-col lg:flex-row justify-start md:justify-between px-8 py-8 md:px-36 md:p-16">
       <div className="flex items-center gap-6">
         <img className="w-24 md:w-28 h-24 md:h-28" src="assets/icons/book_mark.svg" alt="icon" />
         <Typography className="text-hawkes-100 text-24 font-urb text-bold">Order Book</Typography>

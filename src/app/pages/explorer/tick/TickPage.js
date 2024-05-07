@@ -69,7 +69,7 @@ function TickPage() {
             </Link>
           </div>
         </div>
-        <div className="flex p-8 md:p-24 gap-8 md:gap-20 justify-start flex-wrap">
+        <div className="flex p-8 md:p-24 gap-8 md:gap-20 justify-center lg:justify-start flex-wrap">
           <CardItem className="flex py-8 sm:py-12 px-4 sm:px-16 gap-5 md:gap-10 items-center bg-celestial-10">
             <img className="w-32 md:w-40 h-32 md:h-40" src="assets/icons/trade.svg" alt="icon" />
             <div className="flex flex-col items-center">

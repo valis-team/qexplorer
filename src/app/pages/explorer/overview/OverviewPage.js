@@ -16,6 +16,7 @@ import AddressText from '../../components/common/AddressText';
 import TransactionBox from '../../components/common/TransactionBox';
 import Chart from '../../components/Chart';
 import EmptyBox from '../../components/EmptyBox';
+import CircleProgress from '../../components/common/CircleProgress';
 
 function OverviewPage() {
   const {
@@ -32,7 +33,9 @@ function OverviewPage() {
   const [displayRecentTx, setDisplayRecentTx] = useState([]);
   const [mobielDisplayRecentTx, setMobileDisplayRecentTx] = useState([]);
   const [selectedToken, setSelectedToken] = useState(0);
+  const [recenttxLoading, setRecenttxLoading] = useState(false);
   const recenttx = useMemo(() => socketRecentTx, [socketRecentTx]);
+  const [initLoading, setInitLoading] = useState(true);
   const [loadCurrentT, setLoadCurrentT] = useState(false);
   const tokens = useMemo(
     () => (socketTokens || []).filter((item) => item !== 'QWALLET' && item !== 'QFT'),
@@ -48,6 +51,7 @@ function OverviewPage() {
 
   useEffect(() => {
     sendMessage(`recenttx 10000 ${selectedToken}`);
+    setRecenttxLoading(true);
   }, [selectedToken]);
 
   useEffect(() => {
@@ -59,9 +63,13 @@ function OverviewPage() {
   }, [currentTick]);
 
   useEffect(() => {
-    setDisplayRecentTx((recenttx?.recenttx || []).slice(0, 10));
-    setMobileDisplayRecentTx((recenttx?.recenttx || []).slice(0, 10));
-  }, [currentT]);
+    if (recenttx?.recenttx) {
+      setDisplayRecentTx((recenttx?.recenttx || []).slice(0, 10));
+      setMobileDisplayRecentTx((recenttx?.recenttx || []).slice(0, 10));
+      setRecenttxLoading(false);
+      setInitLoading(false);
+    }
+  }, [recenttx]);
 
   const handleScroll = (e) => {
     const { scrollTop, clientHeight, scrollHeight } = e.currentTarget;
@@ -83,7 +91,7 @@ function OverviewPage() {
     }
   };
 
-  if (loading) {
+  if (initLoading) {
     return (
       <div className="w-full md:w-4/5 absolute">
         <LinearProgress color="primary" />
@@ -99,14 +107,14 @@ function OverviewPage() {
             Overview
           </Typography>
         </div>
-        <CardItem className="flex gap-10 p-16 md:p-24 flex-wrap justify-center md:justify-between">
+        <CardItem className="flex flex-col xl:flex-row justify-center xl:justify-between gap-10 p-16 md:p-24">
           <div className="flex flex-col gap-10 justify-center">
             <div className="flex w-full justify-center ml-0 lg:ml-40">
               <Chart />
             </div>
           </div>
-          <div className="flex flex-col md:flex-row lg:flex-col gap-3 flex-wrap justify-center md:justify-start">
-            <CardItem className="flex py-8 sm:py-12 px-12 sm:px-16 gap-10 items-center w-[310px] bg-celestial-10">
+          <div className="flex gap-3 flex-wrap justify-center">
+            <CardItem className="flex py-8 sm:py-12 px-12 sm:px-16 gap-10 items-center min-w-[255px] bg-celestial-10">
               <img className="w-40 h-40" src="assets/icons/mainbrand.svg" alt="icon" />
               <div className="flex flex-col items-center">
                 <Typography className="text-14 text-hawkes-30 font-urb w-full flex justify-start">
@@ -117,7 +125,7 @@ function OverviewPage() {
                 </Typography>
               </div>
             </CardItem>
-            <CardItem className="flex py-8 sm:py-12 px-12 sm:px-16 gap-10 items-center w-[310px] bg-celestial-10">
+            <CardItem className="flex py-8 sm:py-12 px-12 sm:px-16 gap-10 items-center min-w-[255px] bg-celestial-10">
               <img className="w-40 h-40" src="assets/icons/market_icon.svg" alt="icon" />
               <div className="flex flex-col items-center">
                 <Typography className="text-14 text-hawkes-30 font-urb w-full flex justify-start">
@@ -128,7 +136,7 @@ function OverviewPage() {
                 </Typography>
               </div>
             </CardItem>
-            <CardItem className="flex py-8 sm:py-12 px-12 sm:px-16 gap-10 items-center w-[310px] bg-celestial-10">
+            <CardItem className="flex py-8 sm:py-12 px-12 sm:px-16 gap-10 items-center min-w-[255px] bg-celestial-10">
               <img className="w-44 h-44" src="assets/icons/transaction_mark_blue.svg" alt="icon" />
               <div className="flex flex-col">
                 <Typography className="text-14 text-hawkes-30 font-urb w-full flex justify-start">
@@ -145,12 +153,12 @@ function OverviewPage() {
                 <Typography className="text-14 text-hawkes-30 font-urb w-full flex justify-start">
                   Supply
                 </Typography>
-                <Typography className="font-space text-16 md:text-20 text-hawkes-100">
+                <Typography className="font-space text-16 md:text-15 text-hawkes-100">
                   {formatString(marketcap?.supply)}
                 </Typography>
               </div>
             </CardItem>
-            <CardItem className="flex py-8 sm:py-12 px-12 sm:px-16 gap-10 items-center w-[310px] bg-celestial-10">
+            {/* <CardItem className="flex py-8 sm:py-12 px-12 sm:px-16 gap-10 items-center w-[310px] bg-celestial-10">
               <img className="w-36 h-36" src="assets/icons/tick_mark_blue.svg" alt="icon" />
               <div className="flex flex-col">
                 <Typography className="text-14 text-hawkes-30 font-urb w-full flex justify-start">
@@ -160,7 +168,7 @@ function OverviewPage() {
                   {(emptyticks?.emptyticks || []).length}
                 </Typography>
               </div>
-            </CardItem>
+            </CardItem> */}
           </div>
         </CardItem>
         <div className="flex flex-col md:flex-row gap-5 md:gap-8">
@@ -240,85 +248,98 @@ function OverviewPage() {
               </div>
               <div>
                 <Hidden mdUp>
-                  <div
-                    className="flex flex-col gap-2 max-h-360 overflow-auto"
-                    onScroll={handleMobileScroll}
-                  >
-                    {mobielDisplayRecentTx.map((item, key) => (
-                      <div key={key} className="py-4 border-b-1">
-                        <TransactionBox {...item} />
-                      </div>
-                    ))}
-                  </div>
+                  {recenttxLoading ? (
+                    <CircleProgress />
+                  ) : (
+                    <div
+                      className="flex flex-col gap-2 max-h-360 overflow-auto"
+                      onScroll={handleMobileScroll}
+                    >
+                      {mobielDisplayRecentTx.map((item, key) => (
+                        <div key={key} className="py-4 border-b-1">
+                          <TransactionBox {...item} />
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </Hidden>
               </div>
               <Hidden mdDown>
-                <TableContainer
-                  component={Paper}
-                  className="rounded-0 bg-transparent text-hawkes-100"
-                  sx={{ maxHeight: 350 }}
-                  onScroll={handleScroll}
-                >
-                  <Table stickyHeader sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableHead className="bg-celestial-20">
-                      <TableRow>
-                        <TableCell className="border-b-main-80 text-hawkes-100">Tx</TableCell>
-                        <TableCell className="border-b-main-80 text-hawkes-100">Tick</TableCell>
-                        <TableCell className="border-b-main-80 text-hawkes-100">Source</TableCell>
-                        <TableCell className="border-b-main-80 text-hawkes-100">
-                          Destination
-                        </TableCell>
-                        <TableCell className="border-b-main-80 text-hawkes-100">Type</TableCell>
-                        <TableCell className="border-b-main-80 text-hawkes-100" align="right">
-                          Amount
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {displayRecentTx.length > 0 ? (
-                        displayRecentTx.map((row, key) => (
-                          <TableRow
-                            key={row.tx}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                          >
-                            <TableCell
-                              component="th"
-                              scope="row"
-                              className="border-b-main-80 text-celestial-100"
-                            >
-                              <TransactionText
-                                className="text-16"
-                                tx={row.txid}
-                                letter={4}
-                                copy
-                                link
-                              />
-                            </TableCell>
-                            <TableCell className="border-b-main-80 text-celestial-100">
-                              <TickText tick={row.tick} className="text-white text-16" copy link />
-                            </TableCell>
-                            <TableCell className="border-b-main-80 text-celestial-100">
-                              <AddressText address={row.src} letter={4} copy link />
-                            </TableCell>
-                            <TableCell className="border-b-main-80 text-celestial-100">
-                              <AddressText address={row.dest} letter={4} copy link />
-                            </TableCell>
-                            <TableCell className="border-b-main-80">{row.type}</TableCell>
-                            <TableCell className="border-b-main-80" align="right">
-                              {formatString(row.amount)}
-                            </TableCell>
-                          </TableRow>
-                        ))
-                      ) : (
+                {recenttxLoading ? (
+                  <CircleProgress />
+                ) : (
+                  <TableContainer
+                    component={Paper}
+                    className="rounded-0 bg-transparent text-hawkes-100"
+                    sx={{ maxHeight: 350 }}
+                    onScroll={handleScroll}
+                  >
+                    <Table stickyHeader sx={{ minWidth: 650 }} aria-label="simple table">
+                      <TableHead className="bg-celestial-20">
                         <TableRow>
-                          <TableCell colSpan={6}>
-                            <EmptyBox />
+                          <TableCell className="border-b-main-80 text-hawkes-100">Tx</TableCell>
+                          <TableCell className="border-b-main-80 text-hawkes-100">Tick</TableCell>
+                          <TableCell className="border-b-main-80 text-hawkes-100">Source</TableCell>
+                          <TableCell className="border-b-main-80 text-hawkes-100">
+                            Destination
+                          </TableCell>
+                          <TableCell className="border-b-main-80 text-hawkes-100">Type</TableCell>
+                          <TableCell className="border-b-main-80 text-hawkes-100" align="right">
+                            Amount
                           </TableCell>
                         </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
+                      </TableHead>
+                      <TableBody>
+                        {displayRecentTx.length > 0 ? (
+                          displayRecentTx.map((row, key) => (
+                            <TableRow
+                              key={row.tx}
+                              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                            >
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                className="border-b-main-80 text-celestial-100"
+                              >
+                                <TransactionText
+                                  className="text-16"
+                                  tx={row.txid}
+                                  letter={4}
+                                  copy
+                                  link
+                                />
+                              </TableCell>
+                              <TableCell className="border-b-main-80 text-celestial-100">
+                                <TickText
+                                  tick={row.tick}
+                                  className="text-white text-16"
+                                  copy
+                                  link
+                                />
+                              </TableCell>
+                              <TableCell className="border-b-main-80 text-celestial-100">
+                                <AddressText address={row.src} letter={4} copy link />
+                              </TableCell>
+                              <TableCell className="border-b-main-80 text-celestial-100">
+                                <AddressText address={row.dest} letter={4} copy link />
+                              </TableCell>
+                              <TableCell className="border-b-main-80">{row.type}</TableCell>
+                              <TableCell className="border-b-main-80" align="right">
+                                {formatString(row.amount)}
+                              </TableCell>
+                            </TableRow>
+                          ))
+                        ) : (
+                          <TableRow>
+                            <TableCell colSpan={6}>
+                              <EmptyBox />
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                )}
               </Hidden>
             </CardItem>
           </div>

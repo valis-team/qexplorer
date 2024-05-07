@@ -27,7 +27,6 @@ function AddressPage() {
   const [addressData, setAddressData] = useState({});
   const [displayAddressHistory, setDisplayAddressHistory] = useState([]);
   const isMobile = useMediaQuery('(max-width:768px)');
-  console.log('address --->', address);
   useEffect(() => {
     if (addressParam) {
       sendMessage(addressParam);

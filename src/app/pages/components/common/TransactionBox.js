@@ -5,7 +5,7 @@ import AddressText from './AddressText';
 const TransactionBox = (props) => {
   const isMobile = useMediaQuery('(max-width:768px)');
   return (
-    <div className="flex gap-10 md:gap-20 flex-wrap items-center">
+    <div className="flex gap-10 flex-wrap items-center w-fit mx-auto">
       <div className="flex gap-4 md:gap-6 items-start">
         <img className="w-24 md:w-32 h-24 md:h-32" src="assets/icons/info_icon.svg" alt="" />
         <div className="flex flex-col gap-4">
