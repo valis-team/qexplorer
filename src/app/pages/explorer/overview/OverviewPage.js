@@ -17,6 +17,7 @@ import TransactionBox from '../../components/common/TransactionBox';
 import Chart from '../../components/Chart';
 import EmptyBox from '../../components/EmptyBox';
 import CircleProgress from '../../components/common/CircleProgress';
+import TokenBarChart from '../../components/TokenBarChart';
 
 function OverviewPage() {
   const {
@@ -25,6 +26,7 @@ function OverviewPage() {
     currentTick,
     recenttx: socketRecentTx,
     tokens: socketTokens,
+    prices: socketPrices,
     loading,
     sendMessage,
   } = useSocket();
@@ -42,11 +44,13 @@ function OverviewPage() {
     [socketTokens]
   );
 
+  // console.log('prices ---->', prices);
   useEffect(() => {
     sendMessage('marketcap');
     sendMessage('emptyticks 1 100000');
     sendMessage('LKBOPOUKGSYTODWVEPXHUXDTRSOCDOXXXIEAGBJXAGJRMGXRXMCHDNCHWRLK');
     sendMessage('tokenlist');
+    sendMessage('prices');
   }, [sendMessage]);
 
   useEffect(() => {
@@ -153,7 +157,7 @@ function OverviewPage() {
                 <Typography className="text-14 text-hawkes-30 font-urb w-full flex justify-start">
                   Supply
                 </Typography>
-                <Typography className="font-space text-16 md:text-15 text-hawkes-100">
+                <Typography className="font-space py-2 text-16 md:text-15 text-hawkes-100">
                   {formatString(marketcap?.supply)}
                 </Typography>
               </div>
@@ -172,13 +176,19 @@ function OverviewPage() {
           </div>
         </CardItem>
         <div className="flex flex-col md:flex-row gap-5 md:gap-8">
-          <div className="w-full md:w-1/3 flex flex-col gap-5 md:gap-">
+          <div className="w-full md:w-1/3 flex flex-col gap-5 md:gap-10">
+            <CardItem className="flex flex-col gap-10 p-8 md:p-20">
+              <Typography className="text-24 md:text-32 font-urb text-hawkes-100">
+                QWallet Dashboard
+              </Typography>
+              <TokenBarChart />
+            </CardItem>
             <CardItem className="flex flex-col gap-10 p-8 md:p-20">
               <Typography className="text-24 md:text-32 font-urb text-hawkes-100">
                 Empty Ticks{' '}
                 <sapn className="text-20">{`(${emptyticks.begintick} - ${emptyticks.endtick})`}</sapn>
               </Typography>
-              <div className="flex gap-6 flex-wrap max-h-[310px] justify-between overflow-auto">
+              <div className="grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 max-h-[310px] justify-between overflow-auto">
                 {(emptyticks?.emptyticks || []).map((tick, key) => {
                   return <TickText className="text-16 text-main-40" tick={tick} key={key} link />;
                 })}
@@ -211,7 +221,7 @@ function OverviewPage() {
                       loadCurrentT ? 'opacity-70' : 'opacity-100'
                     }`}
                   >
-                    {getStandardTime(currentT.utc)}
+                    {getStandardTime(currentT.utc).toDateString()}
                   </Typography>
                 </div>
               </CardItem>
@@ -274,7 +284,7 @@ function OverviewPage() {
                     sx={{ maxHeight: 350 }}
                     onScroll={handleScroll}
                   >
-                    <Table stickyHeader sx={{ minWidth: 650 }} aria-label="simple table">
+                    <Table stickyHeader sx={{ minWidth: 800 }} aria-label="simple table">
                       <TableHead className="bg-celestial-20">
                         <TableRow>
                           <TableCell className="border-b-main-80 text-hawkes-100">Tx</TableCell>
