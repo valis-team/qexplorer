@@ -43,7 +43,7 @@ export default function OrderbookContent() {
 
   const handleBuyScroll = (e) => {
     const { scrollTop, clientHeight, scrollHeight } = e.currentTarget;
-    if (scrollHeight - scrollTop === clientHeight) {
+    if (scrollHeight - scrollTop <= clientHeight + 5) {
       const newLength = disaplyBuyOrder.length + 5;
       if ((orderbook?.bids || []).length >= newLength) {
         setDisaplayBuyOrder((orderbook?.bids || []).slice(0, newLength));
@@ -53,7 +53,7 @@ export default function OrderbookContent() {
 
   const handleSallScroll = (e) => {
     const { scrollTop, clientHeight, scrollHeight } = e.currentTarget;
-    if (scrollHeight - scrollTop === clientHeight) {
+    if (scrollHeight - scrollTop <= clientHeight + 5) {
       const newLength = displaySallOrder.length + 5;
       if ((orderbook?.asks || []).length >= newLength) {
         setDisaplaySallOrder((orderbook?.asks || []).slice(0, newLength));

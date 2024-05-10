@@ -43,7 +43,7 @@ function RichlistContent() {
 
   const handleScroll = (e) => {
     const { scrollTop, clientHeight, scrollHeight } = e.currentTarget;
-    if (scrollHeight - scrollTop === clientHeight) {
+    if (scrollHeight - scrollTop <= clientHeight + 5) {
       const newLength = displayRichList.length + 5;
       if ((richlist || []).length >= newLength) {
         setDisplayRichList((richlist || []).slice(0, newLength));

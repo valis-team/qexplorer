@@ -23,6 +23,10 @@ export default function TokenTab(props) {
     if (tokenIndex > -1 && displayTokens[0] !== token) {
       handleChangToken({ label: token, value: tokenIndex });
     }
+
+    if (displayTokens.length < 2) {
+      setDisplayTokens((tokens || []).slice(0, displayCount));
+    }
   }, [tokens, token]);
   const handleChangToken = (val) => {
     const total = tokens.length;

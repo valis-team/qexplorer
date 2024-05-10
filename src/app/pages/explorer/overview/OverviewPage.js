@@ -77,7 +77,7 @@ function OverviewPage() {
 
   const handleScroll = (e) => {
     const { scrollTop, clientHeight, scrollHeight } = e.currentTarget;
-    if (scrollHeight - scrollTop === clientHeight) {
+    if (scrollHeight - scrollTop <= clientHeight + 5) {
       const newLength = displayRecentTx.length + 5;
       if ((recenttx?.recenttx || []).length >= newLength) {
         setDisplayRecentTx((recenttx?.recenttx || []).slice(0, newLength));
@@ -87,7 +87,7 @@ function OverviewPage() {
 
   const handleMobileScroll = (e) => {
     const { scrollTop, clientHeight, scrollHeight } = e.currentTarget;
-    if (scrollHeight - scrollTop === clientHeight) {
+    if (scrollHeight - scrollTop <= clientHeight + 10) {
       const newLength = mobielDisplayRecentTx.length + 5;
       if ((recenttx?.recenttx || []).length >= newLength) {
         setMobileDisplayRecentTx((recenttx?.recenttx || []).slice(0, newLength));
