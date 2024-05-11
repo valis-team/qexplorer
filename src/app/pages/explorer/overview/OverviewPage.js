@@ -220,7 +220,7 @@ function OverviewPage() {
               </CardItem>
             )}
           </div>
-          <div className="w-full md:w-2/3">
+          <div className="w-full md:w-2/3 flex flex-col gap-5 md:gap-8">
             <CardItem className="flex flex-col gap-10 p-16 md:p-32">
               <div className="flex items-center justify-between">
                 <Typography className="text-24 md:text-32 font-urb text-hawkes-100">

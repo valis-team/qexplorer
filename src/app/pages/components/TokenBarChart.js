@@ -39,7 +39,7 @@ export default function AreaChartFillByValue() {
   return (
     <Box className="flex w-full gap-5 md:gap-10 flex-col">
       <Box className="flex w-full justify-between items-center">
-        <Typography className="text-24 md:text-32 font-urb text-hawkes-100">
+        <Typography className="text-20 md:text-32 font-urb text-hawkes-100">
           QWallet Dashboard
         </Typography>
         <ToggleButtonGroup
