@@ -1,7 +1,13 @@
 import * as React from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { useSocket } from 'src/app/context/SocketContext';
-import { ToggleButton, ToggleButtonGroup, useMediaQuery } from '@mui/material';
+import {
+  Backdrop,
+  CircularProgress,
+  ToggleButton,
+  ToggleButtonGroup,
+  useMediaQuery,
+} from '@mui/material';
 import { getStandardTime } from 'src/app/utils/function';
 
 export default function Chart() {
@@ -9,13 +15,21 @@ export default function Chart() {
   const { prices: socketPrices, sendMessage } = useSocket();
   const [chartMode, setChartMode] = React.useState(0); // 0: daily, 1: weekly
   const [displayPrices, setDisplayPrices] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
 
   const prices = React.useMemo(() => {
+    setLoading(false);
     return (socketPrices?.prices || []).map((item) => [getStandardTime(item[0]), item[1]]);
   }, [socketPrices]);
 
   React.useEffect(() => {
-    sendMessage(`prices 1 10000`);
+    const myFunction = () => {
+      sendMessage(`prices 1 10000`);
+      setLoading(true);
+    };
+    myFunction();
+    const intervalId = setInterval(myFunction, 60 * 1000);
+    return () => clearInterval(intervalId);
   }, []);
 
   React.useEffect(() => {
@@ -24,10 +38,7 @@ export default function Chart() {
       const oneDayInMillis = 24 * 60 * 60 * 1000;
       const timeBeforeOneDay = new Date(currentDate.getTime() - oneDayInMillis);
       setDisplayPrices(
-        prices.filter(
-          (item, key) =>
-            new Date(item[0]) > new Date().getTime() - 24 * 60 * 60 * 1000 && key % 5 === 0
-        )
+        prices.filter((item, key) => new Date(item[0]) > timeBeforeOneDay && key % 5 === 0)
       );
     } else {
       const currentDate = new Date();
@@ -69,39 +80,44 @@ export default function Chart() {
     setChartMode(+value || 0);
   };
   return (
-    <div className="w-fit relative">
-      <LineChart
-        {...lineChartsParams}
-        xAxis={[
-          {
-            data: displayPrices.map((item) => item[0]),
-            scaleType: 'time',
-            valueFormatter: dayFormatter,
-          },
-        ]}
-        series={lineChartsParams.series.map((series) => ({
-          ...series,
-          valueFormatter: (v) => (v === null ? '' : currencyFormatter(v)),
-        }))}
-        width={isSp ? window.innerWidth * 0.9 : 900}
-        height={isSp ? 250 : 350}
-      />
-      <div className="w-fit absolute top-0 left-[10px] md:left-[100px]">
-        <ToggleButtonGroup
-          color="info"
-          value={chartMode}
-          exclusive
-          onChange={handleChange}
-          aria-label="Platform"
-        >
-          <ToggleButton size="small" value={0}>
-            Day
-          </ToggleButton>
-          <ToggleButton size="small" value={1}>
-            WeeK
-          </ToggleButton>
-        </ToggleButtonGroup>
+    <>
+      <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
+        <CircularProgress color="warning" />
+      </Backdrop>
+      <div className="w-fit relative">
+        <LineChart
+          {...lineChartsParams}
+          xAxis={[
+            {
+              data: displayPrices.map((item) => item[0]),
+              scaleType: 'time',
+              valueFormatter: dayFormatter,
+            },
+          ]}
+          series={lineChartsParams.series.map((series) => ({
+            ...series,
+            valueFormatter: (v) => (v === null ? '' : currencyFormatter(v)),
+          }))}
+          width={isSp ? window.innerWidth * 0.9 : 900}
+          height={isSp ? 250 : 350}
+        />
+        <div className="w-fit absolute top-0 left-[10px] md:left-[100px]">
+          <ToggleButtonGroup
+            color="info"
+            value={chartMode}
+            exclusive
+            onChange={handleChange}
+            aria-label="Platform"
+          >
+            <ToggleButton size="small" value={0}>
+              Day
+            </ToggleButton>
+            <ToggleButton size="small" value={1}>
+              WeeK
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -26,7 +26,6 @@ function OverviewPage() {
     currentTick,
     recenttx: socketRecentTx,
     tokens: socketTokens,
-    prices: socketPrices,
     loading,
     sendMessage,
   } = useSocket();
@@ -63,7 +62,7 @@ function OverviewPage() {
     setTimeout(() => {
       setCurrentT(currentTick);
       setLoadCurrentT(false);
-    }, 500);
+    }, 100);
   }, [currentTick]);
 
   useEffect(() => {
@@ -177,12 +176,6 @@ function OverviewPage() {
         </CardItem>
         <div className="flex flex-col md:flex-row gap-5 md:gap-8">
           <div className="w-full md:w-1/3 flex flex-col gap-5 md:gap-10">
-            <CardItem className="flex flex-col gap-10 p-8 md:p-20">
-              <Typography className="text-24 md:text-32 font-urb text-hawkes-100">
-                QWallet Dashboard
-              </Typography>
-              <TokenBarChart />
-            </CardItem>
             <CardItem className="flex flex-col gap-10 p-8 md:p-20">
               <Typography className="text-24 md:text-32 font-urb text-hawkes-100">
                 Empty Ticks{' '}
@@ -351,6 +344,9 @@ function OverviewPage() {
                   </TableContainer>
                 )}
               </Hidden>
+            </CardItem>
+            <CardItem className="flex flex-col gap-10 p-8 md:p-20">
+              <TokenBarChart />
             </CardItem>
           </div>
         </div>
