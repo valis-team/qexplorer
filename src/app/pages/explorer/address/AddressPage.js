@@ -40,9 +40,13 @@ function AddressPage() {
     }
   }, [address]);
 
+  useEffect(() => {
+    setDisplayAddressHistory((history?.changes || []).slice(0, 10));
+  }, [history]);
+
   const handleScroll = (e) => {
     const { scrollTop, clientHeight, scrollHeight } = e.currentTarget;
-    if (scrollHeight - scrollTop === clientHeight) {
+    if (scrollHeight - scrollTop <= clientHeight + 5) {
       const newLength = displayAddressHistory.length + 5;
       if ((history?.changes || []).length >= newLength) {
         setDisplayAddressHistory((history?.changes || []).slice(0, newLength));
