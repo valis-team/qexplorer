@@ -1,6 +1,6 @@
 const WebSocket = require('ws');
 
-const LIVESOCKET_URL = 'wss://qsilver.org:5555'; // Use 'wss://' for secure WebSocket connections
+const LIVESOCKET_URL = 'wss://websocket.qsilver.org/'; // Use 'wss://' for secure WebSocket connections
 const PORT = 7005;
 
 let liveSocket = null;
