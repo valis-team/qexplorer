@@ -6,8 +6,15 @@ import Error404Config from '../pages/404/Error404Config';
 import RichlistConfig from '../pages/richlist/RichlistConfig';
 import ExplorerConfig from '../pages/explorer/ExplorerConfig';
 import OrderbookConfig from '../pages/orderbook/OrderbookConfig';
+import DownloadConfig from '../pages/download/DownloadConfig';
 
-const routeConfigs = [ExplorerConfig, RichlistConfig, OrderbookConfig, Error404Config];
+const routeConfigs = [
+  ExplorerConfig,
+  RichlistConfig,
+  OrderbookConfig,
+  DownloadConfig,
+  Error404Config,
+];
 
 const routes = [
   ...FuseUtils.generateRoutesFromConfigs(routeConfigs, settingsConfig.defaultAuth),

@@ -16,6 +16,13 @@ const navigationConfig = [
     url: 'explorer',
   },
   {
+    id: 'download',
+    title: 'Downloads',
+    type: 'item',
+    icon: 'heroicons-outline:home',
+    url: 'download',
+  },
+  {
     id: 'orderbood',
     title: 'Order Book',
     type: 'item',
