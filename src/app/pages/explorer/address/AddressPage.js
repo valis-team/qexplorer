@@ -18,6 +18,8 @@ import LinearProgress from '../../components/common/LinearProgress';
 import CardItem from '../../components/CardItem/CardItem';
 import AddressText from '../../components/common/AddressText';
 import TickText from '../../components/common/TickText';
+import AddressTableRow from '../../components/AddressTableRow';
+import EmptyBox from '../../components/EmptyBox';
 
 function AddressPage() {
   const { address: addressParam } = useParams();
@@ -56,6 +58,7 @@ function AddressPage() {
 
   useEffect(() => {
     console.log(displayAddressHistory, 'aaaaaaa');
+    console.log(history?.history.length);
   }, [displayAddressHistory]);
 
   if (loading) {
@@ -156,7 +159,6 @@ function AddressPage() {
             <Table stickyHeader sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead className="bg-celestial-20">
                 <TableRow>
-                  <TableCell className="border-b-main-80" />
                   <TableCell className="border-b-main-80 text-white">Tick</TableCell>
                   <TableCell className="border-b-main-80 text-white">TX</TableCell>
                   <TableCell className="border-b-main-80 text-white">Address</TableCell>
@@ -164,15 +166,17 @@ function AddressPage() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {/* {displayAddressHistory.length > 0 ? (
-                  displayAddressHistory.map((row, key) => <AddressTableRow row={row} />)
+                {displayAddressHistory.length > 0 ? (
+                  displayAddressHistory.map((row, idx) => (
+                    <AddressTableRow row={row} idx={idx} key={idx} />
+                  ))
                 ) : (
                   <TableRow>
                     <TableCell colSpan={8}>
                       <EmptyBox />
                     </TableCell>
                   </TableRow>
-                )} */}
+                )}
               </TableBody>
             </Table>
           </TableContainer>
