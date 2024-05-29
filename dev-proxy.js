@@ -1,7 +1,9 @@
 const WebSocket = require('ws');
+require('dotenv').config();
 
-const LIVESOCKET_URL = 'wss://websocket.qsilver.org/'; // Use 'wss://' for secure WebSocket connections
-const PORT = 7005;
+// Use the environment variables
+const PORT = process.env.REACT_APP_SOCKET_PORT || 7005;
+const LIVESOCKET_URL = process.env.REACT_APP_LIVE_SOCKET_URL || 'wss://websocket.qsilver.org';
 
 let liveSocket = null;
 
