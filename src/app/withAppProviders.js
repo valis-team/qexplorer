@@ -12,6 +12,8 @@ import store from './store';
 import AppContext from './AppContext';
 import { SocketProvider } from './context/SocketContext';
 
+const SOCKET_URL = `${process.env.REACT_APP_SOCKET_URL}:${process.env.REACT_APP_SOCKET_PORT}`;
+
 const withAppProviders = (Component) => (props) => {
   const WrapperComponent = () => (
     <AppContext.Provider
@@ -21,7 +23,7 @@ const withAppProviders = (Component) => (props) => {
     >
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Provider store={store}>
-          <SocketProvider socketUrl={process.env.REACT_APP_SOCKET_URL}>
+          <SocketProvider socketUrl={SOCKET_URL}>
             <StyledEngineProvider injectFirst>
               <Component {...props} />
             </StyledEngineProvider>
