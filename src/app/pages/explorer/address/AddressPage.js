@@ -17,8 +17,6 @@ import { formatString } from 'src/app/utils/function';
 import LinearProgress from '../../components/common/LinearProgress';
 import CardItem from '../../components/CardItem/CardItem';
 import AddressText from '../../components/common/AddressText';
-import AddressTableRow from '../../components/AddressTableRow';
-import EmptyBox from '../../components/EmptyBox';
 import TickText from '../../components/common/TickText';
 
 function AddressPage() {
@@ -41,18 +39,24 @@ function AddressPage() {
   }, [address]);
 
   useEffect(() => {
-    setDisplayAddressHistory((history?.changes || []).slice(0, 10));
+    if (history) {
+      setDisplayAddressHistory((history?.history || []).slice(0, 10));
+    }
   }, [history]);
 
   const handleScroll = (e) => {
     const { scrollTop, clientHeight, scrollHeight } = e.currentTarget;
     if (scrollHeight - scrollTop <= clientHeight + 5) {
       const newLength = displayAddressHistory.length + 5;
-      if ((history?.changes || []).length >= newLength) {
-        setDisplayAddressHistory((history?.changes || []).slice(0, newLength));
+      if ((history?.history || []).length >= newLength) {
+        setDisplayAddressHistory((history?.history || []).slice(0, newLength));
       }
     }
   };
+
+  useEffect(() => {
+    console.log(displayAddressHistory, 'aaaaaaa');
+  }, [displayAddressHistory]);
 
   if (loading) {
     return <LinearProgress />;
@@ -153,21 +157,14 @@ function AddressPage() {
               <TableHead className="bg-celestial-20">
                 <TableRow>
                   <TableCell className="border-b-main-80" />
-                  <TableCell className="border-b-main-80 text-white">Balance</TableCell>
-                  <TableCell className="border-b-main-80 text-white">
-                    In <span className="text-12 text-hawkes-50">Count | Balance</span>
-                  </TableCell>
-                  <TableCell className="border-b-main-80 text-white">New In</TableCell>
-                  <TableCell className="border-b-main-80 text-white">
-                    Out <span className="text-12 text-hawkes-50">Count | Balance</span>
-                  </TableCell>
-                  <TableCell className="border-b-main-80 text-white">New Out</TableCell>
-                  <TableCell className="border-b-main-80 text-white">Rank</TableCell>
                   <TableCell className="border-b-main-80 text-white">Tick</TableCell>
+                  <TableCell className="border-b-main-80 text-white">TX</TableCell>
+                  <TableCell className="border-b-main-80 text-white">Address</TableCell>
+                  <TableCell className="border-b-main-80 text-white">Amount</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {displayAddressHistory.length > 0 ? (
+                {/* {displayAddressHistory.length > 0 ? (
                   displayAddressHistory.map((row, key) => <AddressTableRow row={row} />)
                 ) : (
                   <TableRow>
@@ -175,7 +172,7 @@ function AddressPage() {
                       <EmptyBox />
                     </TableCell>
                   </TableRow>
-                )}
+                )} */}
               </TableBody>
             </Table>
           </TableContainer>

@@ -48,7 +48,7 @@ const useWebSocket = (socketUrl) => {
           setTick(data);
         } else if (data.rank && data.address) {
           setAddress(data);
-        } else if (data.address && data.changes) {
+        } else if (data.address && data.history) {
           setHistory(data);
         } else if (data.command === 'txidrequest') {
           setTx(data);
