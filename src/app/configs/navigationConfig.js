@@ -19,7 +19,7 @@ const navigationConfig = [
     id: 'download',
     title: 'Downloads',
     type: 'item',
-    icon: 'heroicons-outline:home',
+    icon: 'heroicons-outline:download',
     url: 'download',
   },
   {
