@@ -6,7 +6,7 @@ import { getStandardTime } from 'src/app/utils/function';
 
 export default function Chart() {
   const isSp = useMediaQuery('(max-width:1024px)');
-  const { prices: socketPrices, sendMessage, tokens } = useSocket();
+  const { prices: socketPrices, sendMessage, tokens, tokenPrices } = useSocket();
   const [chartMode, setChartMode] = React.useState(0); // 0: daily, 1: weekly
   const [displayPrices, setDisplayPrices] = React.useState([]);
   const [selectedToken, setSelectedToken] = React.useState('QU');
@@ -19,10 +19,8 @@ export default function Chart() {
 
   React.useEffect(() => {
     const myFunction = () => {
-      sendMessage(`prices 1 10000`);
-      // setLoading(true);
+      sendMessage(`prices 1 1000`);
     };
-    myFunction();
     const intervalId = setInterval(myFunction, 60 * 1000);
     return () => clearInterval(intervalId);
   }, []);
@@ -44,6 +42,16 @@ export default function Chart() {
       );
     }
   }, [prices, chartMode]);
+
+  React.useEffect(() => {
+    if (selectedToken !== 'QU') {
+      const tokenPrice = (tokenPrices?.prices || []).map((item) => [
+        getStandardTime(item[0]),
+        item[1],
+      ]);
+      setDisplayPrices(tokenPrice.slice(-100));
+    }
+  }, [tokenPrices]);
 
   const dayFormatter = (date) =>
     `${date.getDate().toString().padStart(2, '0')}/${date
@@ -77,7 +85,11 @@ export default function Chart() {
   };
 
   React.useEffect(() => {
-    console.log(selectedToken);
+    if (selectedToken === 'QU') {
+      sendMessage(`prices 1 1000`);
+    } else {
+      sendMessage(`prices.${selectedToken} 1 1000`);
+    }
   }, [selectedToken]);
 
   return (

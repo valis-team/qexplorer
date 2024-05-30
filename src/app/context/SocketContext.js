@@ -65,7 +65,7 @@ const useWebSocket = (socketUrl) => {
         } else if (data.tokens) {
           setTokens(data.tokens);
         } else if (data.prices) {
-          if (+(data.prices[0] || [])[1] > 1) {
+          if (+(data.prices[0] || [1])[1] > 0.1) {
             setTokenPrices(data);
           } else {
             setPrices(data);
