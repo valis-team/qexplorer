@@ -33,16 +33,20 @@ const useWebSocket = (socketUrl) => {
   const [fetchError, setFetchError] = useState({});
   const [socketSyncStateStore, setSocketSyncStateStore] = useState({});
   const socketSyncStateRef = useRef(socketSyncStateStore);
+  const [reconnectAttempt, setReconnectAttempt] = useState(0);
+  const maxReconnectAttempts = 5;
+  const reconnectDelay = 100; // 5 seconds
 
   useEffect(() => {
     socketSyncStateRef.current = socketSyncStateStore;
   }, [socketSyncStateStore]);
 
-  useEffect(() => {
+  const connectWebSocket = useCallback(() => {
     const ws = new WebSocket(socketUrl);
 
     const onOpen = () => {
       setIsConnected(true);
+      setReconnectAttempt(0);
     };
     const onMessage = (event) => {
       try {
@@ -110,6 +114,12 @@ const useWebSocket = (socketUrl) => {
     const onClose = () => {
       console.log('WebSocket disconnected');
       setIsConnected(false);
+      if (reconnectAttempt < maxReconnectAttempts) {
+        setTimeout(() => {
+          setReconnectAttempt((prev) => prev + 1);
+          connectWebSocket();
+        }, reconnectDelay);
+      }
     };
 
     ws.addEventListener('open', onOpen);
@@ -126,7 +136,11 @@ const useWebSocket = (socketUrl) => {
       ws.removeEventListener('close', onClose);
       ws.close();
     };
-  }, [socketUrl]);
+  }, [socketUrl, reconnectAttempt]);
+
+  useEffect(() => {
+    connectWebSocket();
+  }, [connectWebSocket]);
 
   const socketSync = async (command) => {
     if (websocket && isConnected) {
