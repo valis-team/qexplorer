@@ -19,7 +19,7 @@ export default function Chart() {
 
   React.useEffect(() => {
     const myFunction = () => {
-      sendMessage(`prices 1 1000`);
+      sendMessage(`prices 1`);
     };
     const intervalId = setInterval(myFunction, 60 * 1000);
     return () => clearInterval(intervalId);
@@ -30,16 +30,12 @@ export default function Chart() {
       const currentDate = new Date();
       const oneDayInMillis = 24 * 60 * 60 * 1000;
       const timeBeforeOneDay = new Date(currentDate.getTime() - oneDayInMillis);
-      setDisplayPrices(
-        prices.filter((item, key) => new Date(item[0]) > timeBeforeOneDay && key % 5 === 0)
-      );
+      setDisplayPrices(prices);
     } else {
       const currentDate = new Date();
       const oneWeekInMillis = 7 * 24 * 60 * 60 * 1000;
       const timeBeforeOneWeek = new Date(currentDate.getTime() - oneWeekInMillis);
-      setDisplayPrices(
-        prices.filter((item, key) => new Date(item[0]) > timeBeforeOneWeek && key % 35 === 0)
-      );
+      setDisplayPrices(prices);
     }
   }, [prices, chartMode]);
 
@@ -49,7 +45,7 @@ export default function Chart() {
         getStandardTime(item[0]),
         item[1],
       ]);
-      setDisplayPrices(tokenPrice.slice(-100));
+      setDisplayPrices(tokenPrice);
     }
   }, [tokenPrices]);
 
@@ -86,9 +82,9 @@ export default function Chart() {
 
   React.useEffect(() => {
     if (selectedToken === 'QU') {
-      sendMessage(`prices 1 1000`);
+      sendMessage(`prices 1`);
     } else {
-      sendMessage(`prices.${selectedToken} 1 1000`);
+      sendMessage(`prices.${selectedToken} 1`);
     }
   }, [selectedToken]);
 
