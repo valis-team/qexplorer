@@ -52,9 +52,7 @@ function DownloadPage() {
   ) : (
     <div className="container px-12 py-20 md:px-24 flex flex-col gap-10 max-h-[calc(100vh-76px)] overflow-y-auto">
       <h1 className="text-4xl font-bold text-center mb-8">Available Downloads</h1>
-      {releases.length === 0 ? (
-        <p className="text-center text-xl">No releases available.</p>
-      ) : (
+      {releases.length !== 0 && (
         <div className="space-y-4">
           {releases.map((filename, index) => {
             const { productName, platform, date } = parseFilename(filename);
