@@ -63,7 +63,7 @@ function AddressTableRow(props) {
           <TickText className="text-white" tick={row[3]} copy />
         </TableCell>
         {hoverIdx === idx && sctx && row[2].startsWith('BAAAAAAA') && (
-          <TableCell className="absolute bg-white text-black border border-gray-300 shadow-lg p-2 max-w-[300px] top-0 left-0 break-words overflow-hidden whitespace-normal z-10">
+          <TableCell className="absolute bg-white text-black border border-gray-300 shadow-lg p-2 max-w-[300px] bottom-5 left-5 break-words overflow-hidden whitespace-normal z-10">
             {itemLoading ? (
               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-black" />
             ) : (
