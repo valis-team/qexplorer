@@ -17,7 +17,6 @@ import TransactionBox from '../../components/common/TransactionBox';
 import Chart from '../../components/Chart';
 import EmptyBox from '../../components/EmptyBox';
 import CircleProgress from '../../components/common/CircleProgress';
-import TokenBarChart from '../../components/TokenBarChart';
 
 function OverviewPage() {
   const {
@@ -345,9 +344,9 @@ function OverviewPage() {
                 )}
               </Hidden>
             </CardItem>
-            <CardItem className="flex flex-col gap-10 p-8 md:p-20">
+            {/* <CardItem className="flex flex-col gap-10 p-8 md:p-20">
               <TokenBarChart />
-            </CardItem>
+            </CardItem> */}
           </div>
         </div>
       </div>
