@@ -42,7 +42,7 @@ function AddressTableRow(props) {
         sx={{ '& > *': { borderBottom: 'unset' } }}
         className="relative"
         onMouseEnter={(e) => {
-          handleMouseEnter(e, row, idx);
+          if (row[2].startsWith('BAAAAAAA')) handleMouseEnter(e, row, idx);
         }}
         onMouseLeave={handleMouseLeave}
       >
