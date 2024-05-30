@@ -11,7 +11,7 @@ const OrderbookHeader = () => {
   const isMobile = useMediaQuery('(max-width:768px)');
 
   useEffect(() => {
-    sendMessage('tokenlist');
+    sendMessage('explist');
   }, [sendMessage]);
 
   useEffect(() => {

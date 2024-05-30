@@ -24,7 +24,7 @@ ws.on('connection', function connection(clientSocket) {
     });
 
     liveSocket.on('message', (data) => {
-      console.log(`Received from live socket: ${data}`);
+      // console.log(`Received from live socket: ${data}`);
       if (clientSocket.readyState === WebSocket.OPEN) {
         clientSocket.send(`${data}`);
       }

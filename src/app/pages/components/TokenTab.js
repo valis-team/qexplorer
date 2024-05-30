@@ -22,7 +22,7 @@ export default function TokenTab(props) {
     slidesToScroll: 1,
   };
   useEffect(() => {
-    sendMessage('tokenlist');
+    sendMessage('explist');
   }, [sendMessage]);
 
   useEffect(() => {
