@@ -17,7 +17,6 @@ import TransactionBox from '../../components/common/TransactionBox';
 import Chart from '../../components/Chart';
 import EmptyBox from '../../components/EmptyBox';
 import CircleProgress from '../../components/common/CircleProgress';
-import TokenBarChart from '../../components/TokenBarChart';
 
 function OverviewPage() {
   const {
@@ -48,12 +47,12 @@ function OverviewPage() {
     sendMessage('marketcap');
     sendMessage('emptyticks 1 100000');
     sendMessage('LKBOPOUKGSYTODWVEPXHUXDTRSOCDOXXXIEAGBJXAGJRMGXRXMCHDNCHWRLK');
-    sendMessage('tokenlist');
+    sendMessage('explist');
     sendMessage('prices');
   }, [sendMessage]);
 
   useEffect(() => {
-    sendMessage(`recenttx 10000 ${selectedToken}`);
+    sendMessage(`recenttx 100 ${selectedToken}`);
     setRecenttxLoading(true);
   }, [selectedToken]);
 
@@ -66,6 +65,7 @@ function OverviewPage() {
   }, [currentTick]);
 
   useEffect(() => {
+    console.log(recenttx, 'aaaaaaaaaaaa');
     if (recenttx?.recenttx) {
       setDisplayRecentTx((recenttx?.recenttx || []).slice(0, 10));
       setMobileDisplayRecentTx((recenttx?.recenttx || []).slice(0, 10));
@@ -345,9 +345,9 @@ function OverviewPage() {
                 )}
               </Hidden>
             </CardItem>
-            <CardItem className="flex flex-col gap-10 p-8 md:p-20">
+            {/* <CardItem className="flex flex-col gap-10 p-8 md:p-20">
               <TokenBarChart />
-            </CardItem>
+            </CardItem> */}
           </div>
         </div>
       </div>

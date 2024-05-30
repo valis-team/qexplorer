@@ -1,5 +1,6 @@
 import FuseLoading from '@fuse/core/FuseLoading';
-import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
+import { delay, splitAtFirstSpace } from '../utils/function';
 
 const WebSocketContext = createContext(null);
 
@@ -30,16 +31,41 @@ const useWebSocket = (socketUrl) => {
   const [tokenPrices, setTokenPrices] = useState({});
   const [loading, setLoading] = useState(false); // Added loading state
   const [fetchError, setFetchError] = useState({});
+  const [socketSyncStateStore, setSocketSyncStateStore] = useState({});
+  const socketSyncStateRef = useRef(socketSyncStateStore);
+  const [reconnectAttempt, setReconnectAttempt] = useState(0);
+  const maxReconnectAttempts = 5;
+  const reconnectDelay = 100; // 5 seconds
 
   useEffect(() => {
+    socketSyncStateRef.current = socketSyncStateStore;
+  }, [socketSyncStateStore]);
+
+  const connectWebSocket = useCallback(() => {
     const ws = new WebSocket(socketUrl);
 
     const onOpen = () => {
       setIsConnected(true);
+      setReconnectAttempt(0);
     };
     const onMessage = (event) => {
       try {
-        const data = JSON.parse(event.data);
+        let flag;
+        let data;
+        if (event.data.startsWith('#')) {
+          [flag, data] = splitAtFirstSpace(event.data);
+        } else {
+          data = JSON.parse(event.data);
+        }
+        if (flag) {
+          setSocketSyncStateStore((prevState) => {
+            const updatedState = {
+              ...prevState,
+              [flag.slice(1)]: data,
+            };
+            return updatedState;
+          });
+        }
         if (data.richlist && data.name) {
           setRichList(data.richlist);
         } else if (data.command === 'CurrentTickInfo') {
@@ -65,7 +91,7 @@ const useWebSocket = (socketUrl) => {
         } else if (data.tokens) {
           setTokens(data.tokens);
         } else if (data.prices) {
-          if (+(data.prices[0] || [])[1] > 1) {
+          if (+(data.prices[0] || [1])[1] > 0.1) {
             setTokenPrices(data);
           } else {
             setPrices(data);
@@ -76,7 +102,6 @@ const useWebSocket = (socketUrl) => {
 
         setLoading(false);
       } catch (error) {
-        console.log(event.data);
         setLoading(false);
       }
     };
@@ -89,6 +114,12 @@ const useWebSocket = (socketUrl) => {
     const onClose = () => {
       console.log('WebSocket disconnected');
       setIsConnected(false);
+      if (reconnectAttempt < maxReconnectAttempts) {
+        setTimeout(() => {
+          setReconnectAttempt((prev) => prev + 1);
+          connectWebSocket();
+        }, reconnectDelay);
+      }
     };
 
     ws.addEventListener('open', onOpen);
@@ -105,7 +136,35 @@ const useWebSocket = (socketUrl) => {
       ws.removeEventListener('close', onClose);
       ws.close();
     };
-  }, [socketUrl]);
+  }, [socketUrl, reconnectAttempt]);
+
+  useEffect(() => {
+    connectWebSocket();
+  }, [connectWebSocket]);
+
+  const socketSync = useCallback(
+    async (command) => {
+      if (websocket && isConnected) {
+        let flag = `${Date.now()}`;
+        if (socketSyncStateRef.current[flag] !== undefined) {
+          flag += '_';
+        }
+        websocket.send(`#${flag} ${command}`);
+
+        /* eslint-disable no-await-in-loop */
+        for (let i = 1; i < 100; i += 1) {
+          await delay(50);
+          const socketState = socketSyncStateRef.current[flag];
+          if (socketState) {
+            return socketState;
+          }
+        }
+      }
+      /* eslint-enable no-await-in-loop */
+      return undefined;
+    },
+    [websocket, isConnected]
+  );
 
   const sendMessage = useCallback(
     (message) => {
@@ -136,6 +195,7 @@ const useWebSocket = (socketUrl) => {
     prices,
     tokenPrices,
     fetchError,
+    socketSync,
   };
 };
 

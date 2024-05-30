@@ -53,11 +53,25 @@ function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function splitAtFirstSpace(str) {
+  const index = str.indexOf(' ');
+  if (index === -1) {
+    return [str];
+  }
+  return [str.slice(0, index), JSON.parse(str.slice(index + 1))];
+}
+
 export {
   formatString,
   formatDate,
   formatEllipsis,
   copyText,
+  delay,
   getStandardTime,
   capitalizeFirstLetter,
+  splitAtFirstSpace,
 };

@@ -13,9 +13,16 @@ export default function TokenTab(props) {
   const displayCount = 5;
   const [displayTokens, setDisplayTokens] = useState([]);
   const [search, setSearch] = useState();
-
+  const settings = {
+    dots: true,
+    infinite: true,
+    width: '300px',
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+  };
   useEffect(() => {
-    sendMessage('tokenlist');
+    sendMessage('explist');
   }, [sendMessage]);
 
   useEffect(() => {
@@ -69,11 +76,11 @@ export default function TokenTab(props) {
           renderInput={(params) => <TextField {...params} label="SC" />}
         />
       ) : (
-        <div className="flex">
-          {displayTokens.map((item, key) => (
+        <div className="flex max-w-[600px] overflow-x-auto">
+          {tokens.map((item, key) => (
             <Typography
               key={key}
-              className={`px-16 md:px-32 py-12 ${
+              className={`px-6 md:px-12 py-12 hover:text-white ${
                 token === item
                   ? 'border-b-2 border-hawkes-100 text-bold text-white'
                   : 'text-main-50  border-b-1'
@@ -86,12 +93,12 @@ export default function TokenTab(props) {
               {item}
             </Typography>
           ))}
-          <Typography
+          {/* <Typography
             className="px-16 md:px-32 py-12 text-hawkes-50  border-b-1"
             style={{ borderColor: '#d2e0fc4d' }}
           >
             ...
-          </Typography>
+          </Typography> */}
         </div>
       )}
 

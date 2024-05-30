@@ -5,6 +5,8 @@ import './i18n';
 import './styles/app-base.css';
 import './styles/app-components.css';
 import './styles/app-utilities.css';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 import { createRoot } from 'react-dom/client';
 import App from './app/App';
 import * as serviceWorker from './serviceWorker';

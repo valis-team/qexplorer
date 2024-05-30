@@ -1,33 +1,26 @@
 import * as React from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { useSocket } from 'src/app/context/SocketContext';
-import {
-  Backdrop,
-  CircularProgress,
-  ToggleButton,
-  ToggleButtonGroup,
-  useMediaQuery,
-} from '@mui/material';
+import { FormControl, NativeSelect, useMediaQuery } from '@mui/material';
 import { getStandardTime } from 'src/app/utils/function';
 
 export default function Chart() {
   const isSp = useMediaQuery('(max-width:1024px)');
-  const { prices: socketPrices, sendMessage } = useSocket();
+  const { prices: socketPrices, sendMessage, tokens, tokenPrices } = useSocket();
   const [chartMode, setChartMode] = React.useState(0); // 0: daily, 1: weekly
   const [displayPrices, setDisplayPrices] = React.useState([]);
-  const [loading, setLoading] = React.useState(false);
+  const [selectedToken, setSelectedToken] = React.useState('QU');
+  // const [loading, setLoading] = React.useState(false);
 
   const prices = React.useMemo(() => {
-    setLoading(false);
+    // setLoading(false);
     return (socketPrices?.prices || []).map((item) => [getStandardTime(item[0]), item[1]]);
   }, [socketPrices]);
 
   React.useEffect(() => {
     const myFunction = () => {
-      sendMessage(`prices 1 10000`);
-      setLoading(true);
+      sendMessage(`prices 1`);
     };
-    myFunction();
     const intervalId = setInterval(myFunction, 60 * 1000);
     return () => clearInterval(intervalId);
   }, []);
@@ -37,18 +30,24 @@ export default function Chart() {
       const currentDate = new Date();
       const oneDayInMillis = 24 * 60 * 60 * 1000;
       const timeBeforeOneDay = new Date(currentDate.getTime() - oneDayInMillis);
-      setDisplayPrices(
-        prices.filter((item, key) => new Date(item[0]) > timeBeforeOneDay && key % 5 === 0)
-      );
+      setDisplayPrices(prices);
     } else {
       const currentDate = new Date();
       const oneWeekInMillis = 7 * 24 * 60 * 60 * 1000;
       const timeBeforeOneWeek = new Date(currentDate.getTime() - oneWeekInMillis);
-      setDisplayPrices(
-        prices.filter((item, key) => new Date(item[0]) > timeBeforeOneWeek && key % 35 === 0)
-      );
+      setDisplayPrices(prices);
     }
   }, [prices, chartMode]);
+
+  React.useEffect(() => {
+    if (selectedToken !== 'QU') {
+      const tokenPrice = (tokenPrices?.prices || []).map((item) => [
+        getStandardTime(item[0]),
+        item[1],
+      ]);
+      setDisplayPrices(tokenPrice);
+    }
+  }, [tokenPrices]);
 
   const dayFormatter = (date) =>
     `${date.getDate().toString().padStart(2, '0')}/${date
@@ -66,7 +65,7 @@ export default function Chart() {
     () => ({
       series: [
         {
-          label: 'QU Price',
+          // label: 'QU Price',
           data: displayPrices.map((item) => item[1]),
           showMark: false,
           color: '#03A9F4',
@@ -76,14 +75,24 @@ export default function Chart() {
     [displayPrices]
   );
 
-  const handleChange = (event, value) => {
-    setChartMode(+value || 0);
+  const handleTokenChange = (event) => {
+    const selectedIdx = event.target.value;
+    setSelectedToken(['QU', ...tokens][selectedIdx]);
   };
+
+  React.useEffect(() => {
+    if (selectedToken === 'QU') {
+      sendMessage(`prices 1`);
+    } else {
+      sendMessage(`prices.${selectedToken} 1`);
+    }
+  }, [selectedToken]);
+
   return (
     <>
-      <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
+      {/* <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
         <CircularProgress color="warning" />
-      </Backdrop>
+      </Backdrop> */}
       <div className="w-fit relative">
         <LineChart
           {...lineChartsParams}
@@ -102,7 +111,23 @@ export default function Chart() {
           height={isSp ? 250 : 350}
         />
         <div className="w-fit absolute top-0 left-[10px] md:left-[100px]">
-          <ToggleButtonGroup
+          <FormControl fullWidth>
+            <NativeSelect
+              defaultValue={0}
+              onChange={handleTokenChange}
+              inputProps={{
+                name: 'age',
+                id: 'uncontrolled-native',
+              }}
+            >
+              {tokens &&
+                tokens.length > 0 &&
+                ['QU', ...tokens].map((token, idx) => {
+                  return <option value={idx}>{token}</option>;
+                })}
+            </NativeSelect>
+          </FormControl>
+          {/* <ToggleButtonGroup
             color="info"
             value={chartMode}
             exclusive
@@ -115,7 +140,7 @@ export default function Chart() {
             <ToggleButton size="small" value={1}>
               WeeK
             </ToggleButton>
-          </ToggleButtonGroup>
+          </ToggleButtonGroup> */}
         </div>
       </div>
     </>
