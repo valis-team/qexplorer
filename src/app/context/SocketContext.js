@@ -54,13 +54,11 @@ const useWebSocket = (socketUrl) => {
           data = JSON.parse(event.data);
         }
         if (flag) {
-          console.log({ ...socketSyncStateStore, [flag.slice(1)]: data }, '333333333333333');
           setSocketSyncStateStore((prevState) => {
             const updatedState = {
               ...prevState,
               [flag.slice(1)]: data,
             };
-            console.log(updatedState);
             return updatedState;
           });
         }
@@ -100,7 +98,6 @@ const useWebSocket = (socketUrl) => {
 
         setLoading(false);
       } catch (error) {
-        console.log(event.data);
         setLoading(false);
       }
     };
@@ -138,12 +135,10 @@ const useWebSocket = (socketUrl) => {
         flag += '_';
       }
       websocket.send(`#${flag} ${command}`);
-      console.log(`#${flag} ${command}`);
 
       /* eslint-disable no-await-in-loop */
-      for (let i = 1; i < 10; i += 1) {
-        await delay(500);
-        console.log(socketSyncStateRef.current, flag, 141);
+      for (let i = 1; i < 100; i += 1) {
+        await delay(50);
         const socketState = socketSyncStateRef.current[flag];
         if (socketState) {
           return socketState;

@@ -26,6 +26,7 @@ function AddressPage() {
   const { address, history, loading, sendMessage } = useSocket();
   const [addressData, setAddressData] = useState({});
   const [displayAddressHistory, setDisplayAddressHistory] = useState([]);
+  const [hoverIdx, setHoverIdx] = useState();
   const isMobile = useMediaQuery('(max-width:768px)');
   useEffect(() => {
     if (addressParam) {
@@ -163,7 +164,13 @@ function AddressPage() {
               <TableBody>
                 {displayAddressHistory.length > 0 ? (
                   displayAddressHistory.map((row, idx) => (
-                    <AddressTableRow row={row} idx={idx} key={idx} />
+                    <AddressTableRow
+                      row={row}
+                      idx={idx}
+                      key={idx}
+                      hoverIdx={hoverIdx}
+                      setHoverIdx={setHoverIdx}
+                    />
                   ))
                 ) : (
                   <TableRow>
