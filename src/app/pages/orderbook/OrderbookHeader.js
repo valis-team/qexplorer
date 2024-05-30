@@ -34,9 +34,9 @@ const OrderbookHeader = () => {
             copy
           />
         ) : (
-          <Typography className="text-18 text-hawkes-100 text-bold font-urb mt-4 ml-10">{`SC: ${
-            tokenissuer.contractid || 0
-          }`}</Typography>
+          <Typography className="text-18 text-hawkes-100 text-bold font-urb mt-4 ml-10">
+            {`SC: ${tokenissuer.contractid || 0}`}
+          </Typography>
         )}
       </div>
       <TokenTab tokens={tokens} />

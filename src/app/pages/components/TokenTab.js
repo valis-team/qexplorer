@@ -70,10 +70,10 @@ export default function TokenTab(props) {
         />
       ) : (
         <div className="flex">
-          {displayTokens.map((item, key) => (
+          {tokens.map((item, key) => (
             <Typography
               key={key}
-              className={`px-16 md:px-32 py-12 ${
+              className={`px-6 md:px-12 py-12 hover:text-white ${
                 token === item
                   ? 'border-b-2 border-hawkes-100 text-bold text-white'
                   : 'text-main-50  border-b-1'
@@ -86,12 +86,12 @@ export default function TokenTab(props) {
               {item}
             </Typography>
           ))}
-          <Typography
+          {/* <Typography
             className="px-16 md:px-32 py-12 text-hawkes-50  border-b-1"
             style={{ borderColor: '#d2e0fc4d' }}
           >
             ...
-          </Typography>
+          </Typography> */}
         </div>
       )}
 
