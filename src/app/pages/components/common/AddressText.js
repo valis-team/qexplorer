@@ -16,7 +16,7 @@ const AddressText = (props) => {
     setIsCopy(true);
   };
   return (
-    <Box className="flex gap-3 items-start">
+    <Box className="flex gap-5 items-center">
       <Link to={link ? `/explorer/address/${address}` : ''}>
         <Tooltip title={address} arrow>
           <Typography className={`text-hawkes-100 font-space ${className}`}>

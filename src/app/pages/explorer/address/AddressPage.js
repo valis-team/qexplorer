@@ -56,11 +56,6 @@ function AddressPage() {
     }
   };
 
-  useEffect(() => {
-    console.log(displayAddressHistory, 'aaaaaaa');
-    console.log(history?.history.length);
-  }, [displayAddressHistory]);
-
   if (loading) {
     return <LinearProgress />;
   }
@@ -149,7 +144,7 @@ function AddressPage() {
           </CardItem>
         </div>
         <CardItem className="flex flex-col gap-6 p-4 md:p-16">
-          <Typography className="text-24 text-hawkes-100 text-bold font-urb">Transfers</Typography>
+          <Typography className="text-24 text-hawkes-100 text-bold font-urb">Activities</Typography>
           <TableContainer
             component={Paper}
             className="rounded-0 bg-transparent text-hawkes-100"

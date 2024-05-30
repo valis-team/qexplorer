@@ -17,7 +17,7 @@ const TransactionText = (props) => {
     setIsCopy(true);
   };
   return (
-    <Box className="flex gap-3 items-start">
+    <Box className="flex gap-5 items-center">
       <Link to={link ? `/explorer/tx/${tx}` : ''}>
         <Tooltip title={tx} arrow>
           <Typography className={`text-hawkes-100 font-mono ${className}`}>

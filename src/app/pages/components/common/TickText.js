@@ -17,7 +17,7 @@ const TickText = (props) => {
   };
 
   return (
-    <Box className="flex gap-3 items-start">
+    <Box className="flex gap-5 items-center">
       <Link to={link ? `/explorer/tick/${tick}` : ''} className="no-underline text-transparent">
         <Typography className={`font-space ${className}`}>
           {' '}
