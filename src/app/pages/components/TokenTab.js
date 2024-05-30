@@ -13,7 +13,14 @@ export default function TokenTab(props) {
   const displayCount = 5;
   const [displayTokens, setDisplayTokens] = useState([]);
   const [search, setSearch] = useState();
-
+  const settings = {
+    dots: true,
+    infinite: true,
+    width: '300px',
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+  };
   useEffect(() => {
     sendMessage('tokenlist');
   }, [sendMessage]);
@@ -69,7 +76,7 @@ export default function TokenTab(props) {
           renderInput={(params) => <TextField {...params} label="SC" />}
         />
       ) : (
-        <div className="flex">
+        <div className="flex max-w-[600px] overflow-x-auto">
           {tokens.map((item, key) => (
             <Typography
               key={key}

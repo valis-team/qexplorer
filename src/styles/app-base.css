@@ -110,13 +110,13 @@ a[role=button] {
 ::-webkit-scrollbar {
     width: 16px;
     height: 16px;
-    background-color: rgba(0, 0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.1);
 }
 
 ::-webkit-scrollbar:hover {
     width: 16px;
     height: 16px;
-    background-color: rgba(0, 0, 0, 0.06);
+    background-color: rgba(0, 0, 0, 0.2);
 }
 
 ::-webkit-scrollbar-thumb {

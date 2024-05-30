@@ -142,26 +142,29 @@ const useWebSocket = (socketUrl) => {
     connectWebSocket();
   }, [connectWebSocket]);
 
-  const socketSync = async (command) => {
-    if (websocket && isConnected) {
-      let flag = `${Date.now()}`;
-      if (socketSyncStateRef.current[flag] !== undefined) {
-        flag += '_';
-      }
-      websocket.send(`#${flag} ${command}`);
+  const socketSync = useCallback(
+    async (command) => {
+      if (websocket && isConnected) {
+        let flag = `${Date.now()}`;
+        if (socketSyncStateRef.current[flag] !== undefined) {
+          flag += '_';
+        }
+        websocket.send(`#${flag} ${command}`);
 
-      /* eslint-disable no-await-in-loop */
-      for (let i = 1; i < 100; i += 1) {
-        await delay(50);
-        const socketState = socketSyncStateRef.current[flag];
-        if (socketState) {
-          return socketState;
+        /* eslint-disable no-await-in-loop */
+        for (let i = 1; i < 100; i += 1) {
+          await delay(50);
+          const socketState = socketSyncStateRef.current[flag];
+          if (socketState) {
+            return socketState;
+          }
         }
       }
-    }
-    /* eslint-enable no-await-in-loop */
-    return undefined;
-  };
+      /* eslint-enable no-await-in-loop */
+      return undefined;
+    },
+    [websocket, isConnected]
+  );
 
   const sendMessage = useCallback(
     (message) => {
