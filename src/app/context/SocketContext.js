@@ -1,5 +1,6 @@
 import FuseLoading from '@fuse/core/FuseLoading';
-import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
+import { delay, splitAtFirstSpace } from '../utils/function';
 
 const WebSocketContext = createContext(null);
 
@@ -30,6 +31,12 @@ const useWebSocket = (socketUrl) => {
   const [tokenPrices, setTokenPrices] = useState({});
   const [loading, setLoading] = useState(false); // Added loading state
   const [fetchError, setFetchError] = useState({});
+  const [socketSyncStateStore, setSocketSyncStateStore] = useState({});
+  const socketSyncStateRef = useRef(socketSyncStateStore);
+
+  useEffect(() => {
+    socketSyncStateRef.current = socketSyncStateStore;
+  }, [socketSyncStateStore]);
 
   useEffect(() => {
     const ws = new WebSocket(socketUrl);
@@ -39,7 +46,24 @@ const useWebSocket = (socketUrl) => {
     };
     const onMessage = (event) => {
       try {
-        const data = JSON.parse(event.data);
+        let flag;
+        let data;
+        if (event.data.startsWith('#')) {
+          [flag, data] = splitAtFirstSpace(event.data);
+        } else {
+          data = JSON.parse(event.data);
+        }
+        if (flag) {
+          console.log({ ...socketSyncStateStore, [flag.slice(1)]: data }, '333333333333333');
+          setSocketSyncStateStore((prevState) => {
+            const updatedState = {
+              ...prevState,
+              [flag.slice(1)]: data,
+            };
+            console.log(updatedState);
+            return updatedState;
+          });
+        }
         if (data.richlist && data.name) {
           setRichList(data.richlist);
         } else if (data.command === 'CurrentTickInfo') {
@@ -107,6 +131,29 @@ const useWebSocket = (socketUrl) => {
     };
   }, [socketUrl]);
 
+  const socketSync = async (command) => {
+    if (websocket && isConnected) {
+      let flag = `${Date.now()}`;
+      if (socketSyncStateRef.current[flag] !== undefined) {
+        flag += '_';
+      }
+      websocket.send(`#${flag} ${command}`);
+      console.log(`#${flag} ${command}`);
+
+      /* eslint-disable no-await-in-loop */
+      for (let i = 1; i < 10; i += 1) {
+        await delay(500);
+        console.log(socketSyncStateRef.current, flag, 141);
+        const socketState = socketSyncStateRef.current[flag];
+        if (socketState) {
+          return socketState;
+        }
+      }
+    }
+    /* eslint-enable no-await-in-loop */
+    return undefined;
+  };
+
   const sendMessage = useCallback(
     (message) => {
       if (websocket && isConnected) {
@@ -136,6 +183,7 @@ const useWebSocket = (socketUrl) => {
     prices,
     tokenPrices,
     fetchError,
+    socketSync,
   };
 };
 
