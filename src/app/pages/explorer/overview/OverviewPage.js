@@ -24,7 +24,7 @@ function OverviewPage() {
     emptyticks,
     currentTick,
     recenttx: socketRecentTx,
-    tokens: socketTokens,
+    tokens,
     loading,
     sendMessage,
   } = useSocket();
@@ -37,10 +37,8 @@ function OverviewPage() {
   const recenttx = useMemo(() => socketRecentTx, [socketRecentTx]);
   const [initLoading, setInitLoading] = useState(true);
   const [loadCurrentT, setLoadCurrentT] = useState(false);
-  const tokens = useMemo(
-    () => (socketTokens || []).filter((item) => item !== 'QWALLET' && item !== 'QFT'),
-    [socketTokens]
-  );
+  const [screenWidth, setScreenWidth] = useState();
+  const letterCount = useMemo(() => (screenWidth * 12) / 1920, [screenWidth]);
 
   // console.log('prices ---->', prices);
   useEffect(() => {
@@ -67,32 +65,24 @@ function OverviewPage() {
   useEffect(() => {
     console.log(recenttx, 'aaaaaaaaaaaa');
     if (recenttx?.recenttx) {
-      setDisplayRecentTx((recenttx?.recenttx || []).slice(0, 10));
-      setMobileDisplayRecentTx((recenttx?.recenttx || []).slice(0, 10));
+      setDisplayRecentTx(recenttx?.recenttx);
+      setMobileDisplayRecentTx(recenttx?.recenttx);
       setRecenttxLoading(false);
       setInitLoading(false);
     }
   }, [recenttx]);
 
-  const handleScroll = (e) => {
-    const { scrollTop, clientHeight, scrollHeight } = e.currentTarget;
-    if (scrollHeight - scrollTop <= clientHeight + 5) {
-      const newLength = displayRecentTx.length + 5;
-      if ((recenttx?.recenttx || []).length >= newLength) {
-        setDisplayRecentTx((recenttx?.recenttx || []).slice(0, newLength));
-      }
-    }
-  };
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth);
+    };
+    setScreenWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
 
-  const handleMobileScroll = (e) => {
-    const { scrollTop, clientHeight, scrollHeight } = e.currentTarget;
-    if (scrollHeight - scrollTop <= clientHeight + 10) {
-      const newLength = mobielDisplayRecentTx.length + 5;
-      if ((recenttx?.recenttx || []).length >= newLength) {
-        setMobileDisplayRecentTx((recenttx?.recenttx || []).slice(0, newLength));
-      }
-    }
-  };
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   if (initLoading) {
     return (
@@ -174,16 +164,148 @@ function OverviewPage() {
             </CardItem> */}
           </div>
         </CardItem>
-        <div className="flex flex-col md:flex-row gap-5 md:gap-8">
-          <div className="w-full md:w-1/3 flex flex-col gap-5 md:gap-10">
+        <div className="flex flex-col gap-5 md:gap-8">
+          <div className="w-full flex flex-col gap-5 md:gap-8">
+            <CardItem className="flex flex-col gap-10 p-16 md:p-32">
+              <div className="flex items-center justify-between">
+                <Typography className="text-24 md:text-32 font-urb text-hawkes-100">
+                  Recent Transactions
+                </Typography>
+                <Autocomplete
+                  disablePortal
+                  defaultValue={{
+                    value: selectedToken,
+                    label: ['QU', ...(tokens || [])][selectedToken],
+                  }}
+                  options={['QU', ...(tokens || [])].map((token, key) => ({
+                    value: key,
+                    label: token,
+                  }))}
+                  sx={{
+                    width: 200,
+                    '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      borderColor: '#d2e0fc4d',
+                    },
+                    '& .MuiInputLabel-root.Mui-focused': {
+                      color: '#D2E0FC',
+                    },
+                  }}
+                  onChange={(e, val) => setSelectedToken(val.value)}
+                  renderInput={(params) => <TextField {...params} label="SC" />}
+                />
+              </div>
+              <div>
+                <Hidden mdUp>
+                  {recenttxLoading ? (
+                    <CircleProgress />
+                  ) : (
+                    <div className="flex flex-col gap-2 max-h-360 overflow-auto">
+                      {mobielDisplayRecentTx.map((item, key) => (
+                        <div key={key} className="py-4 border-b-1">
+                          <TransactionBox {...item} />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </Hidden>
+              </div>
+              <Hidden mdDown>
+                {recenttxLoading ? (
+                  <CircleProgress />
+                ) : (
+                  <TableContainer
+                    component={Paper}
+                    className="rounded-0 bg-transparent text-hawkes-100"
+                    sx={{ maxHeight: 350 }}
+                  >
+                    <Table stickyHeader sx={{ minWidth: 800 }} aria-label="simple table">
+                      <TableHead className="bg-celestial-20">
+                        <TableRow>
+                          <TableCell className="border-b-main-80 text-hawkes-100">Tx</TableCell>
+                          <TableCell className="border-b-main-80 text-hawkes-100">Tick</TableCell>
+                          <TableCell className="border-b-main-80 text-hawkes-100">Source</TableCell>
+                          <TableCell className="border-b-main-80 text-hawkes-100">
+                            Destination
+                          </TableCell>
+                          <TableCell className="border-b-main-80 text-hawkes-100">Type</TableCell>
+                          <TableCell className="border-b-main-80 text-hawkes-100" align="right">
+                            Amount
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {displayRecentTx.length > 0 ? (
+                          displayRecentTx.map((row, key) => (
+                            <TableRow
+                              key={row.tx}
+                              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                            >
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                className="border-b-main-80 text-celestial-100"
+                              >
+                                <TransactionText
+                                  className="text-16"
+                                  tx={row.txid}
+                                  letter={letterCount}
+                                  copy
+                                  link
+                                />
+                              </TableCell>
+                              <TableCell className="border-b-main-80 text-celestial-100">
+                                <TickText
+                                  tick={row.tick}
+                                  className="text-white text-16"
+                                  copy
+                                  link
+                                />
+                              </TableCell>
+                              <TableCell className="border-b-main-80 text-celestial-100">
+                                <AddressText address={row.src} letter={letterCount} copy link />
+                              </TableCell>
+                              <TableCell className="border-b-main-80 text-celestial-100">
+                                <AddressText address={row.dest} letter={letterCount} copy link />
+                              </TableCell>
+                              <TableCell className="border-b-main-80">{row.type}</TableCell>
+                              <TableCell className="border-b-main-80" align="right">
+                                {formatString(row.amount)}
+                              </TableCell>
+                            </TableRow>
+                          ))
+                        ) : (
+                          <TableRow>
+                            <TableCell colSpan={6}>
+                              <EmptyBox />
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                )}
+              </Hidden>
+            </CardItem>
+            {/* <CardItem className="flex flex-col gap-10 p-8 md:p-20">
+              <TokenBarChart />
+            </CardItem> */}
+          </div>
+          <div className="w-full flex flex-col gap-5 md:gap-10">
             <CardItem className="flex flex-col gap-10 p-8 md:p-20">
               <Typography className="text-24 md:text-32 font-urb text-hawkes-100">
                 Empty Ticks{' '}
                 <sapn className="text-20">{`(${emptyticks.begintick} - ${emptyticks.endtick})`}</sapn>
               </Typography>
-              <div className="grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 max-h-[310px] justify-between overflow-auto">
+              <div className="flex flex-wrap w-full gap-12 max-h-[310px] justify-center overflow-auto">
                 {(emptyticks?.emptyticks || []).map((tick, key) => {
-                  return <TickText className="text-16 text-main-40" tick={tick} key={key} link />;
+                  return (
+                    <TickText
+                      className="text-16 text-main-40 hover:text-white"
+                      tick={tick}
+                      key={key}
+                      link
+                    />
+                  );
                 })}
               </div>
             </CardItem>
@@ -219,135 +341,6 @@ function OverviewPage() {
                 </div>
               </CardItem>
             )}
-          </div>
-          <div className="w-full md:w-2/3 flex flex-col gap-5 md:gap-8">
-            <CardItem className="flex flex-col gap-10 p-16 md:p-32">
-              <div className="flex items-center justify-between">
-                <Typography className="text-24 md:text-32 font-urb text-hawkes-100">
-                  Recent Transactions
-                </Typography>
-                <Autocomplete
-                  disablePortal
-                  defaultValue={{
-                    value: selectedToken,
-                    label: ['QU', ...(tokens || [])][selectedToken],
-                  }}
-                  options={['QU', ...(tokens || [])].map((token, key) => ({
-                    value: key,
-                    label: token,
-                  }))}
-                  sx={{
-                    width: 200,
-                    '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#d2e0fc4d',
-                    },
-                    '& .MuiInputLabel-root.Mui-focused': {
-                      color: '#D2E0FC',
-                    },
-                  }}
-                  onChange={(e, val) => setSelectedToken(val.value)}
-                  renderInput={(params) => <TextField {...params} label="SC" />}
-                />
-              </div>
-              <div>
-                <Hidden mdUp>
-                  {recenttxLoading ? (
-                    <CircleProgress />
-                  ) : (
-                    <div
-                      className="flex flex-col gap-2 max-h-360 overflow-auto"
-                      onScroll={handleMobileScroll}
-                    >
-                      {mobielDisplayRecentTx.map((item, key) => (
-                        <div key={key} className="py-4 border-b-1">
-                          <TransactionBox {...item} />
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </Hidden>
-              </div>
-              <Hidden mdDown>
-                {recenttxLoading ? (
-                  <CircleProgress />
-                ) : (
-                  <TableContainer
-                    component={Paper}
-                    className="rounded-0 bg-transparent text-hawkes-100"
-                    sx={{ maxHeight: 350 }}
-                    onScroll={handleScroll}
-                  >
-                    <Table stickyHeader sx={{ minWidth: 800 }} aria-label="simple table">
-                      <TableHead className="bg-celestial-20">
-                        <TableRow>
-                          <TableCell className="border-b-main-80 text-hawkes-100">Tx</TableCell>
-                          <TableCell className="border-b-main-80 text-hawkes-100">Tick</TableCell>
-                          <TableCell className="border-b-main-80 text-hawkes-100">Source</TableCell>
-                          <TableCell className="border-b-main-80 text-hawkes-100">
-                            Destination
-                          </TableCell>
-                          <TableCell className="border-b-main-80 text-hawkes-100">Type</TableCell>
-                          <TableCell className="border-b-main-80 text-hawkes-100" align="right">
-                            Amount
-                          </TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {displayRecentTx.length > 0 ? (
-                          displayRecentTx.map((row, key) => (
-                            <TableRow
-                              key={row.tx}
-                              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
-                              <TableCell
-                                component="th"
-                                scope="row"
-                                className="border-b-main-80 text-celestial-100"
-                              >
-                                <TransactionText
-                                  className="text-16"
-                                  tx={row.txid}
-                                  letter={4}
-                                  copy
-                                  link
-                                />
-                              </TableCell>
-                              <TableCell className="border-b-main-80 text-celestial-100">
-                                <TickText
-                                  tick={row.tick}
-                                  className="text-white text-16"
-                                  copy
-                                  link
-                                />
-                              </TableCell>
-                              <TableCell className="border-b-main-80 text-celestial-100">
-                                <AddressText address={row.src} letter={4} copy link />
-                              </TableCell>
-                              <TableCell className="border-b-main-80 text-celestial-100">
-                                <AddressText address={row.dest} letter={4} copy link />
-                              </TableCell>
-                              <TableCell className="border-b-main-80">{row.type}</TableCell>
-                              <TableCell className="border-b-main-80" align="right">
-                                {formatString(row.amount)}
-                              </TableCell>
-                            </TableRow>
-                          ))
-                        ) : (
-                          <TableRow>
-                            <TableCell colSpan={6}>
-                              <EmptyBox />
-                            </TableCell>
-                          </TableRow>
-                        )}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                )}
-              </Hidden>
-            </CardItem>
-            {/* <CardItem className="flex flex-col gap-10 p-8 md:p-20">
-              <TokenBarChart />
-            </CardItem> */}
           </div>
         </div>
       </div>
