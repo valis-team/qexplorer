@@ -8,7 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useSocket } from 'src/app/context/SocketContext';
-import { formatString, getStandardTime } from 'src/app/utils/function';
+import { formatString } from 'src/app/utils/function';
 import CardItem from '../../components/CardItem/CardItem';
 import TransactionText from '../../components/common/TransactionText';
 import TickText from '../../components/common/TickText';
@@ -22,22 +22,22 @@ function OverviewPage() {
   const {
     marketcap,
     emptyticks,
-    currentTick,
+    // currentTick,
     recenttx: socketRecentTx,
     tokens,
-    loading,
+    // loading,
     sendMessage,
     socketSync,
   } = useSocket();
 
-  const [currentT, setCurrentT] = useState({});
+  // const [currentT, setCurrentT] = useState({});
   const [displayRecentTx, setDisplayRecentTx] = useState([]);
   const [mobielDisplayRecentTx, setMobileDisplayRecentTx] = useState([]);
   const [selectedToken, setSelectedToken] = useState(0);
   const [recenttxLoading, setRecenttxLoading] = useState(false);
   const recenttx = useMemo(() => socketRecentTx, [socketRecentTx]);
   const [initLoading, setInitLoading] = useState(true);
-  const [loadCurrentT, setLoadCurrentT] = useState(false);
+  // const [loadCurrentT, setLoadCurrentT] = useState(false);
   const [screenWidth, setScreenWidth] = useState();
   const letterCount = useMemo(() => (screenWidth * 12) / 1920, [screenWidth]);
   const [tokenPrices, setTokenPrices] = useState({});
@@ -55,13 +55,13 @@ function OverviewPage() {
     setRecenttxLoading(true);
   }, [selectedToken]);
 
-  useEffect(() => {
-    setLoadCurrentT(true);
-    setTimeout(() => {
-      setCurrentT(currentTick);
-      setLoadCurrentT(false);
-    }, 100);
-  }, [currentTick]);
+  // useEffect(() => {
+  //   setLoadCurrentT(true);
+  //   setTimeout(() => {
+  //     setCurrentT(currentTick);
+  //     setLoadCurrentT(false);
+  //   }, 100);
+  // }, [currentTick]);
 
   useEffect(() => {
     if (recenttx?.recenttx) {
@@ -132,6 +132,35 @@ function OverviewPage() {
             Overview
           </Typography>
         </div>
+        {/* {Object.keys(currentT).length > 0 && (
+          <CardItem className="flex py-8 sm:py-12 px-12 sm:px-16 gap-10 items-center bg-celestial-10">
+            <img
+              className={`w-40 h-40 transition-all duration-500 ease-in-out ${loadCurrentT ? 'rotate-180 opacity-30' : 'rotate-0 opacity-100'
+                }`}
+              src="assets/icons/tick_mark.svg"
+              alt="icon"
+            />
+            <div className="flex flex-col items-center">
+              <div className="flex items-end">
+                <Typography className="text-14 text-hawkes-30 font-urb w-full flex justify-start">
+                  Current Tick #
+                </Typography>
+                <TickText
+                  className={`text-18 text-hawkes-100 transition-all duration-500 ease-in-out ${loadCurrentT ? 'opacity-70' : 'opacity-100'
+                    }`}
+                  tick={`${currentT.tick}`}
+                  link
+                />
+              </div>
+              <Typography
+                className={`font-space text-14 text-hawkes-50 ${loadCurrentT ? 'opacity-70' : 'opacity-100'
+                  }`}
+              >
+                {getStandardTime(currentT.utc).toDateString()}
+              </Typography>
+            </div>
+          </CardItem>
+        )} */}
         <CardItem className="flex flex-col xl:flex-row justify-center xl:justify-between gap-10 p-16 md:p-24">
           <div className="flex flex-col gap-10 justify-center">
             <div className="flex w-full justify-center ml-0 lg:ml-40">
@@ -363,38 +392,6 @@ function OverviewPage() {
                 })}
               </div>
             </CardItem>
-            {Object.keys(currentT).length > 0 && (
-              <CardItem className="flex py-8 sm:py-12 px-12 sm:px-16 gap-10 items-center bg-celestial-10">
-                <img
-                  className={`w-40 h-40 transition-all duration-500 ease-in-out ${
-                    loadCurrentT ? 'rotate-180 opacity-30' : 'rotate-0 opacity-100'
-                  }`}
-                  src="assets/icons/tick_mark.svg"
-                  alt="icon"
-                />
-                <div className="flex flex-col items-center">
-                  <div className="flex items-end">
-                    <Typography className="text-14 text-hawkes-30 font-urb w-full flex justify-start">
-                      Current Tick #
-                    </Typography>
-                    <TickText
-                      className={`text-18 text-hawkes-100 transition-all duration-500 ease-in-out ${
-                        loadCurrentT ? 'opacity-70' : 'opacity-100'
-                      }`}
-                      tick={`${currentT.tick}`}
-                      link
-                    />
-                  </div>
-                  <Typography
-                    className={`font-space text-14 text-hawkes-50 ${
-                      loadCurrentT ? 'opacity-70' : 'opacity-100'
-                    }`}
-                  >
-                    {getStandardTime(currentT.utc).toDateString()}
-                  </Typography>
-                </div>
-              </CardItem>
-            )}
           </div>
         </div>
       </div>
