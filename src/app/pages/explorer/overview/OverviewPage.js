@@ -27,6 +27,7 @@ function OverviewPage() {
     tokens,
     loading,
     sendMessage,
+    socketSync,
   } = useSocket();
 
   const [currentT, setCurrentT] = useState({});
@@ -39,8 +40,8 @@ function OverviewPage() {
   const [loadCurrentT, setLoadCurrentT] = useState(false);
   const [screenWidth, setScreenWidth] = useState();
   const letterCount = useMemo(() => (screenWidth * 12) / 1920, [screenWidth]);
+  const [tokenPrices, setTokenPrices] = useState({});
 
-  // console.log('prices ---->', prices);
   useEffect(() => {
     sendMessage('marketcap');
     sendMessage('emptyticks 1 100000');
@@ -63,7 +64,6 @@ function OverviewPage() {
   }, [currentTick]);
 
   useEffect(() => {
-    console.log(recenttx, 'aaaaaaaaaaaa');
     if (recenttx?.recenttx) {
       setDisplayRecentTx(recenttx?.recenttx);
       setMobileDisplayRecentTx(recenttx?.recenttx);
@@ -71,6 +71,38 @@ function OverviewPage() {
       setInitLoading(false);
     }
   }, [recenttx]);
+
+  useEffect(() => {
+    async function init() {
+      if (tokens && tokens.length > 0) {
+        /* eslint-disable no-await-in-loop */
+        for (let idx = 0; idx < tokens.length; idx += 1) {
+          const resp = await socketSync(`orders ${tokens[idx]}`);
+          if (resp.name === tokens[idx]) {
+            let minAskPrice;
+            let maxBidPrice;
+            if (resp.asks && resp.asks.length > 0) {
+              const askPriceArray = resp.asks.map((subArray) => Number(subArray[2]));
+              minAskPrice = Math.min(...askPriceArray);
+            }
+            if (resp.bids && resp.bids.length > 0) {
+              const bidPriceArray = resp.bids.map((subArray) => Number(subArray[2]));
+              maxBidPrice = Math.max(...bidPriceArray);
+            }
+            setTokenPrices((prevPrices) => {
+              const updatedPrices = {
+                ...prevPrices,
+                [resp.name]: [maxBidPrice, minAskPrice],
+              };
+              return updatedPrices;
+            });
+          }
+        }
+        /* eslint-enable no-await-in-loop */
+      }
+    }
+    init();
+  }, [tokens]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -165,6 +197,28 @@ function OverviewPage() {
           </div>
         </CardItem>
         <div className="flex flex-col gap-5 md:gap-8">
+          <div className="w-full flex flex-col gap-5 md:gap-8">
+            <CardItem className="flex flex-col gap-10 p-16 md:p-32">
+              <div className="flex flex-col">
+                <Typography className="text-24 md:text-32 font-urb text-hawkes-100">
+                  Token Prices
+                </Typography>
+                <div>
+                  {(tokens || []).map((token) => {
+                    return (
+                      <>
+                        {tokenPrices[token] && (
+                          <>
+                            {token} {tokenPrices[token][0]} {tokenPrices[token][1]}
+                          </>
+                        )}
+                      </>
+                    );
+                  })}
+                </div>
+              </div>
+            </CardItem>
+          </div>
           <div className="w-full flex flex-col gap-5 md:gap-8">
             <CardItem className="flex flex-col gap-10 p-16 md:p-32">
               <div className="flex items-center justify-between">

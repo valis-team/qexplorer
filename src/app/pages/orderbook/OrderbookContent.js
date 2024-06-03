@@ -87,7 +87,7 @@ export default function OrderbookContent() {
                   <TableRow>
                     <TableCell className="border-b-main-80 text-white">Side</TableCell>
                     <TableCell className="border-b-main-80 text-white">Buyer</TableCell>
-                    <TableCell className="border-b-main-80 text-white">Quality</TableCell>
+                    <TableCell className="border-b-main-80 text-white">Quantity</TableCell>
                     <TableCell className="border-b-main-80 text-white">QU Price</TableCell>
                   </TableRow>
                 </TableHead>
@@ -147,8 +147,8 @@ export default function OrderbookContent() {
                 <TableHead className="bg-celestial-20">
                   <TableRow>
                     <TableCell className="border-b-main-80 text-white">Side</TableCell>
-                    <TableCell className="border-b-main-80 text-white">Saller</TableCell>
-                    <TableCell className="border-b-main-80 text-white">Quality</TableCell>
+                    <TableCell className="border-b-main-80 text-white">Seller</TableCell>
+                    <TableCell className="border-b-main-80 text-white">Quantity</TableCell>
                     <TableCell className="border-b-main-80 text-white">QU Price</TableCell>
                   </TableRow>
                 </TableHead>
