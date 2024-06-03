@@ -105,7 +105,10 @@ function RichlistContent() {
                             copy
                           />
                         </TableCell>
-                        <TableCell className="border-b-main-80 text-hawkes-100" align="right">
+                        <TableCell
+                          className="border-b-main-80 text-hawkes-100 font-mono"
+                          align="right"
+                        >
                           {formatString(row[2])}
                         </TableCell>
                       </TableRow>
