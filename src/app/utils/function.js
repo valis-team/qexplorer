@@ -49,6 +49,24 @@ function getStandardTime(utcTimestamp) {
   return utcDate;
 }
 
+function getTimeAgo(currentTime, timestamp) {
+  const timeDifference = currentTime - timestamp;
+  const totalSeconds = Math.floor(timeDifference / 1000);
+
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  let minLabel = 'mins';
+  let secondLabel = 'seconds';
+  if (minutes <= 1) {
+    minLabel = 'min';
+  }
+  if (secondLabel <= 1) {
+    secondLabel = 'second';
+  }
+
+  return `${minutes} ${minLabel} ${seconds} ${secondLabel} ago`;
+}
+
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
@@ -74,4 +92,5 @@ export {
   getStandardTime,
   capitalizeFirstLetter,
   splitAtFirstSpace,
+  getTimeAgo,
 };

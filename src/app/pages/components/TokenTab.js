@@ -73,7 +73,7 @@ export default function TokenTab(props) {
             },
           }}
           onChange={(e, val) => handleChangToken(val)}
-          renderInput={(params) => <TextField {...params} label="SC" />}
+          renderInput={(params) => <TextField {...params} label="Search" />}
         />
       ) : (
         <div className="flex max-w-[600px] overflow-x-auto">
