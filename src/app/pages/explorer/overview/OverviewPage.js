@@ -382,7 +382,7 @@ function OverviewPage() {
                               <TableCell className="border-b-main-80 text-celestial-100">
                                 {/* getTimeAgo(currentTime, row.utc * 1000) */}
                                 <TimeText
-                                  utcTime={new Date(row.utc).toUTCString()}
+                                  utcTime={new Date(row.utc * 1000).toUTCString()}
                                   readableTime={getTimeAgo(currentTime, row.utc * 1000)}
                                   className="text-white text-12"
                                   copy
