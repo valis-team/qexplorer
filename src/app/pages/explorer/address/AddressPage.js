@@ -76,6 +76,21 @@ function AddressPage() {
                   {addressData?.balance ? `${formatString(addressData?.balance)} QUBIC` : 0}
                 </Typography>
               </div>
+              {address.tokens &&
+                address.tokens.map((item) => {
+                  return (
+                    <div className="flex gap-4 items-center">
+                      <img
+                        className="w-14 h-14"
+                        src="assets/icons/price_mark_white.svg"
+                        alt="icon"
+                      />
+                      <Typography className="text-white text-14 bold font-urb">
+                        {addressData?.balance ? `${item[1]} ${item[0]}` : 0}
+                      </Typography>
+                    </div>
+                  );
+                })}
               {addressData?.rank && (
                 <div className="flex gap-4 items-center">
                   <img className="w-14 h-14" src="assets/icons/trade.svg" alt="icon" />
