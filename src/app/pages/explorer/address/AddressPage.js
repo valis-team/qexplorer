@@ -186,8 +186,9 @@ function AddressPage() {
             <Table stickyHeader sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead className="bg-celestial-20">
                 <TableRow>
-                  <TableCell className="border-b-main-80 text-white">Tick</TableCell>
                   <TableCell className="border-b-main-80 text-white">TX</TableCell>
+                  <TableCell className="border-b-main-80 text-white">Tick</TableCell>
+                  <TableCell className="border-b-main-80 text-white">Time</TableCell>
                   <TableCell className="border-b-main-80 text-white">Address</TableCell>
                   <TableCell className="border-b-main-80 text-white">Amount</TableCell>
                 </TableRow>

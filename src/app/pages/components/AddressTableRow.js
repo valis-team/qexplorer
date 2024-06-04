@@ -1,20 +1,22 @@
-import * as React from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import _ from 'lodash';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import { useSocket } from 'src/app/context/SocketContext';
-import { formatString } from 'src/app/utils/function';
+import { formatString, getTimeAgo } from 'src/app/utils/function';
 import AddressText from './common/AddressText';
 import TransactionText from './common/TransactionText';
 import TickText from './common/TickText';
+import TimeText from './common/TimeText';
 
 function AddressTableRow(props) {
   const { socketSync } = useSocket();
   const { row, idx, hoverIdx, setHoverIdx } = props;
-  const [itemLoading, setItemLoading] = React.useState(false);
-  const [sctx, setSctx] = React.useState();
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [itemLoading, setItemLoading] = useState(false);
+  const [sctx, setSctx] = useState();
 
-  const handleMouseEnter = React.useCallback(
+  const handleMouseEnter = useCallback(
     _.throttle(async (a, item, index) => {
       setHoverIdx(index);
       setItemLoading(true);
@@ -37,6 +39,13 @@ function AddressTableRow(props) {
     setItemLoading(false);
   };
 
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, []);
+
   return (
     <>
       <TableRow
@@ -48,11 +57,21 @@ function AddressTableRow(props) {
         onMouseLeave={handleMouseLeave}
       >
         <TableCell component="th" scope="row" className="border-b-main-80">
-          <TickText className="text-white" tick={row[0]} copy link />
-        </TableCell>
-        <TableCell component="th" scope="row" className="border-b-main-80">
           <TransactionText tx={row[1]} copy letter={20} link />
         </TableCell>
+        <TableCell component="th" scope="row" className="border-b-main-80">
+          <TickText className="text-white" tick={row[0]} copy link />
+        </TableCell>
+
+        <TableCell component="th" scope="row" className="border-b-main-80">
+          <TimeText
+            className="text-white"
+            utcTime={row[5]}
+            readableTime={getTimeAgo(currentTime, row[5] * 1000)}
+            copy
+          />
+        </TableCell>
+
         <TableCell component="th" scope="row" className="border-b-main-80">
           <AddressText address={row[2]} copy letter={20} link />
         </TableCell>
