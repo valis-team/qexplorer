@@ -48,6 +48,7 @@ function OverviewPage() {
   const [tokenPrices, setTokenPrices] = useState({});
   const [pageNum, setPageNum] = useState(1);
   const [network, setNetwork] = useState();
+  const [scs, setScs] = useState([]);
 
   useEffect(() => {
     sendMessage('marketcap');
@@ -63,7 +64,10 @@ function OverviewPage() {
     }, 1000);
     const init = async () => {
       const networkResp = await socketSync('network');
+      const _scs = await socketSync('explist SC');
+      console.log(_scs, 'aaaaaaa');
       setNetwork(networkResp);
+      setScs(_scs.tokens);
     };
     init();
     return () => clearInterval(intervalId);
@@ -275,28 +279,31 @@ function OverviewPage() {
                 <Typography className="text-24 md:text-32 font-urb text-hawkes-100">
                   Recent Transactions
                 </Typography>
-                <Autocomplete
-                  disablePortal
-                  defaultValue={{
-                    value: selectedToken,
-                    label: ['QU', ...(tokens || [])][selectedToken],
-                  }}
-                  options={['QU', ...(tokens || [])].map((token, key) => ({
-                    value: key,
-                    label: token,
-                  }))}
-                  sx={{
-                    width: 200,
-                    '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#d2e0fc4d',
-                    },
-                    '& .MuiInputLabel-root.Mui-focused': {
-                      color: '#D2E0FC',
-                    },
-                  }}
-                  onChange={(e, val) => setSelectedToken(val.value)}
-                  renderInput={(params) => <TextField {...params} label="SC" />}
-                />
+                {scs[selectedToken] && (
+                  <Autocomplete
+                    disablePortal
+                    defaultValue={{
+                      value: selectedToken,
+                      label: scs[selectedToken],
+                    }}
+                    options={scs.map((token, key) => ({
+                      value: key,
+                      label: token,
+                    }))}
+                    isOptionEqualToValue={(option, value) => option.value === value.value}
+                    sx={{
+                      width: 200,
+                      '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#d2e0fc4d',
+                      },
+                      '& .MuiInputLabel-root.Mui-focused': {
+                        color: '#D2E0FC',
+                      },
+                    }}
+                    onChange={(e, val) => setSelectedToken(val.value)}
+                    renderInput={(params) => <TextField {...params} label="SC" />}
+                  />
+                )}
               </div>
               <div>
                 <Hidden mdUp>
