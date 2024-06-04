@@ -260,15 +260,15 @@ function OverviewPage() {
                 <div className="flex flex-wrap justify-center gap-36">
                   {(tokens || []).map((token) => {
                     return (
-                      <div className="flex items-center gap-5">
-                        <span className="text-[18px]">{token}</span>
+                      <CardItem className="bg-main-80 flex flex-col items-center gap-5 p-5 px-12">
+                        <span className="text-[12px]">{token}</span>
                         {tokenPrices[token] && (
                           <div className="flex flex-col text-[12px]">
-                            <span>{formatString(tokenPrices[token][0])}</span>
-                            <span>{formatString(tokenPrices[token][1])}</span>
+                            <span>min: {formatString(tokenPrices[token][0])}</span>
+                            <span>max: {formatString(tokenPrices[token][1])}</span>
                           </div>
                         )}
-                      </div>
+                      </CardItem>
                     );
                   })}
                 </div>
