@@ -123,7 +123,11 @@ export default function Chart() {
               {tokens &&
                 tokens.length > 0 &&
                 ['QU', ...tokens].map((token, idx) => {
-                  return <option value={idx}>{token}</option>;
+                  return (
+                    <option value={idx} key={idx}>
+                      {token}
+                    </option>
+                  );
                 })}
             </NativeSelect>
           </FormControl>

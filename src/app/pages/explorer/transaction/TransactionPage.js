@@ -24,6 +24,7 @@ function TransactionPage() {
   useEffect(() => {
     if (Object.keys(tx).length > 0) {
       setTxData(tx);
+      console.log(tx);
     }
   }, [tx]);
   if (loading) {
@@ -90,6 +91,17 @@ function TransactionPage() {
                 link
                 copy={!isEmpty(txData?.src)}
               />
+            </div>
+            <div className="flex justify-between items-center w-full gap-36 py-3 border-b-1">
+              <div className="flex w-full items-center gap-4">
+                <img className="w-20 h-20" src="assets/icons/information-icon.svg" alt="icon" />
+                <Typography className="text-hawkes-100 text-16 font-urb">SCTX Detail</Typography>
+              </div>
+              {txData && txData.sctx && (
+                <pre style={{ padding: '10px', borderRadius: '5px' }}>
+                  {JSON.stringify(txData.sctx, null, 2)}
+                </pre>
+              )}
             </div>
           </CardItem>
         </div>

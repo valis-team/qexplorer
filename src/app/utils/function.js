@@ -52,6 +52,9 @@ function getStandardTime(utcTimestamp) {
 function getTimeAgo(currentTime, timestamp) {
   const timeDifference = currentTime - timestamp;
   const totalSeconds = Math.floor(timeDifference / 1000);
+  if (totalSeconds <= 0) {
+    return `0 seconds ago`;
+  }
 
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;

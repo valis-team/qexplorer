@@ -36,7 +36,7 @@ const SearchBar = () => {
     <>
       <Input
         className="w-full border-1 px-12 text-main-30 text-urb text-14 bg-main-100"
-        placeholder="Search TX, blocks, IDs..."
+        placeholder="Search Address, TX, blocks..."
         value={keyword}
         disableUnderline
         autoFocus

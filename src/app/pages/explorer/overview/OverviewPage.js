@@ -8,7 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useSocket } from 'src/app/context/SocketContext';
-import { formatString } from 'src/app/utils/function';
+import { formatString, getTimeAgo } from 'src/app/utils/function';
 import CardItem from '../../components/CardItem/CardItem';
 import TransactionText from '../../components/common/TransactionText';
 import TickText from '../../components/common/TickText';
@@ -17,6 +17,10 @@ import TransactionBox from '../../components/common/TransactionBox';
 import Chart from '../../components/Chart';
 import EmptyBox from '../../components/EmptyBox';
 import CircleProgress from '../../components/common/CircleProgress';
+import Pagination from '../tick/Pagination';
+import TimeText from '../../components/common/TimeText';
+
+const COUNTPERPAGE = 10;
 
 function OverviewPage() {
   const {
@@ -24,7 +28,7 @@ function OverviewPage() {
     emptyticks,
     // currentTick,
     recenttx: socketRecentTx,
-    tokens,
+    // tokens,
     // loading,
     sendMessage,
     socketSync,
@@ -37,10 +41,15 @@ function OverviewPage() {
   const [recenttxLoading, setRecenttxLoading] = useState(false);
   const recenttx = useMemo(() => socketRecentTx, [socketRecentTx]);
   const [initLoading, setInitLoading] = useState(true);
+  const [currentTime, setCurrentTime] = useState(new Date());
   // const [loadCurrentT, setLoadCurrentT] = useState(false);
   const [screenWidth, setScreenWidth] = useState();
   const letterCount = useMemo(() => (screenWidth * 12) / 1920, [screenWidth]);
   const [tokenPrices, setTokenPrices] = useState({});
+  const [pageNum, setPageNum] = useState(1);
+  const [network, setNetwork] = useState();
+  const [scs, setScs] = useState([]);
+  const [tokens, setTokens] = useState([]);
 
   useEffect(() => {
     sendMessage('marketcap');
@@ -51,26 +60,36 @@ function OverviewPage() {
   }, [sendMessage]);
 
   useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    const init = async () => {
+      const networkResp = await socketSync('network');
+      const _scs = await socketSync('explist SC');
+      const _tokens = await socketSync('explist');
+      setTokens(_tokens.tokens);
+      setNetwork(networkResp);
+      setScs(_scs.tokens);
+    };
+    init();
+    return () => clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => {
     sendMessage(`recenttx 100 ${selectedToken}`);
     setRecenttxLoading(true);
   }, [selectedToken]);
 
-  // useEffect(() => {
-  //   setLoadCurrentT(true);
-  //   setTimeout(() => {
-  //     setCurrentT(currentTick);
-  //     setLoadCurrentT(false);
-  //   }, 100);
-  // }, [currentTick]);
-
   useEffect(() => {
-    if (recenttx?.recenttx) {
-      setDisplayRecentTx(recenttx?.recenttx);
-      setMobileDisplayRecentTx(recenttx?.recenttx);
+    if (recenttx?.recenttx && typeof recenttx?.recenttx === 'object') {
+      const indexOfLastItem = pageNum * COUNTPERPAGE;
+      const indexOfFirstItem = indexOfLastItem - COUNTPERPAGE;
+      setDisplayRecentTx(recenttx?.recenttx.slice(indexOfFirstItem, indexOfLastItem));
+      setMobileDisplayRecentTx(recenttx?.recenttx.slice(indexOfFirstItem, indexOfLastItem));
       setRecenttxLoading(false);
       setInitLoading(false);
     }
-  }, [recenttx]);
+  }, [recenttx, pageNum]);
 
   useEffect(() => {
     async function init() {
@@ -115,6 +134,10 @@ function OverviewPage() {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  const handleChangePageNum = (page) => {
+    setPageNum(page);
+  };
 
   if (initLoading) {
     return (
@@ -194,11 +217,13 @@ function OverviewPage() {
               <img className="w-44 h-44" src="assets/icons/transaction_mark_blue.svg" alt="icon" />
               <div className="flex flex-col">
                 <Typography className="text-14 text-hawkes-30 font-urb w-full flex justify-start">
-                  Recent Transaction
+                  Average block time
                 </Typography>
-                <Typography className="font-space text-16 md:text-20 text-hawkes-100">
-                  {(recenttx?.recenttx || []).length}
-                </Typography>
+                {network && (
+                  <Typography className="font-space text-16 md:text-20 text-hawkes-100">
+                    {network.last10 / 10}s
+                  </Typography>
+                )}
               </div>
             </CardItem>
             <CardItem className="flex py-8 sm:py-12 px-12 sm:px-16 gap-10 items-center min-w-[255px] bg-celestial-10">
@@ -232,16 +257,18 @@ function OverviewPage() {
                 <Typography className="text-24 md:text-32 font-urb text-hawkes-100">
                   Token Prices
                 </Typography>
-                <div>
+                <div className="flex flex-wrap justify-center gap-36">
                   {(tokens || []).map((token) => {
                     return (
-                      <>
+                      <div className="flex items-center gap-5">
+                        <span className="text-[18px]">{token}</span>
                         {tokenPrices[token] && (
-                          <>
-                            {token} {tokenPrices[token][0]} {tokenPrices[token][1]}
-                          </>
+                          <div className="flex flex-col text-[12px]">
+                            <span>{tokenPrices[token][0]}</span>
+                            <span>{tokenPrices[token][1]}</span>
+                          </div>
                         )}
-                      </>
+                      </div>
                     );
                   })}
                 </div>
@@ -254,28 +281,31 @@ function OverviewPage() {
                 <Typography className="text-24 md:text-32 font-urb text-hawkes-100">
                   Recent Transactions
                 </Typography>
-                <Autocomplete
-                  disablePortal
-                  defaultValue={{
-                    value: selectedToken,
-                    label: ['QU', ...(tokens || [])][selectedToken],
-                  }}
-                  options={['QU', ...(tokens || [])].map((token, key) => ({
-                    value: key,
-                    label: token,
-                  }))}
-                  sx={{
-                    width: 200,
-                    '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#d2e0fc4d',
-                    },
-                    '& .MuiInputLabel-root.Mui-focused': {
-                      color: '#D2E0FC',
-                    },
-                  }}
-                  onChange={(e, val) => setSelectedToken(val.value)}
-                  renderInput={(params) => <TextField {...params} label="SC" />}
-                />
+                {scs[selectedToken] && (
+                  <Autocomplete
+                    disablePortal
+                    defaultValue={{
+                      value: selectedToken,
+                      label: scs[selectedToken],
+                    }}
+                    options={scs.map((token, key) => ({
+                      value: key,
+                      label: token,
+                    }))}
+                    isOptionEqualToValue={(option, value) => option.value === value.value}
+                    sx={{
+                      width: 200,
+                      '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#d2e0fc4d',
+                      },
+                      '& .MuiInputLabel-root.Mui-focused': {
+                        color: '#D2E0FC',
+                      },
+                    }}
+                    onChange={(e, val) => setSelectedToken(val.value)}
+                    renderInput={(params) => <TextField {...params} label="SC" />}
+                  />
+                )}
               </div>
               <div>
                 <Hidden mdUp>
@@ -306,11 +336,12 @@ function OverviewPage() {
                         <TableRow>
                           <TableCell className="border-b-main-80 text-hawkes-100">Tx</TableCell>
                           <TableCell className="border-b-main-80 text-hawkes-100">Tick</TableCell>
+                          <TableCell className="border-b-main-80 text-hawkes-100">Time</TableCell>
                           <TableCell className="border-b-main-80 text-hawkes-100">Source</TableCell>
                           <TableCell className="border-b-main-80 text-hawkes-100">
                             Destination
                           </TableCell>
-                          <TableCell className="border-b-main-80 text-hawkes-100">Type</TableCell>
+                          {/* <TableCell className="border-b-main-80 text-hawkes-100">Type</TableCell> */}
                           <TableCell className="border-b-main-80 text-hawkes-100" align="right">
                             Amount
                           </TableCell>
@@ -345,12 +376,21 @@ function OverviewPage() {
                                 />
                               </TableCell>
                               <TableCell className="border-b-main-80 text-celestial-100">
+                                {/* getTimeAgo(currentTime, row.utc * 1000) */}
+                                <TimeText
+                                  utcTime={row.utc}
+                                  readableTime={getTimeAgo(currentTime, row.utc * 1000)}
+                                  className="text-white text-16"
+                                  copy
+                                />
+                              </TableCell>
+                              <TableCell className="border-b-main-80 text-celestial-100">
                                 <AddressText address={row.src} letter={letterCount} copy link />
                               </TableCell>
                               <TableCell className="border-b-main-80 text-celestial-100">
                                 <AddressText address={row.dest} letter={letterCount} copy link />
                               </TableCell>
-                              <TableCell className="border-b-main-80">{row.type}</TableCell>
+                              {/* <TableCell className="border-b-main-80">{row.type}</TableCell> */}
                               <TableCell className="border-b-main-80" align="right">
                                 {formatString(row.amount)}
                               </TableCell>
@@ -368,6 +408,12 @@ function OverviewPage() {
                   </TableContainer>
                 )}
               </Hidden>
+              {recenttx?.recenttx && (
+                <Pagination
+                  count={Math.ceil(recenttx?.recenttx.length / COUNTPERPAGE)}
+                  handleChangePageNum={handleChangePageNum}
+                />
+              )}
             </CardItem>
             {/* <CardItem className="flex flex-col gap-10 p-8 md:p-20">
               <TokenBarChart />

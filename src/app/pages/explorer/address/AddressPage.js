@@ -20,6 +20,9 @@ import AddressText from '../../components/common/AddressText';
 import TickText from '../../components/common/TickText';
 import AddressTableRow from '../../components/AddressTableRow';
 import EmptyBox from '../../components/EmptyBox';
+import Pagination from '../tick/Pagination';
+
+const COUNTPERPAGE = 10;
 
 function AddressPage() {
   const { address: addressParam } = useParams();
@@ -27,7 +30,13 @@ function AddressPage() {
   const [addressData, setAddressData] = useState({});
   const [displayAddressHistory, setDisplayAddressHistory] = useState([]);
   const [hoverIdx, setHoverIdx] = useState();
+  const [pageNum, setPageNum] = useState(1);
   const isMobile = useMediaQuery('(max-width:768px)');
+
+  const handleChangePageNum = (page) => {
+    setPageNum(page);
+  };
+
   useEffect(() => {
     if (addressParam) {
       sendMessage(addressParam);
@@ -39,29 +48,21 @@ function AddressPage() {
     if (addressParam === address?.address) {
       setAddressData(address);
     }
-  }, [address]);
+  }, [addressParam, address]);
 
   useEffect(() => {
-    if (history) {
-      setDisplayAddressHistory((history?.history || []).slice(0, 10));
+    if (history && typeof history.history === 'object') {
+      const indexOfLastItem = pageNum * COUNTPERPAGE;
+      const indexOfFirstItem = indexOfLastItem - COUNTPERPAGE;
+      setDisplayAddressHistory(history.history.slice(indexOfFirstItem, indexOfLastItem));
     }
-  }, [history]);
-
-  const handleScroll = (e) => {
-    const { scrollTop, clientHeight, scrollHeight } = e.currentTarget;
-    if (scrollHeight - scrollTop <= clientHeight + 5) {
-      const newLength = displayAddressHistory.length + 5;
-      if ((history?.history || []).length >= newLength) {
-        setDisplayAddressHistory((history?.history || []).slice(0, newLength));
-      }
-    }
-  };
+  }, [history, pageNum]);
 
   if (loading) {
     return <LinearProgress />;
   }
   return (
-    <Box className="container p-8 md:p-40 flex flex-col gap-20">
+    <Box className="container p-8 md:p-40 flex flex-col gap-20 overflow-y-auto">
       <CardItem className="flex w-full flex-col p-4 md:p-12 gap-5 md:gap-16  justify-start">
         <div>
           <div className="flex justify-between items-center">
@@ -75,6 +76,21 @@ function AddressPage() {
                   {addressData?.balance ? `${formatString(addressData?.balance)} QUBIC` : 0}
                 </Typography>
               </div>
+              {address.tokens &&
+                address.tokens.map((item) => {
+                  return (
+                    <div className="flex gap-4 items-center">
+                      <img
+                        className="w-14 h-14"
+                        src="assets/icons/price_mark_white.svg"
+                        alt="icon"
+                      />
+                      <Typography className="text-white text-14 bold font-urb">
+                        {addressData?.balance ? `${item[1]} ${item[0]}` : 0}
+                      </Typography>
+                    </div>
+                  );
+                })}
               {addressData?.rank && (
                 <div className="flex gap-4 items-center">
                   <img className="w-14 h-14" src="assets/icons/trade.svg" alt="icon" />
@@ -143,13 +159,28 @@ function AddressPage() {
               </div>
             </div>
           </CardItem>
+          <CardItem className="flex py-8 sm:py-12 px-12 sm:px-16 gap-10 items-center bg-celestial-10 w-full md:w-auto">
+            <div className="flex flex-col gap-4">
+              <div className="flex items-end gap-6 w-[180px] justify-between">
+                <Typography className="text-14 text-hawkes-30 font-urb">Incomes</Typography>
+                <Typography className="text-16 text-hawkes-100 font-urb">
+                  {addressData?.numin}
+                </Typography>
+              </div>
+              <div className="flex items-end gap-6 w-[180px] justify-between">
+                <Typography className="text-14 text-hawkes-30 font-urb">Outcomes</Typography>
+                <Typography className="text-16 text-hawkes-100 font-urb">
+                  {addressData?.numout}
+                </Typography>
+              </div>
+            </div>
+          </CardItem>
         </div>
         <CardItem className="flex flex-col gap-6 p-4 md:p-16">
           <Typography className="text-24 text-hawkes-100 text-bold font-urb">Activities</Typography>
           <TableContainer
             component={Paper}
             className="rounded-0 bg-transparent text-hawkes-100"
-            onScroll={handleScroll}
             sx={{ maxHeight: 430 }}
           >
             <Table stickyHeader sx={{ minWidth: 650 }} aria-label="simple table">
@@ -183,6 +214,12 @@ function AddressPage() {
             </Table>
           </TableContainer>
         </CardItem>
+        {history.history && (
+          <Pagination
+            count={Math.ceil(history.history.length / COUNTPERPAGE)}
+            handleChangePageNum={handleChangePageNum}
+          />
+        )}
       </CardItem>
     </Box>
   );
