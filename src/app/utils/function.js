@@ -1,7 +1,15 @@
 // import { useSocket } from "../context/SocketContext";
 
 const formatString = (string) => {
-  return string ? Number(string).toLocaleString('en-US') : '0';
+  const formattedNumber = new Intl.NumberFormat('en-US', {
+    style: 'decimal',
+    useGrouping: true,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  })
+    .format(string)
+    .replace(/,/g, "'");
+  return formattedNumber;
 };
 
 const formatDate = (dateString) => {
@@ -56,18 +64,31 @@ function getTimeAgo(currentTime, timestamp) {
     return `0 seconds ago`;
   }
 
-  const minutes = Math.floor(totalSeconds / 60);
+  const years = Math.floor(totalSeconds / (365 * 24 * 60 * 60));
+  const days = Math.floor((totalSeconds % (365 * 24 * 60 * 60)) / (24 * 60 * 60));
+  const hours = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));
+  const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
   const seconds = totalSeconds % 60;
-  let minLabel = 'mins';
-  let secondLabel = 'seconds';
-  if (minutes <= 1) {
-    minLabel = 'min';
+
+  let agoString = '';
+
+  if (years > 0) {
+    agoString += years === 1 ? `${years} year ` : `${years} years `;
   }
-  if (secondLabel <= 1) {
-    secondLabel = 'second';
+  if (days > 0) {
+    agoString += days === 1 ? `${days} day ` : `${days} days `;
+  }
+  if (hours > 0) {
+    agoString += hours === 1 ? `${hours} hour ` : `${hours} hours `;
+  }
+  if (minutes > 0) {
+    agoString += minutes === 1 ? `${minutes} min ` : `${minutes} mins `;
+  }
+  if (seconds > 0) {
+    agoString += seconds === 1 ? `${seconds} second ` : `${seconds} seconds `;
   }
 
-  return `${minutes} ${minLabel} ${seconds} ${secondLabel} ago`;
+  return `${agoString.trim()} ago`;
 }
 
 function capitalizeFirstLetter(string) {

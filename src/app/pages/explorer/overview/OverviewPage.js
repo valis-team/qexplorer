@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Typography, LinearProgress, Hidden, Autocomplete, TextField } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -44,7 +45,7 @@ function OverviewPage() {
   const [currentTime, setCurrentTime] = useState(new Date());
   // const [loadCurrentT, setLoadCurrentT] = useState(false);
   const [screenWidth, setScreenWidth] = useState();
-  const letterCount = useMemo(() => (screenWidth * 12) / 1920, [screenWidth]);
+  const letterCount = useMemo(() => (screenWidth * 8) / 1920, [screenWidth]);
   const [tokenPrices, setTokenPrices] = useState({});
   const [pageNum, setPageNum] = useState(1);
   const [network, setNetwork] = useState();
@@ -76,7 +77,7 @@ function OverviewPage() {
   }, []);
 
   useEffect(() => {
-    sendMessage(`recenttx 100 ${selectedToken}`);
+    sendMessage(`recenttx 100 ${selectedToken + 1}`);
     setRecenttxLoading(true);
   }, [selectedToken]);
 
@@ -260,15 +261,18 @@ function OverviewPage() {
                 <div className="flex flex-wrap justify-center gap-36">
                   {(tokens || []).map((token) => {
                     return (
-                      <div className="flex items-center gap-5">
-                        <span className="text-[18px]">{token}</span>
+                      <Link
+                        className="bg-main-80 flex flex-col items-center gap-5 p-5 px-12 cursor-pointer"
+                        to={`/orderbook/${token}`}
+                      >
+                        <span className="text-[12px] text-hawkes-100">{token}</span>
                         {tokenPrices[token] && (
-                          <div className="flex flex-col text-[12px]">
-                            <span>{tokenPrices[token][0]}</span>
-                            <span>{tokenPrices[token][1]}</span>
+                          <div className="flex flex-col text-[12px] text-hawkes-100">
+                            <span>bid: {formatString(tokenPrices[token][0])}</span>
+                            <span>ask: {formatString(tokenPrices[token][1])}</span>
                           </div>
                         )}
-                      </div>
+                      </Link>
                     );
                   })}
                 </div>
@@ -378,9 +382,9 @@ function OverviewPage() {
                               <TableCell className="border-b-main-80 text-celestial-100">
                                 {/* getTimeAgo(currentTime, row.utc * 1000) */}
                                 <TimeText
-                                  utcTime={row.utc}
+                                  utcTime={new Date(row.utc * 1000).toUTCString()}
                                   readableTime={getTimeAgo(currentTime, row.utc * 1000)}
-                                  className="text-white text-16"
+                                  className="text-white text-12"
                                   copy
                                 />
                               </TableCell>

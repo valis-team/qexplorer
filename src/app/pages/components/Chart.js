@@ -2,7 +2,7 @@ import * as React from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { useSocket } from 'src/app/context/SocketContext';
 import { FormControl, NativeSelect, useMediaQuery } from '@mui/material';
-import { getStandardTime } from 'src/app/utils/function';
+import { formatString, getStandardTime } from 'src/app/utils/function';
 
 export default function Chart() {
   const isSp = useMediaQuery('(max-width:1024px)');
@@ -54,12 +54,22 @@ export default function Chart() {
       .getHours()
       .toString()
       .padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+
   const currencyFormatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
     minimumFractionDigits: 10,
     maximumFractionDigits: 10,
   }).format;
+
+  const quFormatter = (value) => `QU ${formatString(Math.round(value))}`;
+
+  const customFormatter = (value) => {
+    if (value < 1 && value !== 0) {
+      return currencyFormatter(value);
+    }
+    return quFormatter(value);
+  };
 
   const lineChartsParams = React.useMemo(
     () => ({
@@ -105,7 +115,7 @@ export default function Chart() {
           ]}
           series={lineChartsParams.series.map((series) => ({
             ...series,
-            valueFormatter: (v) => (v === null ? '' : currencyFormatter(v)),
+            valueFormatter: (v) => (v === null ? '' : customFormatter(v)),
           }))}
           width={isSp ? window.innerWidth * 0.9 : 900}
           height={isSp ? 250 : 350}

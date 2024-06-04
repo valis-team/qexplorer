@@ -2,7 +2,7 @@ import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Typography, Box, useMediaQuery } from '@mui/material';
-import { formatString } from 'src/app/utils/function';
+import { formatString, getTimeAgo } from 'src/app/utils/function';
 import { useSocket } from 'src/app/context/SocketContext';
 import LinearProgress from '../../components/common/LinearProgress';
 import CardItem from '../../components/CardItem/CardItem';
@@ -12,6 +12,7 @@ import AddressText from '../../components/common/AddressText';
 function TransactionPage() {
   const { tx: txParam } = useParams();
   const { tx, loading, sendMessage } = useSocket();
+  const [currentTime, setCurrentTime] = useState(new Date());
   const [txData, setTxData] = useState();
   const isMobile = useMediaQuery('(max-width:768px)');
 
@@ -27,6 +28,14 @@ function TransactionPage() {
       console.log(tx);
     }
   }, [tx]);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, []);
+
   if (loading) {
     return <LinearProgress />;
   }
@@ -91,6 +100,25 @@ function TransactionPage() {
                 link
                 copy={!isEmpty(txData?.src)}
               />
+            </div>
+            <div className="flex justify-between items-center w-full gap-36 py-3 border-b-1">
+              <div className="flex w-60 items-center gap-4">
+                <img className="w-20 h-20" src="assets/icons/information-icon.svg" alt="icon" />
+                <Typography className="text-hawkes-100 text-16 font-urb">Time</Typography>
+              </div>
+              <div className="flex flex-col items-end gap-10">
+                <AddressText
+                  address={new Date(txData?.utc * 1000).toUTCString()}
+                  className="text-white text-16"
+                  copy
+                />
+                <AddressText
+                  address={getTimeAgo(currentTime, txData?.utc * 1000)}
+                  className="text-white text-16"
+                  copy
+                />
+                <AddressText address={txData?.utc} className="text-white text-16" copy />
+              </div>
             </div>
             <div className="flex justify-between items-center w-full gap-36 py-3 border-b-1">
               <div className="flex w-full items-center gap-4">

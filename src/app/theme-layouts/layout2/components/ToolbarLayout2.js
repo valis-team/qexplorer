@@ -11,7 +11,7 @@ import { selectFuseCurrentLayoutConfig, selectToolbarTheme } from 'app/store/fus
 import { useSocket } from 'src/app/context/SocketContext';
 import SearchBar from 'src/app/pages/components/SearchBar/SearchBar';
 import TickText from 'src/app/pages/components/common/TickText';
-import { getTimeAgo } from 'src/app/utils/function';
+import { formatString, getTimeAgo } from 'src/app/utils/function';
 import Logo from '../../shared-components/Logo';
 import NavbarToggleButton from '../../shared-components/NavbarToggleButton';
 import Navigation from '../../shared-components/Navigation';
@@ -64,7 +64,7 @@ function ToolbarLayout2(props) {
               </div>
               <div className="flex gap-4 items-center">
                 <img className="w-20 h-20" src="assets/icons/market_mark.svg" alt="icon" />
-                <Typography>{marketcap?.marketcap}</Typography>
+                <Typography>{formatString(marketcap?.marketcap)}</Typography>
               </div>
             </div>
             <div className="w-1/2">
