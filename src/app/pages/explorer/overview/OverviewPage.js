@@ -77,7 +77,7 @@ function OverviewPage() {
   }, []);
 
   useEffect(() => {
-    sendMessage(`recenttx 100 ${selectedToken}`);
+    sendMessage(`recenttx 100 ${selectedToken + 1}`);
     setRecenttxLoading(true);
   }, [selectedToken]);
 
