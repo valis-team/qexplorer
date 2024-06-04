@@ -17,6 +17,9 @@ import TransactionBox from '../../components/common/TransactionBox';
 import Chart from '../../components/Chart';
 import EmptyBox from '../../components/EmptyBox';
 import CircleProgress from '../../components/common/CircleProgress';
+import Pagination from '../tick/Pagination';
+
+const COUNTPERPAGE = 10;
 
 function OverviewPage() {
   const {
@@ -41,6 +44,7 @@ function OverviewPage() {
   const [screenWidth, setScreenWidth] = useState();
   const letterCount = useMemo(() => (screenWidth * 12) / 1920, [screenWidth]);
   const [tokenPrices, setTokenPrices] = useState({});
+  const [pageNum, setPageNum] = useState(1);
 
   useEffect(() => {
     sendMessage('marketcap');
@@ -55,22 +59,16 @@ function OverviewPage() {
     setRecenttxLoading(true);
   }, [selectedToken]);
 
-  // useEffect(() => {
-  //   setLoadCurrentT(true);
-  //   setTimeout(() => {
-  //     setCurrentT(currentTick);
-  //     setLoadCurrentT(false);
-  //   }, 100);
-  // }, [currentTick]);
-
   useEffect(() => {
-    if (recenttx?.recenttx) {
-      setDisplayRecentTx(recenttx?.recenttx);
-      setMobileDisplayRecentTx(recenttx?.recenttx);
+    if (recenttx?.recenttx && typeof recenttx?.recenttx === 'object') {
+      const indexOfLastItem = pageNum * COUNTPERPAGE;
+      const indexOfFirstItem = indexOfLastItem - COUNTPERPAGE;
+      setDisplayRecentTx(recenttx?.recenttx.slice(indexOfFirstItem, indexOfLastItem));
+      setMobileDisplayRecentTx(recenttx?.recenttx.slice(indexOfFirstItem, indexOfLastItem));
       setRecenttxLoading(false);
       setInitLoading(false);
     }
-  }, [recenttx]);
+  }, [recenttx, pageNum]);
 
   useEffect(() => {
     async function init() {
@@ -115,6 +113,10 @@ function OverviewPage() {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  const handleChangePageNum = (page) => {
+    setPageNum(page);
+  };
 
   if (initLoading) {
     return (
@@ -368,6 +370,12 @@ function OverviewPage() {
                   </TableContainer>
                 )}
               </Hidden>
+              {recenttx?.recenttx && (
+                <Pagination
+                  count={Math.ceil(recenttx?.recenttx.length / COUNTPERPAGE)}
+                  handleChangePageNum={handleChangePageNum}
+                />
+              )}
             </CardItem>
             {/* <CardItem className="flex flex-col gap-10 p-8 md:p-20">
               <TokenBarChart />
