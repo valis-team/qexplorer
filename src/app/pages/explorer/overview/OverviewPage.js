@@ -47,6 +47,7 @@ function OverviewPage() {
   const letterCount = useMemo(() => (screenWidth * 12) / 1920, [screenWidth]);
   const [tokenPrices, setTokenPrices] = useState({});
   const [pageNum, setPageNum] = useState(1);
+  const [network, setNetwork] = useState();
 
   useEffect(() => {
     sendMessage('marketcap');
@@ -60,7 +61,11 @@ function OverviewPage() {
     const intervalId = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
-
+    const init = async () => {
+      const networkResp = await socketSync('network');
+      setNetwork(networkResp);
+    };
+    init();
     return () => clearInterval(intervalId);
   }, []);
 
@@ -206,11 +211,13 @@ function OverviewPage() {
               <img className="w-44 h-44" src="assets/icons/transaction_mark_blue.svg" alt="icon" />
               <div className="flex flex-col">
                 <Typography className="text-14 text-hawkes-30 font-urb w-full flex justify-start">
-                  Recent Transaction
+                  Average block time
                 </Typography>
-                <Typography className="font-space text-16 md:text-20 text-hawkes-100">
-                  {(recenttx?.recenttx || []).length}
-                </Typography>
+                {network && (
+                  <Typography className="font-space text-16 md:text-20 text-hawkes-100">
+                    {network.last10 / 10}s
+                  </Typography>
+                )}
               </div>
             </CardItem>
             <CardItem className="flex py-8 sm:py-12 px-12 sm:px-16 gap-10 items-center min-w-[255px] bg-celestial-10">
