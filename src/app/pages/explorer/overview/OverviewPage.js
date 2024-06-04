@@ -8,7 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useSocket } from 'src/app/context/SocketContext';
-import { formatString } from 'src/app/utils/function';
+import { formatString, getTimeAgo } from 'src/app/utils/function';
 import CardItem from '../../components/CardItem/CardItem';
 import TransactionText from '../../components/common/TransactionText';
 import TickText from '../../components/common/TickText';
@@ -18,6 +18,7 @@ import Chart from '../../components/Chart';
 import EmptyBox from '../../components/EmptyBox';
 import CircleProgress from '../../components/common/CircleProgress';
 import Pagination from '../tick/Pagination';
+import TimeText from '../../components/common/TimeText';
 
 const COUNTPERPAGE = 10;
 
@@ -40,6 +41,7 @@ function OverviewPage() {
   const [recenttxLoading, setRecenttxLoading] = useState(false);
   const recenttx = useMemo(() => socketRecentTx, [socketRecentTx]);
   const [initLoading, setInitLoading] = useState(true);
+  const [currentTime, setCurrentTime] = useState(new Date());
   // const [loadCurrentT, setLoadCurrentT] = useState(false);
   const [screenWidth, setScreenWidth] = useState();
   const letterCount = useMemo(() => (screenWidth * 12) / 1920, [screenWidth]);
@@ -53,6 +55,14 @@ function OverviewPage() {
     sendMessage('explist');
     sendMessage('prices');
   }, [sendMessage]);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   useEffect(() => {
     sendMessage(`recenttx 100 ${selectedToken}`);
@@ -310,11 +320,12 @@ function OverviewPage() {
                         <TableRow>
                           <TableCell className="border-b-main-80 text-hawkes-100">Tx</TableCell>
                           <TableCell className="border-b-main-80 text-hawkes-100">Tick</TableCell>
+                          <TableCell className="border-b-main-80 text-hawkes-100">Time</TableCell>
                           <TableCell className="border-b-main-80 text-hawkes-100">Source</TableCell>
                           <TableCell className="border-b-main-80 text-hawkes-100">
                             Destination
                           </TableCell>
-                          <TableCell className="border-b-main-80 text-hawkes-100">Type</TableCell>
+                          {/* <TableCell className="border-b-main-80 text-hawkes-100">Type</TableCell> */}
                           <TableCell className="border-b-main-80 text-hawkes-100" align="right">
                             Amount
                           </TableCell>
@@ -349,12 +360,21 @@ function OverviewPage() {
                                 />
                               </TableCell>
                               <TableCell className="border-b-main-80 text-celestial-100">
+                                {/* getTimeAgo(currentTime, row.utc * 1000) */}
+                                <TimeText
+                                  utcTime={row.utc}
+                                  readableTime={getTimeAgo(currentTime, row.utc * 1000)}
+                                  className="text-white text-16"
+                                  copy
+                                />
+                              </TableCell>
+                              <TableCell className="border-b-main-80 text-celestial-100">
                                 <AddressText address={row.src} letter={letterCount} copy link />
                               </TableCell>
                               <TableCell className="border-b-main-80 text-celestial-100">
                                 <AddressText address={row.dest} letter={letterCount} copy link />
                               </TableCell>
-                              <TableCell className="border-b-main-80">{row.type}</TableCell>
+                              {/* <TableCell className="border-b-main-80">{row.type}</TableCell> */}
                               <TableCell className="border-b-main-80" align="right">
                                 {formatString(row.amount)}
                               </TableCell>
