@@ -3,6 +3,7 @@ import _ from 'lodash';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import { useSocket } from 'src/app/context/SocketContext';
+import { formatString } from 'src/app/utils/function';
 import AddressText from './common/AddressText';
 import TransactionText from './common/TransactionText';
 import TickText from './common/TickText';
@@ -60,7 +61,7 @@ function AddressTableRow(props) {
           scope="row"
           className="border-b-main-80 text-white cursor-pointer"
         >
-          <TickText className="text-white" tick={row[3]} copy />
+          <TickText className="text-white" tick={formatString(row[3])} copy />
         </TableCell>
         {hoverIdx === idx && sctx && row[2].startsWith('BAAAAAAA') && (
           <TableCell className="absolute bg-white text-black border border-gray-300 shadow-lg p-2 max-w-[300px] bottom-5 left-5 break-words overflow-hidden whitespace-normal z-10">

@@ -1,7 +1,15 @@
 // import { useSocket } from "../context/SocketContext";
 
 const formatString = (string) => {
-  return string ? Number(string).toLocaleString('en-US') : '0';
+  const formattedNumber = new Intl.NumberFormat('en-US', {
+    style: 'decimal',
+    useGrouping: true,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  })
+    .format(string)
+    .replace(/,/g, "'");
+  return formattedNumber;
 };
 
 const formatDate = (dateString) => {
