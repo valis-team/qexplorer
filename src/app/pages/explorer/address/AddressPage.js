@@ -121,7 +121,13 @@ function AddressPage() {
               <div className="flex items-end gap-6 w-[180px] justify-between">
                 <Typography className="text-14 text-hawkes-30 font-urb">Incoming</Typography>
                 <Typography className="text-16 text-hawkes-100 font-urb">
-                  {formatString(addressData?.totalincoming) || 0}
+                  {formatString(addressData?.totalincoming || 0)}
+                </Typography>
+              </div>
+              <div className="flex items-end gap-6 w-[180px] justify-between">
+                <Typography className="text-14 text-hawkes-30 font-urb">Number</Typography>
+                <Typography className="text-16 text-hawkes-100 font-urb">
+                  {addressData?.numin}
                 </Typography>
               </div>
               <div className="flex items-end gap-6 w-[180px] justify-between">
@@ -143,7 +149,13 @@ function AddressPage() {
               <div className="flex items-end gap-6 w-[180px] justify-between">
                 <Typography className="text-14 text-hawkes-30 font-urb">Outgoing</Typography>
                 <Typography className="text-16 text-hawkes-100 font-urb">
-                  {formatString(addressData?.totaloutgoing) || 0}
+                  {formatString(addressData?.totaloutgoing || 0)}
+                </Typography>
+              </div>
+              <div className="flex items-end gap-6 w-[180px] justify-between">
+                <Typography className="text-14 text-hawkes-30 font-urb">Number</Typography>
+                <Typography className="text-16 text-hawkes-100 font-urb">
+                  {addressData?.numout}
                 </Typography>
               </div>
               <div className="flex items-end gap-6 w-[180px] justify-between">
@@ -156,22 +168,6 @@ function AddressPage() {
                     link
                   />
                 ) : null}
-              </div>
-            </div>
-          </CardItem>
-          <CardItem className="flex py-8 sm:py-12 px-12 sm:px-16 gap-10 items-center bg-celestial-10 w-full md:w-auto">
-            <div className="flex flex-col gap-4">
-              <div className="flex items-end gap-6 w-[180px] justify-between">
-                <Typography className="text-14 text-hawkes-30 font-urb">Incomes</Typography>
-                <Typography className="text-16 text-hawkes-100 font-urb">
-                  {addressData?.numin}
-                </Typography>
-              </div>
-              <div className="flex items-end gap-6 w-[180px] justify-between">
-                <Typography className="text-14 text-hawkes-30 font-urb">Outcomes</Typography>
-                <Typography className="text-16 text-hawkes-100 font-urb">
-                  {addressData?.numout}
-                </Typography>
               </div>
             </div>
           </CardItem>
