@@ -28,7 +28,7 @@ function OverviewPage() {
     emptyticks,
     // currentTick,
     recenttx: socketRecentTx,
-    tokens,
+    // tokens,
     // loading,
     sendMessage,
     socketSync,
@@ -49,6 +49,7 @@ function OverviewPage() {
   const [pageNum, setPageNum] = useState(1);
   const [network, setNetwork] = useState();
   const [scs, setScs] = useState([]);
+  const [tokens, setTokens] = useState([]);
 
   useEffect(() => {
     sendMessage('marketcap');
@@ -65,7 +66,8 @@ function OverviewPage() {
     const init = async () => {
       const networkResp = await socketSync('network');
       const _scs = await socketSync('explist SC');
-      console.log(_scs, 'aaaaaaa');
+      const _tokens = await socketSync('explist');
+      setTokens(_tokens.tokens);
       setNetwork(networkResp);
       setScs(_scs.tokens);
     };
