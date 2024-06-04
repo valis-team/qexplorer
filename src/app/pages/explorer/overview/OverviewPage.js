@@ -70,14 +70,18 @@ function OverviewPage() {
       const _tokens = await socketSync('explist');
       setTokens(_tokens.tokens);
       setNetwork(networkResp);
-      setScs(_scs.tokens);
+      setScs(['ALL', ..._scs.tokens]);
     };
     init();
     return () => clearInterval(intervalId);
   }, []);
 
   useEffect(() => {
-    sendMessage(`recenttx 100 ${selectedToken + 1}`);
+    if (selectedToken === 0) {
+      sendMessage('recenttx 100');
+    } else {
+      sendMessage(`recenttx 100 ${selectedToken}`);
+    }
     setRecenttxLoading(true);
   }, [selectedToken]);
 

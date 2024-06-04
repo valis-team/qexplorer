@@ -19,11 +19,15 @@ export default function Chart() {
 
   React.useEffect(() => {
     const myFunction = () => {
-      sendMessage(`prices 1`);
+      if (selectedToken === 'QU') {
+        sendMessage(`prices 1`);
+      } else {
+        sendMessage(`prices.${selectedToken} 1`);
+      }
     };
     const intervalId = setInterval(myFunction, 60 * 1000);
     return () => clearInterval(intervalId);
-  }, []);
+  }, [selectedToken]);
 
   React.useEffect(() => {
     if (chartMode === 0) {
