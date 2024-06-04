@@ -37,7 +37,6 @@ function TickPage() {
     if (tick && typeof tick.tx === 'object') {
       const indexOfLastItem = pageNum * COUNTPERPAGE;
       const indexOfFirstItem = indexOfLastItem - COUNTPERPAGE;
-      console.log(tick.tx.slice(indexOfFirstItem, indexOfLastItem), 'aaaaaaaaaaaaaaa');
       setDisplayTx(tick.tx.slice(indexOfFirstItem, indexOfLastItem));
     }
   }, [tick, pageNum]);
