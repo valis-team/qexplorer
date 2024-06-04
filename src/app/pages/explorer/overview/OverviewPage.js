@@ -234,16 +234,18 @@ function OverviewPage() {
                 <Typography className="text-24 md:text-32 font-urb text-hawkes-100">
                   Token Prices
                 </Typography>
-                <div>
+                <div className="flex flex-wrap justify-center gap-36">
                   {(tokens || []).map((token) => {
                     return (
-                      <>
+                      <div className="flex items-center gap-5">
+                        <span className="text-[18px]">{token}</span>
                         {tokenPrices[token] && (
-                          <>
-                            {token} {tokenPrices[token][0]} {tokenPrices[token][1]}
-                          </>
+                          <div className="flex flex-col text-[12px]">
+                            <span>{tokenPrices[token][0]}</span>
+                            <span>{tokenPrices[token][1]}</span>
+                          </div>
                         )}
-                      </>
+                      </div>
                     );
                   })}
                 </div>
