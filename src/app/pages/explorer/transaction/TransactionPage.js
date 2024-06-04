@@ -106,12 +106,17 @@ function TransactionPage() {
                 <img className="w-20 h-20" src="assets/icons/information-icon.svg" alt="icon" />
                 <Typography className="text-hawkes-100 text-16 font-urb">Time</Typography>
               </div>
-              <div className="flex items-center gap-10">
+              <div className="flex flex-col items-end gap-10">
+                <AddressText
+                  address={new Date(txData?.utc * 1000).toUTCString()}
+                  className="text-white text-16"
+                  copy
+                />
                 <AddressText
                   address={getTimeAgo(currentTime, txData?.utc * 1000)}
                   className="text-white text-16"
+                  copy
                 />
-                ,
                 <AddressText address={txData?.utc} className="text-white text-16" copy />
               </div>
             </div>
