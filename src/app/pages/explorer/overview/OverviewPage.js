@@ -264,8 +264,8 @@ function OverviewPage() {
                         <span className="text-[18px]">{token}</span>
                         {tokenPrices[token] && (
                           <div className="flex flex-col text-[12px]">
-                            <span>{tokenPrices[token][0]}</span>
-                            <span>{tokenPrices[token][1]}</span>
+                            <span>{formatString(tokenPrices[token][0])}</span>
+                            <span>{formatString(tokenPrices[token][1])}</span>
                           </div>
                         )}
                       </div>
