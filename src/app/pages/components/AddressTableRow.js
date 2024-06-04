@@ -57,7 +57,7 @@ function AddressTableRow(props) {
         onMouseLeave={handleMouseLeave}
       >
         <TableCell component="th" scope="row" className="border-b-main-80">
-          <TransactionText tx={row[1]} copy letter={20} link />
+          <TransactionText tx={row[1]} copy letter={12} link />
         </TableCell>
         <TableCell component="th" scope="row" className="border-b-main-80">
           <TickText className="text-white" tick={row[0]} copy link />
@@ -65,15 +65,15 @@ function AddressTableRow(props) {
 
         <TableCell component="th" scope="row" className="border-b-main-80">
           <TimeText
-            className="text-white"
-            utcTime={row[5]}
+            className="text-white text-[12px]"
+            utcTime={new Date(row[5] * 1000).toUTCString()}
             readableTime={getTimeAgo(currentTime, row[5] * 1000)}
             copy
           />
         </TableCell>
 
         <TableCell component="th" scope="row" className="border-b-main-80">
-          <AddressText address={row[2]} copy letter={20} link />
+          <AddressText address={row[2]} copy letter={12} link />
         </TableCell>
         <TableCell
           component="th"
