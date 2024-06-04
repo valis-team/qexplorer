@@ -6,13 +6,20 @@ import LinearProgress from '../../components/common/LinearProgress';
 import CardItem from '../../components/CardItem/CardItem';
 import TransactionBox from '../../components/common/TransactionBox';
 import EmptyBox from '../../components/EmptyBox';
+import Pagination from './Pagination';
+
+const COUNTPERPAGE = 10;
 
 function TickPage() {
   const { tick: tickId } = useParams();
   const { tick, loading, sendMessage } = useSocket();
   const [tickData, setTickData] = useState();
   const [displayTx, setDisplayTx] = useState([]);
-  const batchSize = 5;
+  const [pageNum, setPageNum] = useState(1);
+
+  const handleChangePageNum = (page) => {
+    setPageNum(page);
+  };
 
   useEffect(() => {
     if (tickId) {
@@ -23,25 +30,23 @@ function TickPage() {
   useEffect(() => {
     if (+tickId === +tick?.tick) {
       setTickData(tick);
-      setDisplayTx((tick.tx || []).slice(0, 10));
     }
   }, [tick]);
 
-  const handleScroll = (e) => {
-    const { scrollTop, clientHeight, scrollHeight } = e.currentTarget;
-    if (scrollHeight - scrollTop === clientHeight) {
-      const newLength = displayTx.length + batchSize;
-      if ((tick.tx || []).length >= newLength) {
-        setDisplayTx((tick.tx || []).slice(0, newLength));
-      }
+  useEffect(() => {
+    if (tick && typeof tick.tx === 'object') {
+      const indexOfLastItem = pageNum * COUNTPERPAGE;
+      const indexOfFirstItem = indexOfLastItem - COUNTPERPAGE;
+      console.log(tick.tx.slice(indexOfFirstItem, indexOfLastItem), 'aaaaaaaaaaaaaaa');
+      setDisplayTx(tick.tx.slice(indexOfFirstItem, indexOfLastItem));
     }
-  };
+  }, [tick, pageNum]);
 
   if (loading) {
     return <LinearProgress />;
   }
   return (
-    <Box className="container p-8 md:p-20 flex flex-col gap-20">
+    <Box className="container p-8 md:p-20 flex flex-col gap-20 overflow-y-auto">
       <CardItem className="flex w-full flex-col p-4 md:p-12 gap-5 md:gap-16">
         <div className="flex gap-6 items-center">
           <div className="flex items-center gap-6">
@@ -105,11 +110,8 @@ function TickPage() {
             Transactions
           </Typography>
         </div>
-        <div
-          className="flex flex-col gap-4 md:gap-8 max-h-[500px] overflow-y-auto"
-          onScroll={handleScroll}
-        >
-          {displayTx.length > 0 ? (
+        <div className="flex flex-col gap-4 md:gap-8 max-h-[500px] overflow-y-auto">
+          {tick.tx && tick.tx.length > 0 ? (
             displayTx.map((item, key) => {
               return (
                 <div key={key} className="py-4 border-b-1">
@@ -123,6 +125,12 @@ function TickPage() {
             </div>
           )}
         </div>
+        {tick.tx && (
+          <Pagination
+            count={Math.ceil(tick.tx.length / COUNTPERPAGE)}
+            handleChangePageNum={handleChangePageNum}
+          />
+        )}
       </CardItem>
     </Box>
   );
