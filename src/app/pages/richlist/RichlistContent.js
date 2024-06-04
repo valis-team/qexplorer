@@ -9,6 +9,7 @@ import {
   TableRow,
   useMediaQuery,
 } from '@mui/material';
+import { Box } from '@mui/system';
 import { useEffect, useState } from 'react';
 import { useSocket } from 'src/app/context/SocketContext';
 import { useParams } from 'react-router-dom';
@@ -16,6 +17,9 @@ import { formatString } from 'src/app/utils/function';
 import AddressText from '../components/common/AddressText';
 import EmptyBox from '../components/EmptyBox';
 import CircleProgress from '../components/common/CircleProgress';
+import Pagination from '../explorer/tick/Pagination';
+
+const COUNTPERPAGE = 10;
 
 function RichlistContent() {
   const { richlist, loading, sendMessage } = useSocket();
@@ -23,14 +27,19 @@ function RichlistContent() {
   const [displayRichList, setDisplayRichList] = useState([]);
   const [tableLoading, setTableLoading] = useState(false);
   const [initLoading, setInitLoading] = useState(true);
+  const [pageNum, setPageNum] = useState(1);
 
   const isMobile = useMediaQuery('(max-width:768px)');
 
   useEffect(() => {
-    setDisplayRichList((richlist || []).slice(0, 15));
-    setInitLoading(false);
-    setTableLoading(false);
-  }, [richlist]);
+    if (richlist && typeof richlist === 'object') {
+      const indexOfLastItem = pageNum * COUNTPERPAGE;
+      const indexOfFirstItem = indexOfLastItem - COUNTPERPAGE;
+      setDisplayRichList(richlist.slice(indexOfFirstItem, indexOfLastItem));
+      setInitLoading(false);
+      setTableLoading(false);
+    }
+  }, [richlist, pageNum]);
 
   useEffect(() => {
     if (token === 'QU') {
@@ -41,14 +50,8 @@ function RichlistContent() {
     setTableLoading(true);
   }, [token, sendMessage]);
 
-  const handleScroll = (e) => {
-    const { scrollTop, clientHeight, scrollHeight } = e.currentTarget;
-    if (scrollHeight - scrollTop <= clientHeight + 5) {
-      const newLength = displayRichList.length + 5;
-      if ((richlist || []).length >= newLength) {
-        setDisplayRichList((richlist || []).slice(0, newLength));
-      }
-    }
+  const handleChangePageNum = (page) => {
+    setPageNum(page);
   };
 
   if (initLoading) {
@@ -60,16 +63,15 @@ function RichlistContent() {
   }
 
   return (
-    <>
-      <div className="container flex justify-center px-8">
-        <div className="flex w-full border-1 border-main-50 flex-col p-12 max-w-[1220px]">
-          {tableLoading ? (
-            <CircleProgress />
-          ) : (
+    <Box className="container flex justify-center px-8">
+      <div className="flex w-full border-1 border-main-50 flex-col p-12 max-w-[1220px]">
+        {tableLoading ? (
+          <CircleProgress />
+        ) : (
+          <>
             <TableContainer
               component={Paper}
               className="rounded-0 bg-transparent text-hawkes-100"
-              onScroll={handleScroll}
               sx={{ maxHeight: 650 }}
             >
               <Table stickyHeader sx={{ minWidth: 350 }} aria-label="simple table">
@@ -123,10 +125,16 @@ function RichlistContent() {
                 </TableBody>
               </Table>
             </TableContainer>
-          )}
-        </div>
+            {richlist && (
+              <Pagination
+                count={Math.ceil(richlist.length / COUNTPERPAGE)}
+                handleChangePageNum={handleChangePageNum}
+              />
+            )}
+          </>
+        )}
       </div>
-    </>
+    </Box>
   );
 }
 
