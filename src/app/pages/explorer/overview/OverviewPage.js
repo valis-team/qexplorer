@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Typography, LinearProgress, Hidden, Autocomplete, TextField } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -260,15 +261,18 @@ function OverviewPage() {
                 <div className="flex flex-wrap justify-center gap-36">
                   {(tokens || []).map((token) => {
                     return (
-                      <CardItem className="bg-main-80 flex flex-col items-center gap-5 p-5 px-12">
-                        <span className="text-[12px]">{token}</span>
+                      <Link
+                        className="bg-main-80 flex flex-col items-center gap-5 p-5 px-12 cursor-pointer"
+                        to={`/orderbook/${token}`}
+                      >
+                        <span className="text-[12px] text-hawkes-100">{token}</span>
                         {tokenPrices[token] && (
-                          <div className="flex flex-col text-[12px]">
-                            <span>min: {formatString(tokenPrices[token][0])}</span>
-                            <span>max: {formatString(tokenPrices[token][1])}</span>
+                          <div className="flex flex-col text-[12px] text-hawkes-100">
+                            <span>bid: {formatString(tokenPrices[token][0])}</span>
+                            <span>ask: {formatString(tokenPrices[token][1])}</span>
                           </div>
                         )}
-                      </CardItem>
+                      </Link>
                     );
                   })}
                 </div>
